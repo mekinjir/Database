@@ -1,5 +1,15 @@
 {
-  "users": {},
+  "users": {
+    "meki": {
+      "password": "8195e8f09241171e87c50701:970bb231e5fed8ebbe81f5b8a09cf3e99dafca0f568f2010cb51d609dcf840f5",
+      "role": "developer",
+      "displayName": "meki",
+      "createdAt": "2026-10-16T23:15:33.033Z",
+      "createdBy": "bootstrap",
+      "expiresAt": null,
+      "active": true
+    }
+  },
   "orders": {
     "MEKI-2026-35980FFBF": {
       "id": "MEKI-2026-35980FFBF",

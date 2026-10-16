@@ -1,3 +1,12 @@
 {
-  "users": {}
+  "users": {
+    "meki": {
+      "password": "59892b8e2bbb2a74fbfb2318:0e81f56b76c4896a8958118f187a7d31369c60e37974c8c8285f9f8de68491c5",
+      "role": "developer",
+      "displayName": "meki",
+      "createdAt": "2026-10-16T22:18:30.202Z",
+      "createdBy": "bootstrap",
+      "active": true
+    }
+  }
 }

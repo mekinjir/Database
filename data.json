@@ -58,5 +58,18 @@
       "createdAt": "2026-10-17T00:37:53.054Z",
       "updatedAt": "2026-10-17T00:38:01.786Z"
     }
-  }
+  },
+  "logs": [
+    {
+      "id": "LOG-1792197497542-2802",
+      "timestamp": "2026-10-17T00:38:17.542Z",
+      "type": "user_login",
+      "user": "meki",
+      "email": null,
+      "status": "success",
+      "provider": null,
+      "source": "web",
+      "note": null
+    }
+  ]
 }

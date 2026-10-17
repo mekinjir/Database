@@ -72,6 +72,17 @@
   },
   "logs": [
     {
+      "id": "LOG-1792197718919-4f9a",
+      "timestamp": "2026-10-17T00:41:58.919Z",
+      "type": "am_activation",
+      "user": "meki",
+      "email": "dufho@coffeejadore.com",
+      "status": "success",
+      "provider": "B",
+      "source": "web",
+      "note": null
+    },
+    {
       "id": "LOG-1792197660284-479b",
       "timestamp": "2026-10-17T00:41:00.284Z",
       "type": "user_login",

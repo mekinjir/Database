@@ -72,6 +72,17 @@
   },
   "logs": [
     {
+      "id": "LOG-1792203679663-1e0c",
+      "timestamp": "2026-10-17T02:21:19.663Z",
+      "type": "am_activation",
+      "user": "meki",
+      "email": "milwhimw@ipxwan.com",
+      "status": "success",
+      "provider": "B",
+      "source": "web",
+      "note": null
+    },
+    {
       "id": "LOG-1792203645014-8903",
       "timestamp": "2026-10-17T02:20:45.014Z",
       "type": "user_login",

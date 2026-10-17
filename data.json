@@ -69,5 +69,18 @@
       "approvedBy": "meki",
       "approvedAt": "2026-10-17T00:38:23.504Z"
     }
-  }
+  },
+  "logs": [
+    {
+      "id": "LOG-1792197505062-f552",
+      "timestamp": "2026-10-17T00:38:25.062Z",
+      "type": "order_approve",
+      "user": "meki",
+      "email": "testingg",
+      "status": "success",
+      "provider": null,
+      "source": "admin",
+      "note": "order: MEKI-2026-73054C5BB"
+    }
+  ]
 }

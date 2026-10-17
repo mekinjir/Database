@@ -13,6 +13,17 @@
   "orders": {},
   "logs": [
     {
+      "id": "LOG-1792196426270-7fe3",
+      "timestamp": "2026-10-17T00:20:26.270Z",
+      "type": "user_login",
+      "user": "meki",
+      "email": null,
+      "status": "success",
+      "provider": null,
+      "source": "web",
+      "note": null
+    },
+    {
       "id": "LOG-1792196369482-3e0f",
       "timestamp": "2026-10-17T00:19:29.483Z",
       "type": "user_login",

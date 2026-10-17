@@ -39,30 +39,24 @@
       "updatedAt": "2026-10-17T00:23:22.363Z",
       "approvedBy": "meki",
       "approvedAt": "2026-10-17T00:23:22.363Z"
-    }
-  },
-  "logs": [
-    {
-      "id": "LOG-1792197418225-2ae3",
-      "timestamp": "2026-10-17T00:36:58.225Z",
-      "type": "user_login",
-      "user": "meki",
-      "email": null,
-      "status": "success",
-      "provider": null,
-      "source": "web",
-      "note": null
     },
-    {
-      "id": "LOG-1792196604008-1043",
-      "timestamp": "2026-10-17T00:23:24.008Z",
-      "type": "order_approve",
-      "user": "meki",
-      "email": "testing",
-      "status": "success",
-      "provider": null,
-      "source": "admin",
-      "note": "order: MEKI-2026-74761BE6F"
+    "MEKI-2026-73054C5BB": {
+      "id": "MEKI-2026-73054C5BB",
+      "packageId": "ress_lifetime",
+      "packageName": "RESS Permanen",
+      "role": "ress",
+      "durationDays": 0,
+      "price": 10000,
+      "username": "testingg",
+      "password": "fbbbf543212926a037d9c7de:5b4bc5845811b6cf2e7072ad174678ae00eaf3a1b038387c8aad92461b2cd19a",
+      "passwordPlain": "meki1114",
+      "email": "mekinjirt5@gmail.com",
+      "whatsapp": null,
+      "status": "pending",
+      "proofImage": null,
+      "note": null,
+      "createdAt": "2026-10-17T00:37:53.054Z",
+      "updatedAt": "2026-10-17T00:37:53.054Z"
     }
-  ]
+  }
 }

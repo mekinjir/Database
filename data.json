@@ -1,5 +1,14 @@
 {
-  "users": {},
-  "orders": {},
-  "logs": []
+  "users": {
+    "meki": {
+      "password": "c8a0cfba616c8cb3ea19996f:eabda0f0a1a99f0c4bee6dbb8b7af4c7265eff89389d16590954772a313997b6",
+      "role": "developer",
+      "displayName": "meki",
+      "createdAt": "2026-10-17T00:14:26.881Z",
+      "createdBy": "bootstrap",
+      "expiresAt": null,
+      "active": true
+    }
+  },
+  "orders": {}
 }

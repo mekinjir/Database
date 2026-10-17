@@ -72,6 +72,17 @@
   },
   "logs": [
     {
+      "id": "LOG-1792217308189-e833",
+      "timestamp": "2026-10-17T06:08:28.189Z",
+      "type": "user_login",
+      "user": "meki",
+      "email": null,
+      "status": "success",
+      "provider": null,
+      "source": "web",
+      "note": null
+    },
+    {
       "id": "LOG-1792203679663-1e0c",
       "timestamp": "2026-10-17T02:21:19.663Z",
       "type": "am_activation",

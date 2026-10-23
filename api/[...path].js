@@ -3,7 +3,11 @@ export default async function handler(req, res) {
   const PARENT_KEY = req.headers['x-api-key'];
   if (!TERMUX_URL || !PARENT_KEY) return res.status(401).json({ error: 'Config kosong' });
 
-  const subPath = decodeURIComponent(req.url.replace('/api/', '').split('?')[0]);
+  let subPath = req.url.replace('/api/', '').split('?')[0];
+  
+  // Paksa decode di proxy (biar %20 jadi spasi)
+  try { subPath = decodeURIComponent(subPath); } catch(e) {}
+  
   let targetPath = '';
 
   if (subPath === 'devices') targetPath = '/api/dashboard/devices';
@@ -13,7 +17,6 @@ export default async function handler(req, res) {
   else if (subPath.startsWith('chat/')) targetPath = '/api/dashboard/' + subPath;
   else if (subPath.startsWith('apps/')) targetPath = '/api/dashboard/' + subPath;
   else if (subPath === 'blocked') targetPath = '/api/dashboard/blocked';
-  else if (subPath === 'timer') targetPath = '/api/dashboard/timer';
   else if (subPath.startsWith('device/') && req.method === 'DELETE') targetPath = '/api/dashboard/' + subPath;
   else return res.status(404).json({ error: 'Endpoint tidak dikenal: ' + subPath });
 
@@ -24,7 +27,10 @@ export default async function handler(req, res) {
     };
     if (req.method === 'POST' && req.body) fetchOpts.body = JSON.stringify(req.body);
     
-    const upstream = await fetch(TERMUX_URL + targetPath, fetchOpts);
+    // Encode lagi pas nembak ke Termux biar aman
+    const safeTargetPath = targetPath.split('/').map(p => encodeURIComponent(p)).join('/');
+    
+    const upstream = await fetch(TERMUX_URL + safeTargetPath, fetchOpts);
     res.status(upstream.status);
     const data = await upstream.text();
     try { res.json(JSON.parse(data)); } catch { res.send(data); }

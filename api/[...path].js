@@ -4,24 +4,23 @@ export default async function handler(req, res) {
 
   if (!TERMUX_URL || !PARENT_KEY) return res.status(401).json({ error: 'Config tidak ditemukan' });
 
-  const subPath = req.url.replace('/api/', '').split('?')[0];
+  const subPath = decodeURIComponent(req.url.replace('/api/', '').split('?')[0]);
   let targetPath = '';
 
+  // Routing lengkap
   if (subPath === 'devices') targetPath = '/api/dashboard/devices';
   else if (subPath === 'pair-code') targetPath = '/api/dashboard/pair-code';
   else if (subPath === 'command') targetPath = '/api/dashboard/command';
   else if (subPath === 'chat') targetPath = '/api/dashboard/chat';
   else if (subPath.startsWith('chat/')) targetPath = '/api/dashboard/' + subPath;
-  else if (subPath.startsWith('apps/')) targetPath = '/api/dashboard/' + subPath;
+  else if (subPath.startsWith('apps/')) targetPath = '/api/dashboard/' + subPath; // <-- FIX BLOKIR APP
   else if (subPath === 'blocked') targetPath = '/api/dashboard/blocked';
+  else if (subPath === 'timer') targetPath = '/api/dashboard/timer';
   else if (subPath.startsWith('device/') && req.method === 'DELETE') targetPath = '/api/dashboard/' + subPath;
   else return res.status(404).json({ error: 'Endpoint tidak dikenal: ' + subPath });
 
   try {
-    const fetchOpts = { 
-      method: req.method, 
-      headers: { 'x-api-key': PARENT_KEY, 'content-type': 'application/json' } 
-    };
+    const fetchOpts = { method: req.method, headers: { 'x-api-key': PARENT_KEY, 'content-type': 'application/json' } };
     if (req.method === 'POST' && req.body) fetchOpts.body = JSON.stringify(req.body);
     
     const upstream = await fetch(TERMUX_URL + targetPath, fetchOpts);

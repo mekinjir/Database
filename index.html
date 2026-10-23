@@ -25,9 +25,9 @@
     button { border: none; padding: 10px; border-radius: 10px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .btn-lock { background: var(--danger); } .btn-unlock { background: var(--success); }
     .btn-block { background: var(--warning); color: #000; } .btn-chat { background: var(--accent); }
+    .btn-delete { background: #475569; } 
     .btn-pair { background: var(--accent); width: 100%; margin-bottom: 16px; padding: 14px; }
     
-    /* MODAL UI KUSTOM */
     .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 999; }
     .modal-bg.show { display: flex; }
     .modal { background: var(--card); padding: 24px; border-radius: 16px; width: 100%; max-width: 400px; border: 1px solid var(--border); }
@@ -39,7 +39,6 @@
     .app-list { max-height: 250px; overflow-y: auto; background: #0f172a; border-radius: 8px; padding: 8px; margin-bottom: 12px; }
     .app-item { display: flex; align-items: center; gap: 8px; padding: 8px; border-bottom: 1px solid var(--border); color: #fff; font-size: 14px; }
     
-    /* TOAST (Notifikasi Kustom) */
     .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--card); color: #fff; padding: 12px 24px; border-radius: 8px; border: 1px solid var(--accent); opacity: 0; transition: 0.3s; z-index: 1000; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   </style>
@@ -54,7 +53,6 @@
     <div id="list">Memuat data...</div>
   </div>
 
-  <!-- TOAST -->
   <div class="toast" id="toast">Pesan</div>
 
   <!-- MODAL PAIRING -->
@@ -63,6 +61,16 @@
       <h3><i class="fa-solid fa-key"></i> Kode Pairing</h3>
       <h1 id="pairCode" style="text-align:center; font-size:40px; letter-spacing:8px; color:var(--accent); margin:20px 0;">------</h1>
       <button class="btn-pair" onclick="document.getElementById('pairModal').classList.remove('show')">Tutup</button>
+    </div>
+  </div>
+
+  <!-- MODAL KONFIRMASI HAPUS -->
+  <div class="modal-bg" id="deleteModal">
+    <div class="modal">
+      <h3><i class="fa-solid fa-trash" style="color:var(--danger)"></i> Hapus Perangkat?</h3>
+      <p style="text-align:center; color:var(--muted); margin-bottom:16px;">HP anak tidak akan bisa terkoneksi lagi ke web ini.</p>
+      <button class="btn-lock" style="width:100%; margin-bottom:8px;" onclick="konfirmasiHapus()">Ya, Hapus</button>
+      <button style="background:transparent; border:1px solid var(--border); width:100%;" onclick="document.getElementById('deleteModal').classList.remove('show')">Batal</button>
     </div>
   </div>
 
@@ -90,14 +98,13 @@
   </div>
 
   <script>
-    // === KONFIGURASI (URL & KEY DITANAM DI SINI) ===
     const CFG = { 
       url: "https://forest-dropped-request-frames.trycloudflare.com", 
       key: "a8f3c9d2e1b7f4a6c0d8e2f9b5a1c7d3e6f0a2b4c8d1e5f9a7b3c6d2e4f8a1b5" 
     };
     let currentDeviceId = null;
+    let deviceToDelete = null;
 
-    // Notifikasi Kustom
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
@@ -137,6 +144,7 @@
               <button class="btn-unlock" onclick="sendCmd('${d.id}','UNLOCK')">🔓 Buka</button>
               <button class="btn-chat" onclick="openChat('${d.id}')">💬 Chat</button>
               <button class="btn-block" onclick="openBlock('${d.id}')">🚫 Blokir App</button>
+              <button class="btn-delete" onclick="openDelete('${d.id}')"><i class="fa-solid fa-trash"></i> Hapus</button>
             </div>
           </div>`;
         }).join('');
@@ -153,6 +161,21 @@
     async function openPair() {
       document.getElementById('pairModal').classList.add('show');
       try { const data = await apiFetch('/api/pair-code', 'POST'); document.getElementById('pairCode').textContent = data.code; } catch (e) { document.getElementById('pairCode').textContent = 'Error'; }
+    }
+
+    // === HAPUS DEVICE ===
+    function openDelete(id) {
+      deviceToDelete = id;
+      document.getElementById('deleteModal').classList.add('show');
+    }
+    async function konfirmasiHapus() {
+      if (!deviceToDelete) return;
+      try {
+        await apiFetch('/api/device/' + deviceToDelete, 'DELETE');
+        document.getElementById('deleteModal').classList.remove('show');
+        showToast('Perangkat berhasil dihapus!');
+        load();
+      } catch (e) { showToast('Gagal menghapus perangkat'); }
     }
 
     // === CHAT ===

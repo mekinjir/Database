@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Ortu</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+    :root { --bg: #0f172a; --card: #1e293b; --text: #e2e8f0; --muted: #94a3b8; --accent: #6366f1; --danger: #ef4444; --warning: #f59e0b; --success: #10b981; --border: #334155; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px 16px; }
+    .container { max-width: 720px; margin: 0 auto; }
+    .header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .header-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: grid; place-items: center; font-size: 20px; color: #fff; }
+    .header h1 { font-size: 20px; font-weight: 700; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 12px; }
+    .card-top { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .avatar { width: 44px; height: 44px; border-radius: 12px; background: #0ea5e9; display: grid; place-items: center; font-size: 18px; color: #fff; }
+    .device-info { flex: 1; }
+    .device-name { font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .badge { font-size: 10px; padding: 2px 8px; border-radius: 99px; background: rgba(16,185,129,0.2); color: #6ee7b7; }
+    .badge.off { background: rgba(148,163,184,0.2); color: var(--muted); }
+    .device-id { font-size: 11px; color: var(--muted); font-family: monospace; }
+    .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+    button { border: none; padding: 10px; border-radius: 10px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-lock { background: var(--danger); } .btn-unlock { background: var(--success); }
+    .btn-block { background: var(--warning); color: #000; } .btn-chat { background: var(--accent); }
+    .btn-pair { background: var(--accent); width: 100%; margin-bottom: 16px; padding: 14px; }
+    
+    /* MODAL UI KUSTOM */
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 999; }
+    .modal-bg.show { display: flex; }
+    .modal { background: var(--card); padding: 24px; border-radius: 16px; width: 100%; max-width: 400px; border: 1px solid var(--border); }
+    .modal h3 { margin-bottom: 16px; text-align: center; }
+    .chat-box { height: 250px; overflow-y: auto; background: #0f172a; border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .msg { padding: 8px 12px; border-radius: 8px; max-width: 80%; font-size: 13px; }
+    .msg.ortu { background: var(--accent); align-self: flex-end; }
+    .msg.anak { background: var(--border); align-self: flex-start; }
+    .app-list { max-height: 250px; overflow-y: auto; background: #0f172a; border-radius: 8px; padding: 8px; margin-bottom: 12px; }
+    .app-item { display: flex; align-items: center; gap: 8px; padding: 8px; border-bottom: 1px solid var(--border); color: #fff; font-size: 14px; }
+    
+    /* TOAST (Notifikasi Kustom) */
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--card); color: #fff; padding: 12px 24px; border-radius: 8px; border: 1px solid var(--accent); opacity: 0; transition: 0.3s; z-index: 1000; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <div><h1>Dashboard Ortu</h1><p>Pantau perangkat anak</p></div>
+    </div>
+    <button class="btn-pair" onclick="openPair()"><i class="fa-solid fa-plus"></i> Tambah Anak</button>
+    <div id="list">Memuat data...</div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">Pesan</div>
+
+  <!-- MODAL PAIRING -->
+  <div class="modal-bg" id="pairModal">
+    <div class="modal">
+      <h3><i class="fa-solid fa-key"></i> Kode Pairing</h3>
+      <h1 id="pairCode" style="text-align:center; font-size:40px; letter-spacing:8px; color:var(--accent); margin:20px 0;">------</h1>
+      <button class="btn-pair" onclick="document.getElementById('pairModal').classList.remove('show')">Tutup</button>
+    </div>
+  </div>
+
+  <!-- MODAL CHAT -->
+  <div class="modal-bg" id="chatModal">
+    <div class="modal">
+      <h3><i class="fa-solid fa-comments"></i> Chat Anak</h3>
+      <div class="chat-box" id="chatBox"></div>
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="chatInput" placeholder="Ketik pesan..." style="flex:1; padding:12px; border-radius:8px; border:1px solid var(--border); background:#0f172a; color:#fff;">
+        <button class="btn-chat" onclick="sendChat()">Kirim</button>
+      </div>
+      <button style="background:transparent; border:1px solid var(--border); margin-top:12px; width:100%;" onclick="document.getElementById('chatModal').classList.remove('show')">Tutup</button>
+    </div>
+  </div>
+
+  <!-- MODAL BLOKIR APP -->
+  <div class="modal-bg" id="blockModal">
+    <div class="modal">
+      <h3><i class="fa-solid fa-ban"></i> Blokir Aplikasi</h3>
+      <div class="app-list" id="appList">Memuat...</div>
+      <button class="btn-block" style="width:100%;" onclick="simpanBlokir()">Simpan Blokir</button>
+      <button style="background:transparent; border:1px solid var(--border); width:100%; margin-top:8px;" onclick="document.getElementById('blockModal').classList.remove('show')">Batal</button>
+    </div>
+  </div>
+
+  <script>
+    // === KONFIGURASI (URL & KEY DITANAM DI SINI) ===
+    const CFG = { 
+      url: "https://forest-dropped-request-frames.trycloudflare.com", 
+      key: "a8f3c9d2e1b7f4a6c0d8e2f9b5a1c7d3e6f0a2b4c8d1e5f9a7b3c6d2e4f8a1b5" 
+    };
+    let currentDeviceId = null;
+
+    // Notifikasi Kustom
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    async function apiFetch(endpoint, method = 'GET', body = null) {
+      const headers = { 'x-termux-url': CFG.url, 'x-api-key': CFG.key, 'content-type': 'application/json' };
+      const opts = { method, headers };
+      if (body) opts.body = JSON.stringify(body);
+      const res = await fetch(endpoint, opts);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }
+
+    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function timeAgo(iso) { if (!iso) return '-'; const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000); if (diff < 60) return diff + ' dtk lalu'; if (diff < 3600) return Math.floor(diff/60) + ' mnt lalu'; return Math.floor(diff/3600) + ' jam lalu'; }
+
+    async function load() {
+      try {
+        const devices = await apiFetch('/api/devices');
+        if (!devices.length) { document.getElementById('list').innerHTML = '<p style="text-align:center; color:gray;">Belum ada perangkat.</p>'; return; }
+        
+        document.getElementById('list').innerHTML = devices.map(d => {
+          const online = d.last_seen && (Date.now() - new Date(d.last_seen).getTime()) < 120000;
+          return `<div class="card">
+            <div class="card-top">
+              <div class="avatar"><i class="fa-solid fa-mobile-screen"></i></div>
+              <div class="device-info">
+                <div class="device-name">${escapeHtml(d.name)} <span class="badge ${online?'':'off'}">${online?'Online':'Offline'}</span></div>
+                <div class="device-id">${escapeHtml(d.id)}</div>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn-lock" onclick="sendCmd('${d.id}','LOCK')">🔒 Kunci</button>
+              <button class="btn-unlock" onclick="sendCmd('${d.id}','UNLOCK')">🔓 Buka</button>
+              <button class="btn-chat" onclick="openChat('${d.id}')">💬 Chat</button>
+              <button class="btn-block" onclick="openBlock('${d.id}')">🚫 Blokir App</button>
+            </div>
+          </div>`;
+        }).join('');
+      } catch (e) { document.getElementById('list').innerHTML = `<p style="color:red;">Error: ${e.message}</p>`; }
+    }
+
+    async function sendCmd(deviceId, type) {
+      try { 
+        await apiFetch('/api/command', 'POST', { device_id: deviceId, type }); 
+        showToast('Perintah ' + type + ' terkirim!'); 
+      } catch (e) { showToast('Gagal mengirim perintah'); }
+    }
+
+    async function openPair() {
+      document.getElementById('pairModal').classList.add('show');
+      try { const data = await apiFetch('/api/pair-code', 'POST'); document.getElementById('pairCode').textContent = data.code; } catch (e) { document.getElementById('pairCode').textContent = 'Error'; }
+    }
+
+    // === CHAT ===
+    function openChat(id) {
+      currentDeviceId = id;
+      document.getElementById('chatModal').classList.add('show');
+      document.getElementById('chatInput').value = '';
+      loadChat();
+    }
+    async function loadChat() {
+      try {
+        const msgs = await apiFetch('/api/chat/' + currentDeviceId);
+        const box = document.getElementById('chatBox');
+        box.innerHTML = msgs.map(m => {
+          const p = JSON.parse(m.payload);
+          return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`;
+        }).join('');
+        box.scrollTop = box.scrollHeight;
+      } catch(e) {}
+    }
+    async function sendChat() {
+      const text = document.getElementById('chatInput').value.trim();
+      if(!text) return;
+      document.getElementById('chatInput').value = '';
+      await apiFetch('/api/chat', 'POST', { device_id: currentDeviceId, text });
+      loadChat();
+    }
+
+    // === BLOKIR APP ===
+    async function openBlock(id) {
+      currentDeviceId = id;
+      document.getElementById('blockModal').classList.add('show');
+      document.getElementById('appList').innerHTML = 'Memuat...';
+      try {
+        const data = await apiFetch('/api/apps/' + id);
+        const blocked = data.blocked || [];
+        document.getElementById('appList').innerHTML = data.installed.map(app => `
+          <label class="app-item">
+            <input type="checkbox" value="${app.package}" ${blocked.includes(app.package) ? 'checked' : ''} style="width:18px; height:18px;">
+            ${app.name}
+          </label>
+        `).join('');
+      } catch(e) { document.getElementById('appList').innerHTML = 'Gagal memuat.'; }
+    }
+    async function simpanBlokir() {
+      const checkboxes = document.querySelectorAll('#appList input[type="checkbox"]:checked');
+      const blocked = Array.from(checkboxes).map(cb => cb.value);
+      await apiFetch('/api/blocked', 'POST', { device_id: currentDeviceId, blocked });
+      document.getElementById('blockModal').classList.remove('show');
+      showToast('Aplikasi berhasil diblokir!');
+    }
+
+    setInterval(load, 5000); load();
+  </script>
+</body>
+</html>

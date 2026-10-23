@@ -142,7 +142,7 @@
         
         document.getElementById('list').innerHTML = devices.map(d => {
           const online = d.last_seen && (Date.now() - new Date(d.last_seen).getTime()) < 120000;
-          const safeId = escapeHtml(d.id); // Pake escapeHtml biar aman pas masuk ke HTML
+          const safeId = escapeHtml(d.id); 
           return `<div class="card">
             <div class="card-top">
               <div class="avatar"><i class="fa-solid fa-mobile-screen"></i></div>
@@ -191,7 +191,7 @@
     async function konfirmasiHapus() {
       if (!deviceToDelete) return;
       try { 
-        // Tambahin encodeURIComponent biar spasi di ID gak bikin 404
+        // Encode ID biar spasi jadi %20, biar gak 404
         await apiFetch('/api/device/' + encodeURIComponent(deviceToDelete), 'DELETE'); 
         document.getElementById('deleteModal').classList.remove('show'); showToast('Perangkat dihapus!'); load(); 
       } catch (e) { showToast('Gagal hapus: ' + e.message); }
@@ -206,7 +206,7 @@
     }
     async function loadChat() {
       try {
-        // Tambahin encodeURIComponent buat URL
+        // Encode ID biar spasi jadi %20
         const msgs = await apiFetch('/api/chat/' + encodeURIComponent(selectedDeviceId));
         const box = document.getElementById('chatBox');
         box.innerHTML = msgs.map(m => { const p = JSON.parse(m.payload); return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`; }).join('');
@@ -226,7 +226,7 @@
       document.getElementById('blockModal').classList.add('show'); 
       document.getElementById('appList').innerHTML = 'Memuat...';
       try {
-        // Tambahin encodeURIComponent buat URL
+        // Encode ID biar spasi jadi %20
         const data = await apiFetch('/api/apps/' + encodeURIComponent(selectedDeviceId));
         const blocked = data.blocked || [];
         if (data.installed.length === 0) {

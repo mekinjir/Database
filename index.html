@@ -191,7 +191,8 @@
     async function konfirmasiHapus() {
       if (!deviceToDelete) return;
       try { 
-        await apiFetch('/api/device/' + encodeURIComponent(deviceToDelete), 'DELETE'); 
+        // PAKAI ?id= BIAR GAK KENA BUG VERCEL
+        await apiFetch('/api/device?id=' + encodeURIComponent(deviceToDelete), 'DELETE'); 
         document.getElementById('deleteModal').classList.remove('show'); showToast('Perangkat dihapus!'); load(); 
       } catch (e) { showToast('Gagal hapus: ' + e.message); }
     }
@@ -205,7 +206,8 @@
     }
     async function loadChat() {
       try {
-        const msgs = await apiFetch('/api/chat/' + encodeURIComponent(selectedDeviceId));
+        // PAKAI ?id= BIAR GAK KENA BUG VERCEL
+        const msgs = await apiFetch('/api/chat?id=' + encodeURIComponent(selectedDeviceId));
         const box = document.getElementById('chatBox');
         box.innerHTML = msgs.map(m => { const p = JSON.parse(m.payload); return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`; }).join('');
         box.scrollTop = box.scrollHeight;
@@ -224,7 +226,8 @@
       document.getElementById('blockModal').classList.add('show'); 
       document.getElementById('appList').innerHTML = 'Memuat...';
       try {
-        const data = await apiFetch('/api/apps/' + encodeURIComponent(selectedDeviceId));
+        // PAKAI ?id= BIAR GAK KENA BUG VERCEL
+        const data = await apiFetch('/api/apps?id=' + encodeURIComponent(selectedDeviceId));
         const blocked = data.blocked || [];
         if (data.installed.length === 0) {
           document.getElementById('appList').innerHTML = 'Belum ada data aplikasi. Tunggu HP anak terkoneksi.';

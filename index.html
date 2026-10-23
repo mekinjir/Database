@@ -3,76 +3,204 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Ortu</title>
+  <title>VOID INVICTUS</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
-    :root { --bg: #0f172a; --card: #1e293b; --text: #e2e8f0; --muted: #94a3b8; --accent: #6366f1; --danger: #ef4444; --warning: #f59e0b; --success: #10b981; --border: #334155; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px 16px; }
-    .container { max-width: 720px; margin: 0 auto; }
-    .header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-    .header-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: grid; place-items: center; font-size: 20px; color: #fff; }
-    .header h1 { font-size: 20px; font-weight: 700; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 12px; }
-    .card-top { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
-    .avatar { width: 44px; height: 44px; border-radius: 12px; background: #0ea5e9; display: grid; place-items: center; font-size: 18px; color: #fff; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; }
+    :root { 
+      --bg: #0b1120; 
+      --card: #1e293b; 
+      --text: #f8fafc; 
+      --muted: #94a3b8; 
+      --accent: #6366f1; 
+      --danger: #ef4444; 
+      --warning: #f59e0b; 
+      --success: #10b981; 
+      --border: #334155; 
+    }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px 16px; background-image: radial-gradient(circle at top right, rgba(99,102,241,0.15), transparent 400px); }
+    .container { max-width: 768px; margin: 0 auto; }
+    
+    /* Header */
+    .header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 0 8px; }
+    .header-icon { width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #a855f7); display: grid; place-items: center; font-size: 22px; color: #fff; box-shadow: 0 8px 16px rgba(99,102,241,0.3); }
+    .header-text h1 { font-size: 22px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; background: linear-gradient(to right, #fff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .header-text p { font-size: 13px; color: var(--muted); font-weight: 500; }
+    
+    /* Cards */
+    .card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); transition: transform 0.2s ease; }
+    .card:hover { transform: translateY(-2px); }
+    .card-top { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .avatar { width: 50px; height: 50px; border-radius: 14px; background: linear-gradient(135deg, #0ea5e9, #3b82f6); display: grid; place-items: center; font-size: 22px; color: #fff; box-shadow: 0 4px 10px rgba(14,165,233,0.3); }
     .device-info { flex: 1; }
-    .device-name { font-weight: 600; display: flex; align-items: center; gap: 8px; }
-    .badge { font-size: 10px; padding: 2px 8px; border-radius: 99px; background: rgba(16,185,129,0.2); color: #6ee7b7; }
-    .badge.off { background: rgba(148,163,184,0.2); color: var(--muted); }
-    .device-id { font-size: 11px; color: var(--muted); font-family: monospace; }
-    .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
-    button { border: none; padding: 10px; border-radius: 10px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
-    .btn-lock { background: var(--danger); } .btn-unlock { background: var(--success); }
-    .btn-block { background: var(--warning); color: #000; } .btn-chat { background: var(--accent); }
-    .btn-timer { background: #8b5cf6; } .btn-delete { background: #475569; } 
-    .btn-cam { background: #0ea5e9; } .btn-screen { background: #10b981; }
-    .btn-pair { background: var(--accent); width: 100%; margin-bottom: 16px; padding: 14px; }
-    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 999; }
-    .modal-bg.show { display: flex; }
-    .modal { background: var(--card); padding: 24px; border-radius: 16px; width: 100%; max-width: 400px; border: 1px solid var(--border); }
-    .modal h3 { margin-bottom: 16px; text-align: center; }
-    .chat-box { height: 300px; overflow-y: auto; background: #0b1120; border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px; }
-    .msg { padding: 10px 14px; border-radius: 12px; max-width: 80%; font-size: 14px; line-height: 1.4; }
-    .msg.ortu { background: var(--accent); align-self: flex-end; border-bottom-right-radius: 2px; }
-    .msg.anak { background: #334155; align-self: flex-start; border-bottom-left-radius: 2px; }
-    .app-list { max-height: 300px; overflow-y: auto; background: #0f172a; border-radius: 8px; padding: 8px; margin-bottom: 12px; }
-    .app-item { display: flex; align-items: center; gap: 8px; padding: 10px; border-bottom: 1px solid var(--border); color: #fff; font-size: 14px; }
-    .app-item input { width: 20px; height: 20px; accent-color: var(--danger); }
-    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--card); color: #fff; padding: 12px 24px; border-radius: 8px; border: 1px solid var(--accent); opacity: 0; transition: 0.3s; z-index: 1000; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+    .device-name { font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 10px; }
+    .badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 99px; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge.off { background: rgba(148,163,184,0.15); color: #cbd5e1; border-color: rgba(148,163,184,0.3); }
+    .device-id { font-size: 12px; color: var(--muted); font-family: monospace; margin-top: 4px; }
+    
+    /* Button Group Grid */
+    .btn-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .btn-group button { width: 100%; border: none; padding: 12px 14px; border-radius: 12px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+    .btn-group button:hover { background: rgba(255,255,255,0.1); transform: translateY(-1px); }
+    .btn-group button:active { transform: translateY(1px); }
+    .btn-group button i { font-size: 14px; }
+    
+    /* Specific Button Colors */
+    .btn-lock { background: rgba(239,68,68,0.15) !important; color: #fca5a5 !important; border-color: rgba(239,68,68,0.3) !important; }
+    .btn-lock:hover { background: rgba(239,68,68,0.25) !important; }
+    .btn-unlock { background: rgba(16,185,129,0.15) !important; color: #6ee7b7 !important; border-color: rgba(16,185,129,0.3) !important; }
+    .btn-unlock:hover { background: rgba(16,185,129,0.25) !important; }
+    .btn-chat { background: rgba(99,102,241,0.15) !important; color: #a5b4fc !important; border-color: rgba(99,102,241,0.3) !important; }
+    .btn-chat:hover { background: rgba(99,102,241,0.25) !important; }
+    .btn-block { background: rgba(245,158,11,0.15) !important; color: #fcd34d !important; border-color: rgba(245,158,11,0.3) !important; }
+    .btn-block:hover { background: rgba(245,158,11,0.25) !important; }
+    .btn-timer { background: rgba(168,85,247,0.15) !important; color: #d8b4fe !important; border-color: rgba(168,85,247,0.3) !important; }
+    .btn-timer:hover { background: rgba(168,85,247,0.25) !important; }
+    .btn-screen { background: rgba(20,184,166,0.15) !important; color: #5eead4 !important; border-color: rgba(20,184,166,0.3) !important; }
+    .btn-screen:hover { background: rgba(20,184,166,0.25) !important; }
+    .btn-cam { background: rgba(14,165,233,0.15) !important; color: #7dd3fc !important; border-color: rgba(14,165,233,0.3) !important; }
+    .btn-cam:hover { background: rgba(14,165,233,0.25) !important; }
+    .btn-delete { background: rgba(100,116,139,0.15) !important; color: #94a3b8 !important; border-color: rgba(100,116,139,0.3) !important; }
+    .btn-delete:hover { background: rgba(100,116,139,0.25) !important; }
+    
+    /* Tambah Anak Button */
+    .btn-pair { background: linear-gradient(135deg, #6366f1, #a855f7); width: 100%; padding: 16px; border-radius: 14px; font-weight: 600; font-size: 15px; border: none; color: #fff; cursor: pointer; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 14px rgba(99,102,241,0.4); transition: all 0.2s; }
+    .btn-pair:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99,102,241,0.5); }
+
+    /* Modals */
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 999; opacity: 0; transition: opacity 0.3s; }
+    .modal-bg.show { display: flex; opacity: 1; }
+    .modal { background: #1e293b; padding: 24px; border-radius: 20px; width: 100%; max-width: 420px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); transform: scale(0.95); transition: transform 0.3s; }
+    .modal-bg.show .modal { transform: scale(1); }
+    .modal h3 { margin-bottom: 20px; text-align: center; font-size: 18px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    
+    /* Chat Box */
+    .chat-box { height: 300px; overflow-y: auto; background: #0b1120; border-radius: 12px; padding: 16px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px; border: 1px solid rgba(255,255,255,0.05); }
+    .msg { padding: 12px 16px; border-radius: 14px; max-width: 85%; font-size: 14px; line-height: 1.5; }
+    .msg.ortu { background: var(--accent); align-self: flex-end; border-bottom-right-radius: 4px; }
+    .msg.anak { background: #334155; align-self: flex-start; border-bottom-left-radius: 4px; }
+    
+    /* Inputs */
+    input[type="text"], input[type="number"], select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6); color: #fff; outline: none; transition: border 0.2s; }
+    input:focus, select:focus { border-color: var(--accent); }
+    
+    /* App List */
+    .app-list { max-height: 300px; overflow-y: auto; background: #0b1120; border-radius: 12px; padding: 8px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.05); }
+    .app-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #cbd5e1; font-size: 14px; cursor: pointer; }
+    .app-item:last-child { border-bottom: none; }
+    .app-item input { width: 20px; height: 20px; accent-color: var(--danger); cursor: pointer; }
+    
+    /* Toast */
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1e293b; color: #fff; padding: 14px 24px; border-radius: 12px; border: 1px solid var(--accent); opacity: 0; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1000; font-size: 14px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px; }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .img-view { width: 100%; border-radius: 8px; margin-top: 12px; border: 1px solid var(--border); }
+    
+    /* Image & Live Screen */
+    .img-view { width: 100%; border-radius: 12px; margin-top: 12px; border: 1px solid rgba(255,255,255,0.1); }
+    .live-container { background: #000; width: 100%; aspect-ratio: 9/16; max-height: 70vh; display: flex; align-items: center; justify-content: center; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+    
+    .close-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 100%; padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 16px; transition: background 0.2s; }
+    .close-btn:hover { background: rgba(255,255,255,0.05); }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
       <div class="header-icon"><i class="fa-solid fa-shield-halved"></i></div>
-      <div><h1>Dashboard Ortu</h1><p>Pantau perangkat anak</p></div>
+      <div class="header-text">
+        <h1>VOID INVICTUS</h1>
+        <p>Control Panel Dashboard</p>
+      </div>
     </div>
-    <button class="btn-pair" onclick="openPair()"><i class="fa-solid fa-plus"></i> Tambah Anak</button>
+    
+    <button class="btn-pair" onclick="openPair()"><i class="fa-solid fa-plus"></i> Tambah Perangkat Anak</button>
     <div id="list">Memuat data...</div>
   </div>
 
-  <div class="toast" id="toast">Pesan</div>
+  <div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i> <span id="toastMsg"></span></div>
 
-  <div class="modal-bg" id="pairModal"><div class="modal"><h3><i class="fa-solid fa-key"></i> Kode Pairing</h3><h1 id="pairCode" style="text-align:center; font-size:40px; letter-spacing:8px; color:var(--accent); margin:20px 0;">------</h1><button class="btn-pair" onclick="document.getElementById('pairModal').classList.remove('show')">Tutup</button></div></div>
+  <!-- MODAL PAIRING -->
+  <div class="modal-bg" id="pairModal">
+    <div class="modal">
+      <h3><i class="fa-solid fa-key"></i> Kode Pairing</h3>
+      <h1 id="pairCode" style="text-align:center; font-size:48px; letter-spacing:12px; color:var(--accent); margin:24px 0; font-family:monospace;">------</h1>
+      <button class="close-btn" onclick="document.getElementById('pairModal').classList.remove('show')">Tutup</button>
+    </div>
+  </div>
 
-  <div class="modal-bg" id="deleteModal"><div class="modal"><h3><i class="fa-solid fa-trash" style="color:var(--danger)"></i> Hapus Perangkat?</h3><p style="text-align:center; color:var(--muted); margin-bottom:16px;">HP anak tidak akan bisa terkoneksi lagi.</p><button class="btn-lock" style="width:100%; margin-bottom:8px;" onclick="konfirmasiHapus()">Ya, Hapus</button><button style="background:transparent; border:1px solid var(--border); width:100%;" onclick="document.getElementById('deleteModal').classList.remove('show')">Batal</button></div></div>
+  <!-- MODAL HAPUS -->
+  <div class="modal-bg" id="deleteModal">
+    <div class="modal">
+      <h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--danger)"></i> Hapus Perangkat?</h3>
+      <p style="text-align:center; color:var(--muted); margin-bottom:24px; font-size:14px;">HP anak tidak akan bisa terkoneksi lagi ke panel ini.</p>
+      <button class="btn-lock" style="width:100%; margin-bottom:12px; padding:14px;" onclick="konfirmasiHapus()">Ya, Hapus</button>
+      <button class="close-btn" style="margin-top:0;" onclick="document.getElementById('deleteModal').classList.remove('show')">Batal</button>
+    </div>
+  </div>
 
-  <div class="modal-bg" id="timerModal"><div class="modal"><h3><i class="fa-solid fa-stopwatch"></i> Kunci dengan Timer</h3><p style="text-align:center; color:var(--muted); font-size:12px; margin-bottom:16px;">HP akan otomatis terbuka setelah waktu habis.</p><div style="display:flex; gap:8px; margin-bottom:16px;"><input type="number" id="timerVal" placeholder="Angka" style="flex:1; padding:12px; border-radius:8px; border:1px solid var(--border); background:#0f172a; color:#fff;"><select id="timerUnit" style="padding:12px; border-radius:8px; border:1px solid var(--border); background:#0f172a; color:#fff;"><option value="60000">Menit</option><option value="3600000">Jam</option></select></div><button class="btn-timer" style="width:100%; margin-bottom:8px;" onclick="setTimer()">Mulai Kunci</button><button style="background:transparent; border:1px solid var(--border); width:100%;" onclick="document.getElementById('timerModal').classList.remove('show')">Batal</button></div></div>
+  <!-- MODAL TIMER -->
+  <div class="modal-bg" id="timerModal">
+    <div class="modal">
+      <h3><i class="fa-solid fa-stopwatch"></i> Kunci dengan Timer</h3>
+      <p style="text-align:center; color:var(--muted); font-size:13px; margin-bottom:20px;">HP akan otomatis terbuka setelah waktu habis.</p>
+      <div style="display:flex; gap:12px; margin-bottom:20px;">
+        <input type="number" id="timerVal" placeholder="Angka" style="flex:1;">
+        <select id="timerUnit" style="width:120px;">
+          <option value="60000">Menit</option>
+          <option value="3600000">Jam</option>
+        </select>
+      </div>
+      <button class="btn-timer" style="width:100%; margin-bottom:12px; padding:14px;" onclick="setTimer()">Mulai Kunci</button>
+      <button class="close-btn" style="margin-top:0;" onclick="document.getElementById('timerModal').classList.remove('show')">Batal</button>
+    </div>
+  </div>
 
-  <div class="modal-bg" id="chatModal"><div class="modal"><h3><i class="fa-solid fa-comments"></i> Chat Anak</h3><div class="chat-box" id="chatBox"></div><div style="display:flex; gap:8px;"><input type="text" id="chatInput" placeholder="Ketik pesan..." style="flex:1; padding:12px; border-radius:8px; border:1px solid var(--border); background:#0f172a; color:#fff;"><button class="btn-chat" onclick="sendChat()">Kirim</button></div><button style="background:transparent; border:1px solid var(--border); margin-top:12px; width:100%;" onclick="document.getElementById('chatModal').classList.remove('show')">Tutup</button></div></div>
+  <!-- MODAL CHAT -->
+  <div class="modal-bg" id="chatModal">
+    <div class="modal">
+      <h3><i class="fa-solid fa-comments"></i> Chat Anak</h3>
+      <div class="chat-box" id="chatBox"></div>
+      <div style="display:flex; gap:10px;">
+        <input type="text" id="chatInput" placeholder="Ketik pesan...">
+        <button class="btn-chat" style="padding:0 20px;" onclick="sendChat()"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+      <button class="close-btn" onclick="document.getElementById('chatModal').classList.remove('show')">Tutup</button>
+    </div>
+  </div>
 
-  <div class="modal-bg" id="blockModal"><div class="modal"><h3><i class="fa-solid fa-ban"></i> Blokir Aplikasi</h3><p style="font-size:12px; color:var(--muted); text-align:center; margin-bottom:12px;">Centang aplikasi untuk MEMBLOKIR.</p><div class="app-list" id="appList">Memuat...</div><button class="btn-block" style="width:100%;" onclick="simpanBlokir()">Simpan Blokir</button><button style="background:transparent; border:1px solid var(--border); width:100%; margin-top:8px;" onclick="document.getElementById('blockModal').classList.remove('show')">Batal</button></div></div>
+  <!-- MODAL BLOKIR -->
+  <div class="modal-bg" id="blockModal">
+    <div class="modal">
+      <h3><i class="fa-solid fa-ban"></i> Blokir Aplikasi</h3>
+      <p style="font-size:13px; color:var(--muted); text-align:center; margin-bottom:16px;">Centang aplikasi untuk MEMBLOKIR.</p>
+      <div class="app-list" id="appList">Memuat...</div>
+      <button class="btn-block" style="width:100%; margin-bottom:12px; padding:14px;" onclick="simpanBlokir()">Simpan Blokir</button>
+      <button class="close-btn" style="margin-top:0;" onclick="document.getElementById('blockModal').classList.remove('show')">Batal</button>
+    </div>
+  </div>
 
-  <div class="modal-bg" id="imageModal"><div class="modal"><h3><i class="fa-solid fa-image"></i> Hasil</h3><div id="imageContainer" style="text-align:center; color:gray;">Meminta gambar...</div><button style="background:transparent; border:1px solid var(--border); margin-top:12px; width:100%;" onclick="document.getElementById('imageModal').classList.remove('show')">Tutup</button></div></div>
+  <!-- MODAL LIVE SCREEN -->
+  <div class="modal-bg" id="screenModal">
+    <div class="modal" style="max-width: 95%; width: 500px;">
+      <h3><i class="fa-solid fa-desktop"></i> Live Screen</h3>
+      <div class="live-container">
+        <img id="liveScreenImg" src="" style="width:100%; height:100%; object-fit:contain;" />
+      </div>
+      <button class="btn-lock" style="width:100%; margin-top:16px; padding:14px;" onclick="stopLiveScreen()"><i class="fa-solid fa-power-off"></i> Matikan Live</button>
+    </div>
+  </div>
 
   <script>
     const CFG = { url: "https://server.mekinjirserver.dpdns.org", key: "a8f3c9d2e1b7f4a6c0d8e2f9b5a1c7d3e6f0a2b4c8d1e5f9a7b3c6d2e4f8a1b5" };
     let selectedDeviceId = null; let deviceToDelete = null;
+    let wsLive = null;
 
-    function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+    function showToast(msg) { 
+      const t = document.getElementById('toast'); 
+      document.getElementById('toastMsg').textContent = msg; 
+      t.classList.add('show'); 
+      setTimeout(() => t.classList.remove('show'), 3000); 
+    }
 
     async function apiFetch(endpoint, method = 'GET', body = null) {
       const headers = { 'x-termux-url': CFG.url, 'x-api-key': CFG.key, 'content-type': 'application/json' };
@@ -85,7 +213,7 @@
     async function load() {
       try {
         const devices = await apiFetch('/api/devices');
-        if (!devices.length) { document.getElementById('list').innerHTML = '<p style="text-align:center; color:gray;">Belum ada perangkat.</p>'; return; }
+        if (!devices.length) { document.getElementById('list').innerHTML = '<p style="text-align:center; color:var(--muted); padding:40px 0;">Belum ada perangkat terhubung.</p>'; return; }
         document.getElementById('list').innerHTML = devices.map(d => {
           const online = d.last_seen && (Date.now() - new Date(d.last_seen).getTime()) < 120000;
           const safeId = escapeHtml(d.id); 
@@ -97,55 +225,141 @@
                 <div class="device-id">${safeId}</div>
               </div>
             </div>
-            <div class="btn-row">
-              <button class="btn-lock" onclick="sendCmd('${safeId}','LOCK')">🔒 Kunci</button>
-              <button class="btn-unlock" onclick="sendCmd('${safeId}','UNLOCK')">🔓 Buka</button>
-              <button class="btn-chat" onclick="openChat('${safeId}')">💬 Chat</button>
-              <button class="btn-block" onclick="openBlock('${safeId}')">🚫 Blokir</button>
-              <button class="btn-timer" onclick="openTimer('${safeId}')">⏱️ Timer</button>
-              <button class="btn-screen" onclick="sendCmd('${safeId}','SCREEN')">🖥️ Lihat Layar</button>
-              <button class="btn-cam" onclick="sendCmd('${safeId}','CAMERA_FRONT')">📸 Kamera Depan</button>
-              <button class="btn-cam" onclick="sendCmd('${safeId}','CAMERA_BACK')">📸 Kamera Belakang</button>
-              <button class="btn-delete" onclick="openDelete('${safeId}')"><i class="fa-solid fa-trash"></i> Hapus</button>
+            <div class="btn-group">
+              <button class="btn-lock" onclick="sendCmd('${safeId}','LOCK')"><i class="fa-solid fa-lock"></i> Kunci</button>
+              <button class="btn-unlock" onclick="sendCmd('${safeId}','UNLOCK')"><i class="fa-solid fa-lock-open"></i> Buka</button>
+              <button class="btn-chat" onclick="openChat('${safeId}')"><i class="fa-solid fa-comments"></i> Chat</button>
+              <button class="btn-block" onclick="openBlock('${safeId}')"><i class="fa-solid fa-ban"></i> Blokir App</button>
+              <button class="btn-timer" onclick="openTimer('${safeId}')"><i class="fa-solid fa-stopwatch"></i> Timer</button>
+              <button class="btn-screen" onclick="startLiveScreen('${safeId}')"><i class="fa-solid fa-desktop"></i> Live Screen</button>
+              <button class="btn-cam" onclick="sendCmd('${safeId}','CAMERA_FRONT')"><i class="fa-solid fa-camera"></i> Kamera Depan</button>
+              <button class="btn-cam" onclick="sendCmd('${safeId}','CAMERA_BACK')"><i class="fa-solid fa-camera-rotate"></i> Kamera Belakang</button>
+              <button class="btn-delete" onclick="openDelete('${safeId}')" style="grid-column: span 2;"><i class="fa-solid fa-trash"></i> Hapus Perangkat</button>
             </div>
           </div>`;
         }).join('');
-      } catch (e) { document.getElementById('list').innerHTML = `<p style="color:red;">Error: ${e.message}</p>`; }
+      } catch (e) { document.getElementById('list').innerHTML = `<p style="color:var(--danger); text-align:center;">Error: ${e.message}</p>`; }
     }
 
     async function sendCmd(deviceId, type) {
       try { 
         await apiFetch('/api/command', 'POST', { device_id: deviceId, type }); 
-        showToast('Perintah ' + type + ' terkirim!'); 
-        if(type === 'CAMERA_FRONT' || type === 'CAMERA_BACK' || type === 'SCREEN') { 
-            setTimeout(() => viewImage(deviceId), 4000); 
-        }
-      } catch (e) { showToast('Gagal'); }
+        showToast('Perintah ' + type.replace('_', ' ') + ' terkirim!'); 
+        if(type === 'CAMERA_FRONT' || type === 'CAMERA_BACK') { setTimeout(() => viewImage(deviceId), 4000); }
+      } catch (e) { showToast('Gagal mengirim perintah'); }
+    }
+
+    // === LIVE SCREEN ===
+    function startLiveScreen(id) {
+      selectedDeviceId = id;
+      document.getElementById('screenModal').classList.add('show');
+      document.getElementById('liveScreenImg').src = ""; 
+      
+      sendCmd(id, 'SCREEN');
+
+      setTimeout(() => {
+        const wsUrl = CFG.url.replace("https://", "wss://").replace("http://", "ws://") + "/web-view";
+        wsLive = new WebSocket(wsUrl);
+        
+        wsLive.onmessage = function(event) {
+          document.getElementById('liveScreenImg').src = "data:image/jpeg;base64," + event.data;
+        };
+
+        wsLive.onerror = function() { showToast("Gagal konek ke Live Screen"); };
+      }, 1000); 
+    }
+
+    function stopLiveScreen() {
+      document.getElementById('screenModal').classList.remove('show');
+      if(wsLive) { wsLive.close(); wsLive = null; }
+      sendCmd(selectedDeviceId, 'STOP_SCREEN'); 
     }
 
     async function viewImage(id) {
-      document.getElementById('imageModal').classList.add('show');
-      document.getElementById('imageContainer').innerHTML = 'Meminta gambar...';
       try {
         const data = await apiFetch('/api/image?id=' + encodeURIComponent(id));
         if (data.image) {
-          document.getElementById('imageContainer').innerHTML = `<img src="data:image/jpeg;base64,${data.image}" class="img-view">`;
-        } else {
-          document.getElementById('imageContainer').innerHTML = 'Gagal ambil gambar / belum ada respon.';
+          const imgModal = document.createElement('div');
+          imgModal.className = 'modal-bg show';
+          imgModal.innerHTML = `<div class="modal" style="max-width:90%"><h3><i class="fa-solid fa-camera"></i> Hasil Kamera</h3><img src="data:image/jpeg;base64,${data.image}" style="width:100%; border-radius:12px; margin-bottom:12px;"><button class="close-btn" style="margin-top:0;" onclick="this.closest('.modal-bg').remove()">Tutup</button></div>`;
+          document.body.appendChild(imgModal);
         }
-      } catch(e) { document.getElementById('imageContainer').innerHTML = 'Error: ' + e.message; }
+      } catch(e) {}
     }
 
-    async function openPair() { document.getElementById('pairModal').classList.add('show'); try { const data = await apiFetch('/api/pair-code', 'POST'); document.getElementById('pairCode').textContent = data.code; } catch (e) { document.getElementById('pairCode').textContent = 'Error'; } }
+    async function openPair() { 
+      document.getElementById('pairModal').classList.add('show'); 
+      try { const data = await apiFetch('/api/pair-code', 'POST'); document.getElementById('pairCode').textContent = data.code; } catch (e) { document.getElementById('pairCode').textContent = 'Error'; } 
+    }
+    
     function openTimer(id) { selectedDeviceId = id; document.getElementById('timerModal').classList.add('show'); }
-    async function setTimer() { const val = parseInt(document.getElementById('timerVal').value); const unit = parseInt(document.getElementById('timerUnit').value); if(!val || val <= 0) return showToast('Masukkan angka!'); try { await apiFetch('/api/command', 'POST', { device_id: selectedDeviceId, type: 'LOCK_TIMER', payload: { duration_ms: val * unit } }); document.getElementById('timerModal').classList.remove('show'); showToast('Timer diatur!'); } catch (e) { showToast('Gagal'); } }
+    
+    async function setTimer() { 
+      const val = parseInt(document.getElementById('timerVal').value); 
+      const unit = parseInt(document.getElementById('timerUnit').value); 
+      if(!val || val <= 0) return showToast('Masukkan angka yang valid!'); 
+      try { 
+        await apiFetch('/api/command', 'POST', { device_id: selectedDeviceId, type: 'LOCK_TIMER', payload: { duration_ms: val * unit } }); 
+        document.getElementById('timerModal').classList.remove('show'); 
+        showToast('Timer kunci berhasil diatur!'); 
+      } catch (e) { showToast('Gagal atur timer'); } 
+    }
+    
     function openDelete(id) { deviceToDelete = id; document.getElementById('deleteModal').classList.add('show'); }
-    async function konfirmasiHapus() { if (!deviceToDelete) return; try { await apiFetch('/api/device?id=' + encodeURIComponent(deviceToDelete), 'DELETE'); document.getElementById('deleteModal').classList.remove('show'); showToast('Perangkat dihapus!'); load(); } catch (e) { showToast('Gagal hapus'); } }
+    
+    async function konfirmasiHapus() { 
+      if (!deviceToDelete) return; 
+      try { 
+        await apiFetch('/api/device?id=' + encodeURIComponent(deviceToDelete), 'DELETE'); 
+        document.getElementById('deleteModal').classList.remove('show'); 
+        showToast('Perangkat berhasil dihapus!'); 
+        load(); 
+      } catch (e) { showToast('Gagal menghapus perangkat'); } 
+    }
+    
     function openChat(id) { selectedDeviceId = id; document.getElementById('chatModal').classList.add('show'); document.getElementById('chatInput').value = ''; loadChat(); }
-    async function loadChat() { try { const msgs = await apiFetch('/api/chat?id=' + encodeURIComponent(selectedDeviceId)); const box = document.getElementById('chatBox'); box.innerHTML = msgs.map(m => { const p = JSON.parse(m.payload); return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`; }).join(''); box.scrollTop = box.scrollHeight; } catch(e) {} }
-    async function sendChat() { const text = document.getElementById('chatInput').value.trim(); if(!text) return; document.getElementById('chatInput').value = ''; await apiFetch('/api/chat', 'POST', { device_id: selectedDeviceId, text }); loadChat(); }
-    async function openBlock(id) { selectedDeviceId = id; document.getElementById('blockModal').classList.add('show'); document.getElementById('appList').innerHTML = 'Memuat...'; try { const data = await apiFetch('/api/apps?id=' + encodeURIComponent(selectedDeviceId)); const blocked = data.blocked || []; if (data.installed.length === 0) { document.getElementById('appList').innerHTML = 'Tunggu HP anak terkoneksi.'; return; } document.getElementById('appList').innerHTML = data.installed.map(app => `<label class="app-item"><input type="checkbox" value="${app.package}" ${blocked.includes(app.package) ? 'checked' : ''}>${app.name}</label>`).join(''); } catch(e) { document.getElementById('appList').innerHTML = 'Gagal memuat'; } }
-    async function simpanBlokir() { const checkboxes = document.querySelectorAll('#appList input[type="checkbox"]:checked'); const blocked = Array.from(checkboxes).map(cb => cb.value); await apiFetch('/api/blocked', 'POST', { device_id: selectedDeviceId, blocked }); document.getElementById('blockModal').classList.remove('show'); showToast('Blokir disimpan!'); }
+    
+    async function loadChat() { 
+      try { 
+        const msgs = await apiFetch('/api/chat?id=' + encodeURIComponent(selectedDeviceId)); 
+        const box = document.getElementById('chatBox'); 
+        box.innerHTML = msgs.map(m => { const p = JSON.parse(m.payload); return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`; }).join(''); 
+        box.scrollTop = box.scrollHeight; 
+      } catch(e) {} 
+    }
+    
+    async function sendChat() { 
+      const text = document.getElementById('chatInput').value.trim(); 
+      if(!text) return; 
+      document.getElementById('chatInput').value = ''; 
+      await apiFetch('/api/chat', 'POST', { device_id: selectedDeviceId, text }); 
+      loadChat(); 
+    }
+    
+    async function openBlock(id) { 
+      selectedDeviceId = id; 
+      document.getElementById('blockModal').classList.add('show'); 
+      document.getElementById('appList').innerHTML = '<div style="padding:20px; text-align:center; color:gray;">Memuat aplikasi...</div>'; 
+      try { 
+        const data = await apiFetch('/api/apps?id=' + encodeURIComponent(selectedDeviceId)); 
+        const blocked = data.blocked || []; 
+        if (data.installed.length === 0) { 
+          document.getElementById('appList').innerHTML = '<div style="padding:20px; text-align:center; color:gray;">Tunggu HP anak terkoneksi.</div>'; 
+          return; 
+        } 
+        document.getElementById('appList').innerHTML = data.installed.map(app => `<label class="app-item"><input type="checkbox" value="${app.package}" ${blocked.includes(app.package) ? 'checked' : ''}><span>${app.name}</span></label>`).join(''); 
+      } catch(e) { 
+        document.getElementById('appList').innerHTML = '<div style="padding:20px; text-align:center; color:red;">Gagal memuat aplikasi</div>'; 
+      } 
+    }
+    
+    async function simpanBlokir() { 
+      const checkboxes = document.querySelectorAll('#appList input[type="checkbox"]:checked'); 
+      const blocked = Array.from(checkboxes).map(cb => cb.value); 
+      await apiFetch('/api/blocked', 'POST', { device_id: selectedDeviceId, blocked }); 
+      document.getElementById('blockModal').classList.remove('show'); 
+      showToast('Daftar blokir berhasil disimpan!'); 
+    }
 
     setInterval(load, 5000); load();
   </script>

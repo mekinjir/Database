@@ -26,6 +26,7 @@
     .btn-lock { background: var(--danger); } .btn-unlock { background: var(--success); }
     .btn-block { background: var(--warning); color: #000; } .btn-chat { background: var(--accent); }
     .btn-timer { background: #8b5cf6; } .btn-delete { background: #475569; } 
+    .btn-cam { background: #0ea5e9; } .btn-screen { background: #10b981; }
     .btn-pair { background: var(--accent); width: 100%; margin-bottom: 16px; padding: 14px; }
     .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 999; }
     .modal-bg.show { display: flex; }
@@ -40,6 +41,7 @@
     .app-item input { width: 20px; height: 20px; accent-color: var(--danger); }
     .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--card); color: #fff; padding: 12px 24px; border-radius: 8px; border: 1px solid var(--accent); opacity: 0; transition: 0.3s; z-index: 1000; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .img-view { width: 100%; border-radius: 8px; margin-top: 12px; border: 1px solid var(--border); }
   </style>
 </head>
 <body>
@@ -54,83 +56,28 @@
 
   <div class="toast" id="toast">Pesan</div>
 
-  <div class="modal-bg" id="pairModal">
-    <div class="modal">
-      <h3><i class="fa-solid fa-key"></i> Kode Pairing</h3>
-      <h1 id="pairCode" style="text-align:center; font-size:40px; letter-spacing:8px; color:var(--accent); margin:20px 0;">------</h1>
-      <button class="btn-pair" onclick="document.getElementById('pairModal').classList.remove('show')">Tutup</button>
-    </div>
-  </div>
+  <div class="modal-bg" id="pairModal"><div class="modal"><h3><i class="fa-solid fa-key"></i> Kode Pairing</h3><h1 id="pairCode" style="text-align:center; font-size:40px; letter-spacing:8px; color:var(--accent); margin:20px 0;">------</h1><button class="btn-pair" onclick="document.getElementById('pairModal').classList.remove('show')">Tutup</button></div></div>
 
-  <div class="modal-bg" id="deleteModal">
-    <div class="modal">
-      <h3><i class="fa-solid fa-trash" style="color:var(--danger)"></i> Hapus Perangkat?</h3>
-      <p style="text-align:center; color:var(--muted); margin-bottom:16px;">HP anak tidak akan bisa terkoneksi lagi.</p>
-      <button class="btn-lock" style="width:100%; margin-bottom:8px;" onclick="konfirmasiHapus()">Ya, Hapus</button>
-      <button style="background:transparent; border:1px solid var(--border); width:100%;" onclick="document.getElementById('deleteModal').classList.remove('show')">Batal</button>
-    </div>
-  </div>
+  <div class="modal-bg" id="deleteModal"><div class="modal"><h3><i class="fa-solid fa-trash" style="color:var(--danger)"></i> Hapus Perangkat?</h3><p style="text-align:center; color:var(--muted); margin-bottom:16px;">HP anak tidak akan bisa terkoneksi lagi.</p><button class="btn-lock" style="width:100%; margin-bottom:8px;" onclick="konfirmasiHapus()">Ya, Hapus</button><button style="background:transparent; border:1px solid var(--border); width:100%;" onclick="document.getElementById('deleteModal').classList.remove('show')">Batal</button></div></div>
 
-  <div class="modal-bg" id="timerModal">
-    <div class="modal">
-      <h3><i class="fa-solid fa-stopwatch"></i> Kunci dengan Timer</h3>
-      <p style="text-align:center; color:var(--muted); font-size:12px; margin-bottom:16px;">HP akan otomatis terbuka setelah waktu habis.</p>
-      <div style="display:flex; gap:8px; margin-bottom:16px;">
-        <input type="number" id="timerVal" placeholder="Angka" style="flex:1; padding:12px; border-radius:8px; border:1px solid var(--border); background:#0f172a; color:#fff;">
-        <select id="timerUnit" style="padding:12px; border-radius:8px; border:1px solid var(--border); background:#0f172a; color:#fff;">
-          <option value="60000">Menit</option>
-          <option value="3600000">Jam</option>
-        </select>
-      </div>
-      <button class="btn-timer" style="width:100%; margin-bottom:8px;" onclick="setTimer()">Mulai Kunci</button>
-      <button style="background:transparent; border:1px solid var(--border); width:100%;" onclick="document.getElementById('timerModal').classList.remove('show')">Batal</button>
-    </div>
-  </div>
+  <div class="modal-bg" id="timerModal"><div class="modal"><h3><i class="fa-solid fa-stopwatch"></i> Kunci dengan Timer</h3><p style="text-align:center; color:var(--muted); font-size:12px; margin-bottom:16px;">HP akan otomatis terbuka setelah waktu habis.</p><div style="display:flex; gap:8px; margin-bottom:16px;"><input type="number" id="timerVal" placeholder="Angka" style="flex:1; padding:12px; border-radius:8px; border:1px solid var(--border); background:#0f172a; color:#fff;"><select id="timerUnit" style="padding:12px; border-radius:8px; border:1px solid var(--border); background:#0f172a; color:#fff;"><option value="60000">Menit</option><option value="3600000">Jam</option></select></div><button class="btn-timer" style="width:100%; margin-bottom:8px;" onclick="setTimer()">Mulai Kunci</button><button style="background:transparent; border:1px solid var(--border); width:100%;" onclick="document.getElementById('timerModal').classList.remove('show')">Batal</button></div></div>
 
-  <div class="modal-bg" id="chatModal">
-    <div class="modal">
-      <h3><i class="fa-solid fa-comments"></i> Chat Anak</h3>
-      <div class="chat-box" id="chatBox"></div>
-      <div style="display:flex; gap:8px;">
-        <input type="text" id="chatInput" placeholder="Ketik pesan..." style="flex:1; padding:12px; border-radius:8px; border:1px solid var(--border); background:#0f172a; color:#fff;">
-        <button class="btn-chat" onclick="sendChat()">Kirim</button>
-      </div>
-      <button style="background:transparent; border:1px solid var(--border); margin-top:12px; width:100%;" onclick="document.getElementById('chatModal').classList.remove('show')">Tutup</button>
-    </div>
-  </div>
+  <div class="modal-bg" id="chatModal"><div class="modal"><h3><i class="fa-solid fa-comments"></i> Chat Anak</h3><div class="chat-box" id="chatBox"></div><div style="display:flex; gap:8px;"><input type="text" id="chatInput" placeholder="Ketik pesan..." style="flex:1; padding:12px; border-radius:8px; border:1px solid var(--border); background:#0f172a; color:#fff;"><button class="btn-chat" onclick="sendChat()">Kirim</button></div><button style="background:transparent; border:1px solid var(--border); margin-top:12px; width:100%;" onclick="document.getElementById('chatModal').classList.remove('show')">Tutup</button></div></div>
 
-  <div class="modal-bg" id="blockModal">
-    <div class="modal">
-      <h3><i class="fa-solid fa-ban"></i> Blokir Aplikasi</h3>
-      <p style="font-size:12px; color:var(--muted); text-align:center; margin-bottom:12px;">Centang aplikasi untuk MEMBLOKIR.</p>
-      <div class="app-list" id="appList">Memuat...</div>
-      <button class="btn-block" style="width:100%;" onclick="simpanBlokir()">Simpan Blokir</button>
-      <button style="background:transparent; border:1px solid var(--border); width:100%; margin-top:8px;" onclick="document.getElementById('blockModal').classList.remove('show')">Batal</button>
-    </div>
-  </div>
+  <div class="modal-bg" id="blockModal"><div class="modal"><h3><i class="fa-solid fa-ban"></i> Blokir Aplikasi</h3><p style="font-size:12px; color:var(--muted); text-align:center; margin-bottom:12px;">Centang aplikasi untuk MEMBLOKIR.</p><div class="app-list" id="appList">Memuat...</div><button class="btn-block" style="width:100%;" onclick="simpanBlokir()">Simpan Blokir</button><button style="background:transparent; border:1px solid var(--border); width:100%; margin-top:8px;" onclick="document.getElementById('blockModal').classList.remove('show')">Batal</button></div></div>
+
+  <div class="modal-bg" id="imageModal"><div class="modal"><h3><i class="fa-solid fa-image"></i> Hasil</h3><div id="imageContainer" style="text-align:center; color:gray;">Meminta gambar...</div><button style="background:transparent; border:1px solid var(--border); margin-top:12px; width:100%;" onclick="document.getElementById('imageModal').classList.remove('show')">Tutup</button></div></div>
 
   <script>
-    const CFG = { 
-      url: "https://server.mekinjirserver.dpdns.org", 
-      key: "a8f3c9d2e1b7f4a6c0d8e2f9b5a1c7d3e6f0a2b4c8d1e5f9a7b3c6d2e4f8a1b5" 
-    };
-    
-    let selectedDeviceId = null; 
-    let deviceToDelete = null;
+    const CFG = { url: "https://server.mekinjirserver.dpdns.org", key: "a8f3c9d2e1b7f4a6c0d8e2f9b5a1c7d3e6f0a2b4c8d1e5f9a7b3c6d2e4f8a1b5" };
+    let selectedDeviceId = null; let deviceToDelete = null;
 
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg; t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 3000);
-    }
+    function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
 
     async function apiFetch(endpoint, method = 'GET', body = null) {
       const headers = { 'x-termux-url': CFG.url, 'x-api-key': CFG.key, 'content-type': 'application/json' };
-      const opts = { method, headers };
-      if (body) opts.body = JSON.stringify(body);
-      const res = await fetch(endpoint, opts);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
+      const opts = { method, headers }; if (body) opts.body = JSON.stringify(body);
+      const res = await fetch(endpoint, opts); if (!res.ok) throw new Error('HTTP ' + res.status); return res.json();
     }
 
     function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -139,7 +86,6 @@
       try {
         const devices = await apiFetch('/api/devices');
         if (!devices.length) { document.getElementById('list').innerHTML = '<p style="text-align:center; color:gray;">Belum ada perangkat.</p>'; return; }
-        
         document.getElementById('list').innerHTML = devices.map(d => {
           const online = d.last_seen && (Date.now() - new Date(d.last_seen).getTime()) < 120000;
           const safeId = escapeHtml(d.id); 
@@ -155,8 +101,10 @@
               <button class="btn-lock" onclick="sendCmd('${safeId}','LOCK')">🔒 Kunci</button>
               <button class="btn-unlock" onclick="sendCmd('${safeId}','UNLOCK')">🔓 Buka</button>
               <button class="btn-chat" onclick="openChat('${safeId}')">💬 Chat</button>
-              <button class="btn-block" onclick="openBlock('${safeId}')">🚫 Blokir App</button>
+              <button class="btn-block" onclick="openBlock('${safeId}')">🚫 Blokir</button>
               <button class="btn-timer" onclick="openTimer('${safeId}')">⏱️ Timer</button>
+              <button class="btn-cam" onclick="sendCmd('${safeId}','CAMERA')">📸 Kamera</button>
+              <button class="btn-screen" onclick="sendCmd('${safeId}','SCREEN')">🖥️ Lihat Layar</button>
               <button class="btn-delete" onclick="openDelete('${safeId}')"><i class="fa-solid fa-trash"></i> Hapus</button>
             </div>
           </div>`;
@@ -165,85 +113,36 @@
     }
 
     async function sendCmd(deviceId, type) {
-      try { await apiFetch('/api/command', 'POST', { device_id: deviceId, type }); showToast('Perintah ' + type + ' terkirim!'); } catch (e) { showToast('Gagal'); }
-    }
-
-    async function openPair() {
-      document.getElementById('pairModal').classList.add('show');
-      try { const data = await apiFetch('/api/pair-code', 'POST'); document.getElementById('pairCode').textContent = data.code; } catch (e) { document.getElementById('pairCode').textContent = 'Error'; }
-    }
-
-    // === TIMER ===
-    function openTimer(id) { selectedDeviceId = id; document.getElementById('timerModal').classList.add('show'); }
-    async function setTimer() {
-      const val = parseInt(document.getElementById('timerVal').value);
-      const unit = parseInt(document.getElementById('timerUnit').value);
-      if(!val || val <= 0) return showToast('Masukkan angka yang bener!');
-      try {
-        await apiFetch('/api/command', 'POST', { device_id: selectedDeviceId, type: 'LOCK_TIMER', payload: { duration_ms: val * unit } });
-        document.getElementById('timerModal').classList.remove('show');
-        showToast('HP anak dikunci selama ' + val + (unit == 60000 ? ' menit' : ' jam') + '!');
-      } catch (e) { showToast('Gagal atur timer'); }
-    }
-
-    // === HAPUS ===
-    function openDelete(id) { deviceToDelete = id; document.getElementById('deleteModal').classList.add('show'); }
-    async function konfirmasiHapus() {
-      if (!deviceToDelete) return;
       try { 
-        // PAKAI ?id= BIAR GAK KENA BUG VERCEL
-        await apiFetch('/api/device?id=' + encodeURIComponent(deviceToDelete), 'DELETE'); 
-        document.getElementById('deleteModal').classList.remove('show'); showToast('Perangkat dihapus!'); load(); 
-      } catch (e) { showToast('Gagal hapus: ' + e.message); }
+        await apiFetch('/api/command', 'POST', { device_id: deviceId, type }); 
+        showToast('Perintah ' + type + ' terkirim!'); 
+        if(type === 'CAMERA' || type === 'SCREEN') { setTimeout(() => viewImage(deviceId), 5000); }
+      } catch (e) { showToast('Gagal'); }
     }
 
-    // === CHAT ===
-    function openChat(id) { 
-      selectedDeviceId = id; 
-      document.getElementById('chatModal').classList.add('show'); 
-      document.getElementById('chatInput').value = ''; 
-      loadChat(); 
-    }
-    async function loadChat() {
+    async function viewImage(id) {
+      document.getElementById('imageModal').classList.add('show');
+      document.getElementById('imageContainer').innerHTML = 'Meminta gambar...';
       try {
-        // PAKAI ?id= BIAR GAK KENA BUG VERCEL
-        const msgs = await apiFetch('/api/chat?id=' + encodeURIComponent(selectedDeviceId));
-        const box = document.getElementById('chatBox');
-        box.innerHTML = msgs.map(m => { const p = JSON.parse(m.payload); return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`; }).join('');
-        box.scrollTop = box.scrollHeight;
-      } catch(e) { console.error("Gagal load chat", e); }
-    }
-    async function sendChat() {
-      const text = document.getElementById('chatInput').value.trim(); if(!text) return;
-      document.getElementById('chatInput').value = '';
-      await apiFetch('/api/chat', 'POST', { device_id: selectedDeviceId, text }); 
-      loadChat();
-    }
-
-    // === BLOKIR ===
-    async function openBlock(id) {
-      selectedDeviceId = id; 
-      document.getElementById('blockModal').classList.add('show'); 
-      document.getElementById('appList').innerHTML = 'Memuat...';
-      try {
-        // PAKAI ?id= BIAR GAK KENA BUG VERCEL
-        const data = await apiFetch('/api/apps?id=' + encodeURIComponent(selectedDeviceId));
-        const blocked = data.blocked || [];
-        if (data.installed.length === 0) {
-          document.getElementById('appList').innerHTML = 'Belum ada data aplikasi. Tunggu HP anak terkoneksi.';
-          return;
+        const data = await apiFetch('/api/image?id=' + encodeURIComponent(id));
+        if (data.image) {
+          document.getElementById('imageContainer').innerHTML = `<img src="data:image/jpeg;base64,${data.image}" class="img-view">`;
+        } else {
+          document.getElementById('imageContainer').innerHTML = 'Gagal ambil gambar / belum ada respon.';
         }
-        document.getElementById('appList').innerHTML = data.installed.map(app => `
-          <label class="app-item"><input type="checkbox" value="${app.package}" ${blocked.includes(app.package) ? 'checked' : ''}>${app.name}</label>
-        `).join('');
-      } catch(e) { document.getElementById('appList').innerHTML = 'Gagal memuat: ' + e.message; }
+      } catch(e) { document.getElementById('imageContainer').innerHTML = 'Error: ' + e.message; }
     }
-    async function simpanBlokir() {
-      const checkboxes = document.querySelectorAll('#appList input[type="checkbox"]:checked');
-      const blocked = Array.from(checkboxes).map(cb => cb.value);
-      await apiFetch('/api/blocked', 'POST', { device_id: selectedDeviceId, blocked });
-      document.getElementById('blockModal').classList.remove('show'); showToast('Daftar blokir disimpan!');
-    }
+
+    async function openPair() { document.getElementById('pairModal').classList.add('show'); try { const data = await apiFetch('/api/pair-code', 'POST'); document.getElementById('pairCode').textContent = data.code; } catch (e) { document.getElementById('pairCode').textContent = 'Error'; } }
+    function openTimer(id) { selectedDeviceId = id; document.getElementById('timerModal').classList.add('show'); }
+    async function setTimer() { const val = parseInt(document.getElementById('timerVal').value); const unit = parseInt(document.getElementById('timerUnit').value); if(!val || val <= 0) return showToast('Masukkan angka!'); try { await apiFetch('/api/command', 'POST', { device_id: selectedDeviceId, type: 'LOCK_TIMER', payload: { duration_ms: val * unit } }); document.getElementById('timerModal').classList.remove('show'); showToast('Timer diatur!'); } catch (e) { showToast('Gagal'); } }
+    function openDelete(id) { deviceToDelete = id; document.getElementById('deleteModal').classList.add('show'); }
+    async function konfirmasiHapus() { if (!deviceToDelete) return; try { await apiFetch('/api/device?id=' + encodeURIComponent(deviceToDelete), 'DELETE'); document.getElementById('deleteModal').classList.remove('show'); showToast('Perangkat dihapus!'); load(); } catch (e) { showToast('Gagal hapus'); } }
+    function openChat(id) { selectedDeviceId = id; document.getElementById('chatModal').classList.add('show'); document.getElementById('chatInput').value = ''; loadChat(); }
+    async function loadChat() { try { const msgs = await apiFetch('/api/chat?id=' + encodeURIComponent(selectedDeviceId)); const box = document.getElementById('chatBox'); box.innerHTML = msgs.map(m => { const p = JSON.parse(m.payload); return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`; }).join(''); box.scrollTop = box.scrollHeight; } catch(e) {} }
+    async function sendChat() { const text = document.getElementById('chatInput').value.trim(); if(!text) return; document.getElementById('chatInput').value = ''; await apiFetch('/api/chat', 'POST', { device_id: selectedDeviceId, text }); loadChat(); }
+    async function openBlock(id) { selectedDeviceId = id; document.getElementById('blockModal').classList.add('show'); document.getElementById('appList').innerHTML = 'Memuat...'; try { const data = await apiFetch('/api/apps?id=' + encodeURIComponent(selectedDeviceId)); const blocked = data.blocked || []; if (data.installed.length === 0) { document.getElementById('appList').innerHTML = 'Tunggu HP anak terkoneksi.'; return; } document.getElementById('appList').innerHTML = data.installed.map(app => `<label class="app-item"><input type="checkbox" value="${app.package}" ${blocked.includes(app.package) ? 'checked' : ''}>${app.name}</label>`).join(''); } catch(e) { document.getElementById('appList').innerHTML = 'Gagal memuat'; } }
+    async function simpanBlokir() { const checkboxes = document.querySelectorAll('#appList input[type="checkbox"]:checked'); const blocked = Array.from(checkboxes).map(cb => cb.value); await apiFetch('/api/blocked', 'POST', { device_id: selectedDeviceId, blocked }); document.getElementById('blockModal').classList.remove('show'); showToast('Blokir disimpan!'); }
 
     setInterval(load, 5000); load();
   </script>

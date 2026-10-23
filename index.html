@@ -114,9 +114,10 @@
       url: "https://server.mekinjirserver.dpdns.org", 
       key: "a8f3c9d2e1b7f4a6c0d8e2f9b5a1c7d3e6f0a2b4c8d1e5f9a7b3c6d2e4f8a1b5" 
     };
-    let currentDeviceId = null;
+    
+    // Variabel Global penampung ID ASLI (bukan URL)
+    let selectedDeviceId = null; 
     let deviceToDelete = null;
-    let timerDeviceId = null;
 
     function showToast(msg) {
       const t = document.getElementById('toast');
@@ -142,7 +143,7 @@
         
         document.getElementById('list').innerHTML = devices.map(d => {
           const online = d.last_seen && (Date.now() - new Date(d.last_seen).getTime()) < 120000;
-          const safeId = encodeURIComponent(d.id);
+          // Simpan ID asli ke dalam data-attribute, jangan di URL
           return `<div class="card">
             <div class="card-top">
               <div class="avatar"><i class="fa-solid fa-mobile-screen"></i></div>
@@ -152,20 +153,23 @@
               </div>
             </div>
             <div class="btn-row">
-              <button class="btn-lock" onclick="sendCmd('${safeId}','LOCK')">🔒 Kunci</button>
-              <button class="btn-unlock" onclick="sendCmd('${safeId}','UNLOCK')">🔓 Buka</button>
-              <button class="btn-chat" onclick="openChat('${safeId}', '${escapeHtml(d.id)}')">💬 Chat</button>
-              <button class="btn-block" onclick="openBlock('${safeId}', '${escapeHtml(d.id)}')">🚫 Blokir App</button>
+              <button class="btn-lock" onclick="sendCmd('${escapeHtml(d.id)}','LOCK')">🔒 Kunci</button>
+              <button class="btn-unlock" onclick="sendCmd('${escapeHtml(d.id)}','UNLOCK')">🔓 Buka</button>
+              <button class="btn-chat" onclick="openChat('${escapeHtml(d.id)}')">💬 Chat</button>
+              <button class="btn-block" onclick="openBlock('${escapeHtml(d.id)}')">🚫 Blokir App</button>
               <button class="btn-timer" onclick="openTimer('${escapeHtml(d.id)}')">⏱️ Timer</button>
-              <button class="btn-delete" onclick="openDelete('${safeId}', '${escapeHtml(d.id)}')"><i class="fa-solid fa-trash"></i> Hapus</button>
+              <button class="btn-delete" onclick="openDelete('${escapeHtml(d.id)}')"><i class="fa-solid fa-trash"></i> Hapus</button>
             </div>
           </div>`;
         }).join('');
       } catch (e) { document.getElementById('list').innerHTML = `<p style="color:red;">Error: ${e.message}</p>`; }
     }
 
-    async function sendCmd(encodedId, type) {
-      try { await apiFetch('/api/command', 'POST', { device_id: decodeURIComponent(encodedId), type }); showToast('Perintah ' + type + ' terkirim!'); } catch (e) { showToast('Gagal'); }
+    async function sendCmd(deviceId, type) {
+      try { 
+        await apiFetch('/api/command', 'POST', { device_id: deviceId, type }); 
+        showToast('Perintah ' + type + ' terkirim!'); 
+      } catch (e) { showToast('Gagal mengirim perintah'); }
     }
 
     async function openPair() {
@@ -174,55 +178,63 @@
     }
 
     // === TIMER ===
-    function openTimer(rawId) { timerDeviceId = rawId; document.getElementById('timerModal').classList.add('show'); }
+    function openTimer(id) { selectedDeviceId = id; document.getElementById('timerModal').classList.add('show'); }
     async function setTimer() {
       const val = parseInt(document.getElementById('timerVal').value);
       const unit = parseInt(document.getElementById('timerUnit').value);
       if(!val || val <= 0) return showToast('Masukkan angka yang bener!');
       try {
-        await apiFetch('/api/command', 'POST', { device_id: timerDeviceId, type: 'LOCK_TIMER', payload: { duration_ms: val * unit } });
+        await apiFetch('/api/command', 'POST', { device_id: selectedDeviceId, type: 'LOCK_TIMER', payload: { duration_ms: val * unit } });
         document.getElementById('timerModal').classList.remove('show');
         showToast('HP anak dikunci selama ' + val + (unit == 60000 ? ' menit' : ' jam') + '!');
       } catch (e) { showToast('Gagal atur timer'); }
     }
 
     // === HAPUS ===
-    let deleteDeviceId = null;
-    function openDelete(encodedId, rawId) { deleteDeviceId = rawId; deviceToDelete = encodedId; document.getElementById('deleteModal').classList.add('show'); }
+    function openDelete(id) { deviceToDelete = id; document.getElementById('deleteModal').classList.add('show'); }
     async function konfirmasiHapus() {
       if (!deviceToDelete) return;
-      try { await apiFetch('/api/device/' + deviceToDelete, 'DELETE'); document.getElementById('deleteModal').classList.remove('show'); showToast('Perangkat dihapus!'); load(); } catch (e) { showToast('Gagal hapus'); }
+      try { 
+        // Pakai encodeURIComponent HANYA untuk URL
+        await apiFetch('/api/device/' + encodeURIComponent(deviceToDelete), 'DELETE'); 
+        document.getElementById('deleteModal').classList.remove('show'); 
+        showToast('Perangkat dihapus!'); 
+        load(); 
+      } catch (e) { showToast('Gagal hapus: ' + e.message); }
     }
 
     // === CHAT ===
-    function openChat(encodedId, rawId) { 
-      currentDeviceId = rawId; // Simpan ID ASLI
+    function openChat(id) { 
+      selectedDeviceId = id; 
       document.getElementById('chatModal').classList.add('show'); 
       document.getElementById('chatInput').value = ''; 
       loadChat(); 
     }
     async function loadChat() {
       try {
-        const msgs = await apiFetch('/api/chat/' + encodeURIComponent(currentDeviceId));
+        // encodeURIComponent HANYA untuk URL
+        const msgs = await apiFetch('/api/chat/' + encodeURIComponent(selectedDeviceId));
         const box = document.getElementById('chatBox');
         box.innerHTML = msgs.map(m => { const p = JSON.parse(m.payload); return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`; }).join('');
         box.scrollTop = box.scrollHeight;
-      } catch(e) {}
+      } catch(e) { console.error("Gagal load chat", e); }
     }
     async function sendChat() {
       const text = document.getElementById('chatInput').value.trim(); if(!text) return;
       document.getElementById('chatInput').value = '';
-      await apiFetch('/api/chat', 'POST', { device_id: currentDeviceId, text }); 
+      // Body pakai ID ASLI (ada spasinya)
+      await apiFetch('/api/chat', 'POST', { device_id: selectedDeviceId, text }); 
       loadChat();
     }
 
     // === BLOKIR ===
-    async function openBlock(encodedId, rawId) {
-      currentDeviceId = rawId; 
+    async function openBlock(id) {
+      selectedDeviceId = id; 
       document.getElementById('blockModal').classList.add('show'); 
       document.getElementById('appList').innerHTML = 'Memuat...';
       try {
-        const data = await apiFetch('/api/apps/' + encodeURIComponent(currentDeviceId));
+        // encodeURIComponent HANYA untuk URL
+        const data = await apiFetch('/api/apps/' + encodeURIComponent(selectedDeviceId));
         const blocked = data.blocked || [];
         if (data.installed.length === 0) {
           document.getElementById('appList').innerHTML = 'Belum ada data aplikasi. Tunggu HP anak terkoneksi.';
@@ -231,12 +243,13 @@
         document.getElementById('appList').innerHTML = data.installed.map(app => `
           <label class="app-item"><input type="checkbox" value="${app.package}" ${blocked.includes(app.package) ? 'checked' : ''}>${app.name}</label>
         `).join('');
-      } catch(e) { document.getElementById('appList').innerHTML = 'Gagal memuat.'; }
+      } catch(e) { document.getElementById('appList').innerHTML = 'Gagal memuat: ' + e.message; }
     }
     async function simpanBlokir() {
       const checkboxes = document.querySelectorAll('#appList input[type="checkbox"]:checked');
       const blocked = Array.from(checkboxes).map(cb => cb.value);
-      await apiFetch('/api/blocked', 'POST', { device_id: currentDeviceId, blocked });
+      // Body pakai ID ASLI
+      await apiFetch('/api/blocked', 'POST', { device_id: selectedDeviceId, blocked });
       document.getElementById('blockModal').classList.remove('show'); showToast('Daftar blokir disimpan!');
     }
 

@@ -3,10 +3,8 @@ export default async function handler(req, res) {
   const PARENT_KEY = req.headers['x-api-key'];
   if (!TERMUX_URL || !PARENT_KEY) return res.status(401).json({ error: 'Config kosong' });
 
-  // Ambil path langsung dari URL, buang awalan /api/
-  let subPath = req.url.replace(/^\/api\//, '').split('?')[0];
-  subPath = decodeURIComponent(subPath);
-
+  // Ambil path dari URL, decode biar dapet ID asli (ada spasinya)
+  let subPath = decodeURIComponent(req.url.replace('/api/', '').split('?')[0]);
   let targetPath = '';
 
   if (subPath === 'devices') targetPath = '/api/dashboard/devices';
@@ -26,7 +24,7 @@ export default async function handler(req, res) {
     };
     if (req.method === 'POST' && req.body) fetchOpts.body = JSON.stringify(req.body);
     
-    // Encode setiap bagian URL biar spasi (%20) gak bikin error
+    // Encode setiap bagian URL biar spasi (%20) gak bikin patah
     const safeTargetPath = targetPath.split('/').map(p => encodeURIComponent(p)).join('/');
     
     const upstream = await fetch(TERMUX_URL + safeTargetPath, fetchOpts);

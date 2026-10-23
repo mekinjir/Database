@@ -115,7 +115,6 @@
       key: "a8f3c9d2e1b7f4a6c0d8e2f9b5a1c7d3e6f0a2b4c8d1e5f9a7b3c6d2e4f8a1b5" 
     };
     
-    // Variabel Global penampung ID ASLI (bukan URL)
     let selectedDeviceId = null; 
     let deviceToDelete = null;
 
@@ -143,22 +142,22 @@
         
         document.getElementById('list').innerHTML = devices.map(d => {
           const online = d.last_seen && (Date.now() - new Date(d.last_seen).getTime()) < 120000;
-          // Simpan ID asli ke dalam data-attribute, jangan di URL
+          const safeId = escapeHtml(d.id); // Pake escapeHtml biar aman pas masuk ke HTML
           return `<div class="card">
             <div class="card-top">
               <div class="avatar"><i class="fa-solid fa-mobile-screen"></i></div>
               <div class="device-info">
                 <div class="device-name">${escapeHtml(d.name)} <span class="badge ${online?'':'off'}">${online?'Online':'Offline'}</span></div>
-                <div class="device-id">${escapeHtml(d.id)}</div>
+                <div class="device-id">${safeId}</div>
               </div>
             </div>
             <div class="btn-row">
-              <button class="btn-lock" onclick="sendCmd('${escapeHtml(d.id)}','LOCK')">🔒 Kunci</button>
-              <button class="btn-unlock" onclick="sendCmd('${escapeHtml(d.id)}','UNLOCK')">🔓 Buka</button>
-              <button class="btn-chat" onclick="openChat('${escapeHtml(d.id)}')">💬 Chat</button>
-              <button class="btn-block" onclick="openBlock('${escapeHtml(d.id)}')">🚫 Blokir App</button>
-              <button class="btn-timer" onclick="openTimer('${escapeHtml(d.id)}')">⏱️ Timer</button>
-              <button class="btn-delete" onclick="openDelete('${escapeHtml(d.id)}')"><i class="fa-solid fa-trash"></i> Hapus</button>
+              <button class="btn-lock" onclick="sendCmd('${safeId}','LOCK')">🔒 Kunci</button>
+              <button class="btn-unlock" onclick="sendCmd('${safeId}','UNLOCK')">🔓 Buka</button>
+              <button class="btn-chat" onclick="openChat('${safeId}')">💬 Chat</button>
+              <button class="btn-block" onclick="openBlock('${safeId}')">🚫 Blokir App</button>
+              <button class="btn-timer" onclick="openTimer('${safeId}')">⏱️ Timer</button>
+              <button class="btn-delete" onclick="openDelete('${safeId}')"><i class="fa-solid fa-trash"></i> Hapus</button>
             </div>
           </div>`;
         }).join('');
@@ -166,10 +165,7 @@
     }
 
     async function sendCmd(deviceId, type) {
-      try { 
-        await apiFetch('/api/command', 'POST', { device_id: deviceId, type }); 
-        showToast('Perintah ' + type + ' terkirim!'); 
-      } catch (e) { showToast('Gagal mengirim perintah'); }
+      try { await apiFetch('/api/command', 'POST', { device_id: deviceId, type }); showToast('Perintah ' + type + ' terkirim!'); } catch (e) { showToast('Gagal'); }
     }
 
     async function openPair() {
@@ -195,11 +191,9 @@
     async function konfirmasiHapus() {
       if (!deviceToDelete) return;
       try { 
-        // Pakai encodeURIComponent HANYA untuk URL
+        // Tambahin encodeURIComponent biar spasi di ID gak bikin 404
         await apiFetch('/api/device/' + encodeURIComponent(deviceToDelete), 'DELETE'); 
-        document.getElementById('deleteModal').classList.remove('show'); 
-        showToast('Perangkat dihapus!'); 
-        load(); 
+        document.getElementById('deleteModal').classList.remove('show'); showToast('Perangkat dihapus!'); load(); 
       } catch (e) { showToast('Gagal hapus: ' + e.message); }
     }
 
@@ -212,7 +206,7 @@
     }
     async function loadChat() {
       try {
-        // encodeURIComponent HANYA untuk URL
+        // Tambahin encodeURIComponent buat URL
         const msgs = await apiFetch('/api/chat/' + encodeURIComponent(selectedDeviceId));
         const box = document.getElementById('chatBox');
         box.innerHTML = msgs.map(m => { const p = JSON.parse(m.payload); return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`; }).join('');
@@ -222,7 +216,6 @@
     async function sendChat() {
       const text = document.getElementById('chatInput').value.trim(); if(!text) return;
       document.getElementById('chatInput').value = '';
-      // Body pakai ID ASLI (ada spasinya)
       await apiFetch('/api/chat', 'POST', { device_id: selectedDeviceId, text }); 
       loadChat();
     }
@@ -233,7 +226,7 @@
       document.getElementById('blockModal').classList.add('show'); 
       document.getElementById('appList').innerHTML = 'Memuat...';
       try {
-        // encodeURIComponent HANYA untuk URL
+        // Tambahin encodeURIComponent buat URL
         const data = await apiFetch('/api/apps/' + encodeURIComponent(selectedDeviceId));
         const blocked = data.blocked || [];
         if (data.installed.length === 0) {
@@ -248,7 +241,6 @@
     async function simpanBlokir() {
       const checkboxes = document.querySelectorAll('#appList input[type="checkbox"]:checked');
       const blocked = Array.from(checkboxes).map(cb => cb.value);
-      // Body pakai ID ASLI
       await apiFetch('/api/blocked', 'POST', { device_id: selectedDeviceId, blocked });
       document.getElementById('blockModal').classList.remove('show'); showToast('Daftar blokir disimpan!');
     }

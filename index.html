@@ -103,8 +103,9 @@
               <button class="btn-chat" onclick="openChat('${safeId}')">💬 Chat</button>
               <button class="btn-block" onclick="openBlock('${safeId}')">🚫 Blokir</button>
               <button class="btn-timer" onclick="openTimer('${safeId}')">⏱️ Timer</button>
-              <button class="btn-cam" onclick="sendCmd('${safeId}','CAMERA')">📸 Kamera</button>
               <button class="btn-screen" onclick="sendCmd('${safeId}','SCREEN')">🖥️ Lihat Layar</button>
+              <button class="btn-cam" onclick="sendCmd('${safeId}','CAMERA_FRONT')">📸 Kamera Depan</button>
+              <button class="btn-cam" onclick="sendCmd('${safeId}','CAMERA_BACK')">📸 Kamera Belakang</button>
               <button class="btn-delete" onclick="openDelete('${safeId}')"><i class="fa-solid fa-trash"></i> Hapus</button>
             </div>
           </div>`;
@@ -116,7 +117,9 @@
       try { 
         await apiFetch('/api/command', 'POST', { device_id: deviceId, type }); 
         showToast('Perintah ' + type + ' terkirim!'); 
-        if(type === 'CAMERA' || type === 'SCREEN') { setTimeout(() => viewImage(deviceId), 5000); }
+        if(type === 'CAMERA_FRONT' || type === 'CAMERA_BACK' || type === 'SCREEN') { 
+            setTimeout(() => viewImage(deviceId), 4000); 
+        }
       } catch (e) { showToast('Gagal'); }
     }
 

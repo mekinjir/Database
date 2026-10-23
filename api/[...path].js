@@ -3,11 +3,8 @@ export default async function handler(req, res) {
   const PARENT_KEY = req.headers['x-api-key'];
   if (!TERMUX_URL || !PARENT_KEY) return res.status(401).json({ error: 'Config kosong' });
 
-  let subPath = req.url.replace('/api/', '').split('?')[0];
-  
-  // Paksa decode di proxy (biar %20 jadi spasi)
-  try { subPath = decodeURIComponent(subPath); } catch(e) {}
-  
+  let pathParts = req.query.path || [];
+  let subPath = Array.isArray(pathParts) ? pathParts.join('/') : pathParts;
   let targetPath = '';
 
   if (subPath === 'devices') targetPath = '/api/dashboard/devices';
@@ -27,7 +24,7 @@ export default async function handler(req, res) {
     };
     if (req.method === 'POST' && req.body) fetchOpts.body = JSON.stringify(req.body);
     
-    // Encode lagi pas nembak ke Termux biar aman
+    // Encode URL biar spasi jadi %20 dan aman
     const safeTargetPath = targetPath.split('/').map(p => encodeURIComponent(p)).join('/');
     
     const upstream = await fetch(TERMUX_URL + safeTargetPath, fetchOpts);

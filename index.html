@@ -191,7 +191,6 @@
     async function konfirmasiHapus() {
       if (!deviceToDelete) return;
       try { 
-        // Encode ID biar spasi jadi %20, biar gak 404
         await apiFetch('/api/device/' + encodeURIComponent(deviceToDelete), 'DELETE'); 
         document.getElementById('deleteModal').classList.remove('show'); showToast('Perangkat dihapus!'); load(); 
       } catch (e) { showToast('Gagal hapus: ' + e.message); }
@@ -206,7 +205,6 @@
     }
     async function loadChat() {
       try {
-        // Encode ID biar spasi jadi %20
         const msgs = await apiFetch('/api/chat/' + encodeURIComponent(selectedDeviceId));
         const box = document.getElementById('chatBox');
         box.innerHTML = msgs.map(m => { const p = JSON.parse(m.payload); return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`; }).join('');
@@ -226,7 +224,6 @@
       document.getElementById('blockModal').classList.add('show'); 
       document.getElementById('appList').innerHTML = 'Memuat...';
       try {
-        // Encode ID biar spasi jadi %20
         const data = await apiFetch('/api/apps/' + encodeURIComponent(selectedDeviceId));
         const blocked = data.blocked || [];
         if (data.installed.length === 0) {

@@ -18,7 +18,10 @@ export default async function handler(req, res) {
   else return res.status(404).json({ error: 'Endpoint tidak dikenal: ' + subPath });
 
   try {
-    const fetchOpts = { method: req.method, headers: { 'x-api-key': PARENT_KEY, 'content-type': 'application/json' } };
+    const fetchOpts = { 
+      method: req.method, 
+      headers: { 'x-api-key': PARENT_KEY, 'content-type': 'application/json' } 
+    };
     if (req.method === 'POST' && req.body) fetchOpts.body = JSON.stringify(req.body);
     
     const upstream = await fetch(TERMUX_URL + targetPath, fetchOpts);

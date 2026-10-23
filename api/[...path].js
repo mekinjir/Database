@@ -3,18 +3,21 @@ export default async function handler(req, res) {
   const PARENT_KEY = req.headers['x-api-key'];
   if (!TERMUX_URL || !PARENT_KEY) return res.status(401).json({ error: 'Config kosong' });
 
-  // Ambil path dari URL, decode biar dapet ID asli (ada spasinya)
-  let subPath = decodeURIComponent(req.url.replace('/api/', '').split('?')[0]);
+  let pathParts = req.query.path || [];
+  let subPath = Array.isArray(pathParts) ? pathParts.join('/') : pathParts;
+  
+  // AMBIL ID DARI QUERY PARAMETER (?id=...) BIAR GAK KENA BUG SPASI VERCEL
+  const id = req.query.id ? encodeURIComponent(req.query.id) : null;
   let targetPath = '';
 
   if (subPath === 'devices') targetPath = '/api/dashboard/devices';
   else if (subPath === 'pair-code') targetPath = '/api/dashboard/pair-code';
   else if (subPath === 'command') targetPath = '/api/dashboard/command';
-  else if (subPath === 'chat') targetPath = '/api/dashboard/chat';
-  else if (subPath.startsWith('chat/')) targetPath = '/api/dashboard/' + subPath;
-  else if (subPath.startsWith('apps/')) targetPath = '/api/dashboard/' + subPath;
+  else if (subPath === 'chat' && req.method === 'GET') targetPath = '/api/dashboard/chat/' + id;
+  else if (subPath === 'chat') targetPath = '/api/dashboard/chat'; 
+  else if (subPath === 'apps') targetPath = '/api/dashboard/apps/' + id;
   else if (subPath === 'blocked') targetPath = '/api/dashboard/blocked';
-  else if (subPath.startsWith('device/') && req.method === 'DELETE') targetPath = '/api/dashboard/' + subPath;
+  else if (subPath === 'device' && req.method === 'DELETE') targetPath = '/api/dashboard/device/' + id;
   else return res.status(404).json({ error: 'Endpoint tidak dikenal: ' + subPath });
 
   try {
@@ -24,10 +27,7 @@ export default async function handler(req, res) {
     };
     if (req.method === 'POST' && req.body) fetchOpts.body = JSON.stringify(req.body);
     
-    // Encode setiap bagian URL biar spasi (%20) gak bikin patah
-    const safeTargetPath = targetPath.split('/').map(p => encodeURIComponent(p)).join('/');
-    
-    const upstream = await fetch(TERMUX_URL + safeTargetPath, fetchOpts);
+    const upstream = await fetch(TERMUX_URL + targetPath, fetchOpts);
     res.status(upstream.status);
     const data = await upstream.text();
     try { res.json(JSON.parse(data)); } catch { res.send(data); }

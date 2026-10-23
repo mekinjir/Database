@@ -73,16 +73,16 @@
 
   <div class="modal-bg" id="timerModal">
     <div class="modal">
-      <h3><i class="fa-solid fa-stopwatch"></i> Jadwal Kunci</h3>
+      <h3><i class="fa-solid fa-stopwatch"></i> Kunci dengan Timer</h3>
+      <p style="text-align:center; color:var(--muted); font-size:12px; margin-bottom:16px;">HP akan otomatis terbuka setelah waktu habis.</p>
       <div style="display:flex; gap:8px; margin-bottom:16px;">
         <input type="number" id="timerVal" placeholder="Angka" style="flex:1; padding:12px; border-radius:8px; border:1px solid var(--border); background:#0f172a; color:#fff;">
         <select id="timerUnit" style="padding:12px; border-radius:8px; border:1px solid var(--border); background:#0f172a; color:#fff;">
           <option value="60000">Menit</option>
           <option value="3600000">Jam</option>
-          <option value="86400000">Hari</option>
         </select>
       </div>
-      <button class="btn-timer" style="width:100%; margin-bottom:8px;" onclick="setTimer()">Mulai Hitung Mundur</button>
+      <button class="btn-timer" style="width:100%; margin-bottom:8px;" onclick="setTimer()">Mulai Kunci</button>
       <button style="background:transparent; border:1px solid var(--border); width:100%;" onclick="document.getElementById('timerModal').classList.remove('show')">Batal</button>
     </div>
   </div>
@@ -116,6 +116,7 @@
     };
     let currentDeviceId = null;
     let deviceToDelete = null;
+    let timerDeviceId = null;
 
     function showToast(msg) {
       const t = document.getElementById('toast');
@@ -141,6 +142,7 @@
         
         document.getElementById('list').innerHTML = devices.map(d => {
           const online = d.last_seen && (Date.now() - new Date(d.last_seen).getTime()) < 120000;
+          const safeId = encodeURIComponent(d.id);
           return `<div class="card">
             <div class="card-top">
               <div class="avatar"><i class="fa-solid fa-mobile-screen"></i></div>
@@ -150,20 +152,20 @@
               </div>
             </div>
             <div class="btn-row">
-              <button class="btn-lock" onclick="sendCmd('${d.id}','LOCK')">🔒 Kunci</button>
-              <button class="btn-unlock" onclick="sendCmd('${d.id}','UNLOCK')">🔓 Buka</button>
-              <button class="btn-chat" onclick="openChat('${d.id}')">💬 Chat</button>
-              <button class="btn-block" onclick="openBlock('${d.id}')">🚫 Blokir App</button>
-              <button class="btn-timer" onclick="openTimer('${d.id}')">⏱️ Timer</button>
-              <button class="btn-delete" onclick="openDelete('${d.id}')"><i class="fa-solid fa-trash"></i> Hapus</button>
+              <button class="btn-lock" onclick="sendCmd('${safeId}','LOCK')">🔒 Kunci</button>
+              <button class="btn-unlock" onclick="sendCmd('${safeId}','UNLOCK')">🔓 Buka</button>
+              <button class="btn-chat" onclick="openChat('${safeId}', '${escapeHtml(d.id)}')">💬 Chat</button>
+              <button class="btn-block" onclick="openBlock('${safeId}', '${escapeHtml(d.id)}')">🚫 Blokir App</button>
+              <button class="btn-timer" onclick="openTimer('${escapeHtml(d.id)}')">⏱️ Timer</button>
+              <button class="btn-delete" onclick="openDelete('${safeId}', '${escapeHtml(d.id)}')"><i class="fa-solid fa-trash"></i> Hapus</button>
             </div>
           </div>`;
         }).join('');
       } catch (e) { document.getElementById('list').innerHTML = `<p style="color:red;">Error: ${e.message}</p>`; }
     }
 
-    async function sendCmd(deviceId, type) {
-      try { await apiFetch('/api/command', 'POST', { device_id: deviceId, type }); showToast('Perintah ' + type + ' terkirim!'); } catch (e) { showToast('Gagal'); }
+    async function sendCmd(encodedId, type) {
+      try { await apiFetch('/api/command', 'POST', { device_id: decodeURIComponent(encodedId), type }); showToast('Perintah ' + type + ' terkirim!'); } catch (e) { showToast('Gagal'); }
     }
 
     async function openPair() {
@@ -171,28 +173,37 @@
       try { const data = await apiFetch('/api/pair-code', 'POST'); document.getElementById('pairCode').textContent = data.code; } catch (e) { document.getElementById('pairCode').textContent = 'Error'; }
     }
 
-    function openTimer(id) { currentDeviceId = id; document.getElementById('timerModal').classList.add('show'); }
+    // === TIMER ===
+    function openTimer(rawId) { timerDeviceId = rawId; document.getElementById('timerModal').classList.add('show'); }
     async function setTimer() {
       const val = parseInt(document.getElementById('timerVal').value);
       const unit = parseInt(document.getElementById('timerUnit').value);
       if(!val || val <= 0) return showToast('Masukkan angka yang bener!');
       try {
-        await apiFetch('/api/timer', 'POST', { device_id: currentDeviceId, duration_ms: val * unit });
+        await apiFetch('/api/command', 'POST', { device_id: timerDeviceId, type: 'LOCK_TIMER', payload: { duration_ms: val * unit } });
         document.getElementById('timerModal').classList.remove('show');
-        showToast('Jadwal kunci diatur!');
+        showToast('HP anak dikunci selama ' + val + (unit == 60000 ? ' menit' : ' jam') + '!');
       } catch (e) { showToast('Gagal atur timer'); }
     }
 
-    function openDelete(id) { deviceToDelete = id; document.getElementById('deleteModal').classList.add('show'); }
+    // === HAPUS ===
+    let deleteDeviceId = null;
+    function openDelete(encodedId, rawId) { deleteDeviceId = rawId; deviceToDelete = encodedId; document.getElementById('deleteModal').classList.add('show'); }
     async function konfirmasiHapus() {
       if (!deviceToDelete) return;
-      try { await apiFetch('/api/device/' + encodeURIComponent(deviceToDelete), 'DELETE'); document.getElementById('deleteModal').classList.remove('show'); showToast('Perangkat dihapus!'); load(); } catch (e) { showToast('Gagal hapus'); }
+      try { await apiFetch('/api/device/' + deviceToDelete, 'DELETE'); document.getElementById('deleteModal').classList.remove('show'); showToast('Perangkat dihapus!'); load(); } catch (e) { showToast('Gagal hapus'); }
     }
 
-    function openChat(id) { currentDeviceId = id; document.getElementById('chatModal').classList.add('show'); document.getElementById('chatInput').value = ''; loadChat(); }
+    // === CHAT ===
+    function openChat(encodedId, rawId) { 
+      currentDeviceId = rawId; // Simpan ID ASLI
+      document.getElementById('chatModal').classList.add('show'); 
+      document.getElementById('chatInput').value = ''; 
+      loadChat(); 
+    }
     async function loadChat() {
       try {
-        const msgs = await apiFetch('/api/chat/' + currentDeviceId);
+        const msgs = await apiFetch('/api/chat/' + encodeURIComponent(currentDeviceId));
         const box = document.getElementById('chatBox');
         box.innerHTML = msgs.map(m => { const p = JSON.parse(m.payload); return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`; }).join('');
         box.scrollTop = box.scrollHeight;
@@ -201,13 +212,17 @@
     async function sendChat() {
       const text = document.getElementById('chatInput').value.trim(); if(!text) return;
       document.getElementById('chatInput').value = '';
-      await apiFetch('/api/chat', 'POST', { device_id: currentDeviceId, text }); loadChat();
+      await apiFetch('/api/chat', 'POST', { device_id: currentDeviceId, text }); 
+      loadChat();
     }
 
-    async function openBlock(id) {
-      currentDeviceId = id; document.getElementById('blockModal').classList.add('show'); document.getElementById('appList').innerHTML = 'Memuat...';
+    // === BLOKIR ===
+    async function openBlock(encodedId, rawId) {
+      currentDeviceId = rawId; 
+      document.getElementById('blockModal').classList.add('show'); 
+      document.getElementById('appList').innerHTML = 'Memuat...';
       try {
-        const data = await apiFetch('/api/apps/' + id);
+        const data = await apiFetch('/api/apps/' + encodeURIComponent(currentDeviceId));
         const blocked = data.blocked || [];
         if (data.installed.length === 0) {
           document.getElementById('appList').innerHTML = 'Belum ada data aplikasi. Tunggu HP anak terkoneksi.';

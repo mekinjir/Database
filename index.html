@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VOID INVICTUS | Command Center</title>
+  <title>VOID INVICTUS | Pusat Kendali</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -35,7 +35,6 @@
       overflow-x: hidden;
     }
 
-    /* Animasi Background Grid */
     body::before {
       content: ""; position: fixed; inset: 0; z-index: -1;
       background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
@@ -46,7 +45,7 @@
     .container { width: 100%; max-width: 900px; padding: 20px; display: none; animation: fadeIn 0.5s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* === AUTH PAGE === */
+    /* === HALAMAN LOGIN === */
     #authPage { display: flex; max-width: 420px; width: 100%; margin: auto; padding: 20px; }
     .auth-card { 
       width: 100%; background: var(--panel); backdrop-filter: blur(16px); 
@@ -83,7 +82,7 @@
     .secret-admin input { border-color: var(--danger); background: rgba(239,68,68,0.1); }
     .secret-admin .auth-btn { background: var(--danger); }
 
-    /* === DASHBOARD PAGE === */
+    /* === DASHBOARD === */
     .hero { 
       background: linear-gradient(135deg, rgba(30, 27, 75, 0.8), rgba(15, 23, 42, 0.8));
       backdrop-filter: blur(10px); border-radius: 24px; padding: 32px; 
@@ -100,7 +99,7 @@
     }
     .logout-btn:hover { background: var(--danger); color: #fff; }
 
-    /* Super Admin Panel */
+    /* Panel Super Admin */
     #adminPanel { 
       display: none; background: rgba(168, 85, 247, 0.05); border: 1px solid rgba(168, 85, 247, 0.3); 
       padding: 24px; border-radius: 20px; margin-bottom: 32px; position: relative; 
@@ -118,7 +117,7 @@
     .btn-del-parent { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; transition: 0.2s; }
     .btn-del-parent:hover { background: var(--danger); color: #fff; }
 
-    /* Main Button */
+    /* Tombol Utama */
     .btn-main { 
       width: 100%; padding: 18px; border-radius: 16px; border: none; 
       background: linear-gradient(135deg, var(--primary), #8b5cf6); color: #fff; 
@@ -128,7 +127,7 @@
     }
     .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 35px -10px var(--primary); }
 
-    /* Device Card */
+    /* Kartu Perangkat */
     .card { 
       background: var(--panel); backdrop-filter: blur(10px); border: 1px solid var(--border); 
       border-radius: 20px; padding: 24px; margin-bottom: 20px; transition: 0.3s;
@@ -143,7 +142,7 @@
     .badge.off { background: rgba(148,163,184,0.1); color: #94a3b8; border-color: rgba(148,163,184,0.2); }
     .device-id { font-size: 13px; color: var(--muted); font-family: monospace; margin-top: 4px; }
 
-    /* Button Grid */
+    /* Grid Tombol */
     .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .btn-action { 
       border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 14px; 
@@ -168,7 +167,7 @@
     .btn-delete { color: #94a3b8; border-color: rgba(100,116,139,0.3); background: rgba(100,116,139,0.1); }
     .btn-delete:hover { background: rgba(239,68,68,0.2); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
 
-    /* Modals */
+    /* Pop-up (Modal) */
     .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 999; }
     .modal-bg.show { display: flex; animation: fadeIn 0.3s ease; }
     .modal { background: #0f172a; padding: 32px; border-radius: 24px; width: 100%; max-width: 440px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
@@ -195,60 +194,60 @@
 </head>
 <body>
 
-  <!-- LOGIN PAGE -->
+  <!-- HALAMAN LOGIN -->
   <div id="authPage">
     <div class="auth-card">
       <div class="auth-icon" id="secretShield"><i class="fa-solid fa-shield-halved"></i></div>
       <h1 class="auth-title">VOID INVICTUS</h1>
-      <p class="auth-sub">Command Center Access</p>
+      <p class="auth-sub">Pusat Kendali Perangkat</p>
       
       <div class="input-group">
         <i class="fa-solid fa-user"></i>
-        <input type="text" id="authUser" class="auth-input" placeholder="Operator ID">
+        <input type="text" id="authUser" class="auth-input" placeholder="Username">
       </div>
       <div class="input-group">
         <i class="fa-solid fa-lock"></i>
-        <input type="password" id="authPass" class="auth-input" placeholder="Access Code">
+        <input type="password" id="authPass" class="auth-input" placeholder="Password">
       </div>
       
-      <button class="auth-btn" onclick="handleLogin()">INITIALIZE LOGIN</button>
+      <button class="auth-btn" onclick="handleLogin()">MASUK</button>
       
-      <!-- SECRET SUPER ADMIN -->
+      <!-- AKSES RAHASIA SUPER ADMIN -->
       <div class="secret-admin" id="secretAdminArea">
-        <p style="color:var(--danger); font-size:12px; margin-bottom:12px; font-weight:600;"><i class="fa-solid fa-triangle-exclamation"></i> SUPER ADMIN OVERRIDE</p>
+        <p style="color:var(--danger); font-size:12px; margin-bottom:12px; font-weight:600;"><i class="fa-solid fa-triangle-exclamation"></i> AKSES SUPER ADMIN</p>
         <div class="input-group">
           <i class="fa-solid fa-key" style="color:var(--danger);"></i>
-          <input type="password" id="superPass" class="auth-input" placeholder="Master Password">
+          <input type="password" id="superPass" class="auth-input" placeholder="Password Super Admin">
         </div>
-        <button class="auth-btn" onclick="handleAdminLogin()">BYPASS ACCESS</button>
+        <button class="auth-btn" onclick="handleAdminLogin()">BUKA PANEL ADMIN</button>
       </div>
     </div>
   </div>
 
-  <!-- DASHBOARD PAGE -->
+  <!-- HALAMAN DASHBOARD -->
   <div class="container" id="mainApp">
     
     <div class="hero">
       <div class="hero-text">
         <h1>VOID INVICTUS</h1>
-        <p id="userGreeting">Welcome back, Commander.</p>
+        <p id="userGreeting">Selamat datang kembali.</p>
       </div>
-      <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-power-off"></i> Disconnect</button>
+      <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-power-off"></i> Keluar</button>
     </div>
 
-    <!-- SUPER ADMIN PANEL -->
+    <!-- PANEL SUPER ADMIN -->
     <div id="adminPanel">
-      <h3><i class="fa-solid fa-user-shield"></i> Operator Management</h3>
+      <h3><i class="fa-solid fa-user-shield"></i> Kelola Akun Ortu</h3>
       <div class="admin-input-group">
-        <input type="text" id="newParentUser" placeholder="New Operator ID">
-        <input type="password" id="newParentPass" placeholder="Access Code">
-        <button class="admin-btn" onclick="createParent()">Generate Operator</button>
+        <input type="text" id="newParentUser" placeholder="Username Ortu Baru">
+        <input type="password" id="newParentPass" placeholder="Password">
+        <button class="admin-btn" onclick="createParent()">Buat Akun</button>
       </div>
       <div id="parentList"></div>
     </div>
     
     <button class="btn-main" onclick="openPair()">
-      <i class="fa-solid fa-satellite-dish"></i> CONNECT NEW VOID DEVICE
+      <i class="fa-solid fa-satellite-dish"></i> TAMBAH PERANGKAT ANAK
     </button>
     
     <div id="list">Memuat data...</div>
@@ -256,34 +255,33 @@
 
   <div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i> <span id="toastMsg"></span></div>
 
-  <!-- MODALS -->
-  <!-- PAIRING -->
+  <!-- POP-UP PAIRING -->
   <div class="modal-bg" id="pairModal">
     <div class="modal">
-      <h3><i class="fa-solid fa-tower-broadcast" style="color:var(--primary);"></i> Pairing Protocol</h3>
+      <h3><i class="fa-solid fa-tower-broadcast" style="color:var(--primary);"></i> Kode Pairing</h3>
       <h1 id="pairCode" style="text-align:center; font-size:56px; letter-spacing:12px; color:var(--primary); margin:20px 0; font-family:monospace; font-weight:800; text-shadow: 0 0 20px var(--primary-glow);">------</h1>
-      <p style="text-align:center; color:var(--muted); font-size:14px; margin-bottom:24px;">Kode ini permanen. Gunakan untuk menghubungkan semua perangkat Void.</p>
-      <button class="close-btn" onclick="document.getElementById('pairModal').classList.remove('show')">Close Protocol</button>
+      <p style="text-align:center; color:var(--muted); font-size:14px; margin-bottom:24px;">Kode ini berlaku permanen. Masukkan di aplikasi HP anak.</p>
+      <button class="close-btn" onclick="document.getElementById('pairModal').classList.remove('show')">Tutup</button>
     </div>
   </div>
 
-  <!-- HAPUS -->
+  <!-- POP-UP HAPUS -->
   <div class="modal-bg" id="deleteModal">
     <div class="modal">
-      <h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--danger);"></i> Disconnect Device?</h3>
-      <p style="text-align:center; color:var(--muted); margin-bottom:24px; font-size:14px;">Perangkat Void ini tidak akan bisa terhubung lagi ke Command Center.</p>
-      <button class="btn-action btn-lock" style="width:100%; margin-bottom:12px;" onclick="konfirmasiHapus()">Ya, Putuskan Koneksi</button>
+      <h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--danger);"></i> Hapus Perangkat?</h3>
+      <p style="text-align:center; color:var(--muted); margin-bottom:24px; font-size:14px;">HP anak tidak akan bisa terkoneksi lagi ke dasbor ini.</p>
+      <button class="btn-action btn-lock" style="width:100%; margin-bottom:12px;" onclick="konfirmasiHapus()">Ya, Hapus Perangkat</button>
       <button class="close-btn" onclick="document.getElementById('deleteModal').classList.remove('show')">Batal</button>
     </div>
   </div>
 
-  <!-- TIMER -->
+  <!-- POP-UP TIMER -->
   <div class="modal-bg" id="timerModal">
     <div class="modal">
-      <h3><i class="fa-solid fa-stopwatch" style="color:#d8b4fe;"></i> Lock Sequence</h3>
-      <p style="text-align:center; color:var(--muted); font-size:13px; margin-bottom:20px;">Perangkat akan otomatis terbuka setelah waktu habis.</p>
+      <h3><i class="fa-solid fa-stopwatch" style="color:#d8b4fe;"></i> Kunci dengan Timer</h3>
+      <p style="text-align:center; color:var(--muted); font-size:13px; margin-bottom:20px;">HP akan otomatis terbuka setelah waktu habis.</p>
       <div style="display:flex; gap:12px; margin-bottom:20px;">
-        <input type="number" id="timerVal" class="input-field" style="margin:0; flex:1;" placeholder="Durasi">
+        <input type="number" id="timerVal" class="input-field" style="margin:0; flex:1;" placeholder="Angka">
         <select id="timerUnit" class="input-field" style="margin:0; width:120px;">
           <option value="60000">Menit</option>
           <option value="3600000">Jam</option>
@@ -294,26 +292,26 @@
     </div>
   </div>
 
-  <!-- CHAT -->
+  <!-- POP-UP CHAT -->
   <div class="modal-bg" id="chatModal">
     <div class="modal">
-      <h3><i class="fa-solid fa-satellite" style="color:var(--primary);"></i> VOID Comm-Link</h3>
+      <h3><i class="fa-solid fa-comments" style="color:var(--primary);"></i> Chat Anak</h3>
       <div class="chat-box" id="chatBox"></div>
       <div style="display:flex; gap:10px;">
-        <input type="text" id="chatInput" class="input-field" style="margin:0;" placeholder="Transmit message...">
+        <input type="text" id="chatInput" class="input-field" style="margin:0;" placeholder="Ketik pesan...">
         <button class="btn-action btn-chat" style="padding:0 20px;" onclick="sendChat()"><i class="fa-solid fa-paper-plane"></i></button>
       </div>
       <button class="close-btn" style="margin-top:16px;" onclick="document.getElementById('chatModal').classList.remove('show')">Tutup</button>
     </div>
   </div>
 
-  <!-- BLOKIR APP -->
+  <!-- POP-UP BLOKIR APP -->
   <div class="modal-bg" id="blockModal">
     <div class="modal">
-      <h3><i class="fa-solid fa-ban" style="color:var(--warning);"></i> Restrict Access</h3>
-      <p style="font-size:13px; color:var(--muted); text-align:center; margin-bottom:16px;">Pilih aplikasi yang akan diblokir oleh VOID System.</p>
+      <h3><i class="fa-solid fa-ban" style="color:var(--warning);"></i> Blokir Aplikasi</h3>
+      <p style="font-size:13px; color:var(--muted); text-align:center; margin-bottom:16px;">Centang aplikasi yang akan diblokir oleh sistem.</p>
       <div class="app-list" id="appList">Memuat...</div>
-      <button class="btn-action btn-block" style="width:100%; margin-bottom:12px;" onclick="simpanBlokir()">Simpan Pembatasan</button>
+      <button class="btn-action btn-block" style="width:100%; margin-bottom:12px;" onclick="simpanBlokir()">Simpan Blokir</button>
       <button class="close-btn" onclick="document.getElementById('blockModal').classList.remove('show')">Batal</button>
     </div>
   </div>
@@ -324,13 +322,13 @@
     let userRole = localStorage.getItem('role');
     let selectedDeviceId = null; let deviceToDelete = null;
 
-    // === SECRET SUPER ADMIN ===
+    // === AKSES RAHASIA SUPER ADMIN (KETUK 5X) ===
     let tapCount = 0;
     document.getElementById('secretShield').addEventListener('click', function() {
       tapCount++;
       if (tapCount >= 5) {
         document.getElementById('secretAdminArea').style.display = 'block';
-        showToast('Super Admin Mode Activated');
+        showToast('Akses Super Admin Terbuka');
         tapCount = 0;
       }
       setTimeout(() => { tapCount = 0; }, 2000);
@@ -348,11 +346,11 @@
         if (!res.ok) return showToast('Password Salah!');
         localStorage.setItem('token', data.token); localStorage.setItem('username', data.username); localStorage.setItem('role', data.role);
         token = data.token; userRole = data.role; checkAuth();
-        showToast('Welcome, Super Admin.');
+        showToast('Selamat datang, Super Admin.');
       } catch(e) { showToast('Koneksi gagal'); }
     }
 
-    // === AUTH ===
+    // === LOGIN ===
     async function handleLogin() {
       const user = document.getElementById('authUser').value;
       const pass = document.getElementById('authPass').value;
@@ -363,7 +361,7 @@
           body: JSON.stringify({ username: user, password: pass })
         });
         const data = await res.json();
-        if (!res.ok) return showToast(data.error || 'Access Denied');
+        if (!res.ok) return showToast(data.error || 'Akses Ditolak');
         localStorage.setItem('token', data.token); localStorage.setItem('username', data.username); localStorage.setItem('role', data.role);
         token = data.token; userRole = data.role; checkAuth();
       } catch(e) { showToast('Server Offline'); }
@@ -378,7 +376,7 @@
       if (token) {
         document.getElementById('authPage').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
-        document.getElementById('userGreeting').innerText = 'Welcome back, ' + (localStorage.getItem('username') || 'Operator');
+        document.getElementById('userGreeting').innerText = 'Halo, ' + (localStorage.getItem('username') || 'Ortu');
         if (userRole === 'superadmin') {
             document.getElementById('adminPanel').style.display = 'block';
             loadParents();
@@ -397,14 +395,14 @@
         try {
             const parents = await apiFetch('/api/superadmin/parents');
             const list = document.getElementById('parentList');
-            if(!parents.length) { list.innerHTML = '<p style="color:var(--muted); font-size:14px; text-align:center;">Belum ada operator terdaftar.</p>'; return; }
+            if(!parents.length) { list.innerHTML = '<p style="color:var(--muted); font-size:14px; text-align:center;">Belum ada akun ortu terdaftar.</p>'; return; }
             list.innerHTML = parents.map(p => `
                 <div class="parent-item">
                     <div class="parent-header">
-                        <span class="parent-name"><i class="fa-solid fa-user-astronaut"></i> ${escapeHtml(p.username)}</span>
+                        <span class="parent-name"><i class="fa-solid fa-user"></i> ${escapeHtml(p.username)}</span>
                         <button class="btn-del-parent" onclick="deleteParent(${p.id})"><i class="fa-solid fa-trash"></i> Hapus</button>
                     </div>
-                    <div class="parent-code">CODE: ${p.pair_code || 'ERROR'}</div>
+                    <div class="parent-code">KODE PAIRING: ${p.pair_code || 'ERROR'}</div>
                 </div>
             `).join('');
         } catch(e) {}
@@ -413,21 +411,21 @@
     async function createParent() {
         const u = document.getElementById('newParentUser').value;
         const p = document.getElementById('newParentPass').value;
-        if(!u || !p) return showToast('Isi ID & Code');
+        if(!u || !p) return showToast('Isi username & password');
         try {
             const res = await apiFetch('/api/superadmin/create-parent', 'POST', { username: u, password: p });
-            showToast('Operator dibuat! Code: ' + res.pair_code);
+            showToast('Akun dibuat! Kode: ' + res.pair_code);
             document.getElementById('newParentUser').value = ''; document.getElementById('newParentPass').value = '';
             loadParents();
-        } catch(e) { showToast('Gagal buat Operator'); }
+        } catch(e) { showToast('Gagal buat akun'); }
     }
 
     async function deleteParent(id) {
-        if(!confirm('Hapus Operator ini?')) return;
+        if(!confirm('Hapus akun ortu ini?')) return;
         try { await apiFetch('/api/superadmin/parent/' + id, 'DELETE'); loadParents(); } catch(e) { showToast('Gagal hapus'); }
     }
 
-    // === MAIN LOGIC ===
+    // === LOGIKA UTAMA ===
     async function apiFetch(endpoint, method = 'GET', body = null) {
       const headers = { 'authorization': 'Bearer ' + token, 'content-type': 'application/json' };
       const opts = { method, headers }; if (body) opts.body = JSON.stringify(body);
@@ -445,7 +443,7 @@
     async function load() {
       try {
         const devices = await apiFetch('/api/dashboard/devices');
-        if (!devices.length) { document.getElementById('list').innerHTML = '<p style="text-align:center; color:var(--muted); padding:40px 0;">Belum ada Perangkat Void yang terhubung.</p>'; return; }
+        if (!devices.length) { document.getElementById('list').innerHTML = '<p style="text-align:center; color:var(--muted); padding:40px 0;">Belum ada Perangkat Anak yang terhubung.</p>'; return; }
         document.getElementById('list').innerHTML = devices.map(d => {
           const online = d.last_seen && (Date.now() - new Date(d.last_seen).getTime()) < 120000;
           const safeId = escapeHtml(d.id); 
@@ -453,19 +451,19 @@
             <div class="card-header">
               <div class="device-avatar"><i class="fa-solid fa-mobile-screen-button"></i></div>
               <div class="device-info">
-                <div class="device-title">VOID-${escapeHtml(d.name)} <span class="badge ${online?'':'off'}">${online?'ONLINE':'OFFLINE'}</span></div>
-                <div class="device-id">SYS-ID: ${safeId}</div>
+                <div class="device-title">${escapeHtml(d.name)} <span class="badge ${online?'':'off'}">${online?'ONLINE':'OFFLINE'}</span></div>
+                <div class="device-id">ID: ${safeId}</div>
               </div>
             </div>
             <div class="btn-grid">
-              <button class="btn-action btn-lock" onclick="sendCmd('${safeId}','LOCK')"><i class="fa-solid fa-lock"></i> Lock</button>
-              <button class="btn-action btn-unlock" onclick="sendCmd('${safeId}','UNLOCK')"><i class="fa-solid fa-lock-open"></i> Unlock</button>
-              <button class="btn-action btn-chat" onclick="openChat('${safeId}')"><i class="fa-solid fa-satellite"></i> Comm-Link</button>
-              <button class="btn-action btn-block" onclick="openBlock('${safeId}')"><i class="fa-solid fa-ban"></i> Restrict</button>
+              <button class="btn-action btn-lock" onclick="sendCmd('${safeId}','LOCK')"><i class="fa-solid fa-lock"></i> Kunci</button>
+              <button class="btn-action btn-unlock" onclick="sendCmd('${safeId}','UNLOCK')"><i class="fa-solid fa-lock-open"></i> Buka</button>
+              <button class="btn-action btn-chat" onclick="openChat('${safeId}')"><i class="fa-solid fa-comments"></i> Chat</button>
+              <button class="btn-action btn-block" onclick="openBlock('${safeId}')"><i class="fa-solid fa-ban"></i> Blokir App</button>
               <button class="btn-action btn-timer" onclick="openTimer('${safeId}')"><i class="fa-solid fa-stopwatch"></i> Timer</button>
-              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_FRONT')"><i class="fa-solid fa-camera"></i> Cam Front</button>
-              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_BACK')"><i class="fa-solid fa-camera-rotate"></i> Cam Back</button>
-              <button class="btn-action btn-delete" onclick="openDelete('${safeId}')" style="grid-column: span 2;"><i class="fa-solid fa-link-slash"></i> Disconnect Device</button>
+              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_FRONT')"><i class="fa-solid fa-camera"></i> Kamera Depan</button>
+              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_BACK')"><i class="fa-solid fa-camera-rotate"></i> Kamera Belakang</button>
+              <button class="btn-action btn-delete" onclick="openDelete('${safeId}')" style="grid-column: span 2;"><i class="fa-solid fa-trash"></i> Hapus Perangkat</button>
             </div>
           </div>`;
         }).join('');
@@ -475,9 +473,9 @@
     async function sendCmd(deviceId, type) {
       try { 
         await apiFetch('/api/dashboard/command', 'POST', { device_id: deviceId, type }); 
-        showToast('Command ' + type + ' transmitted!'); 
+        showToast('Perintah ' + type + ' terkirim!'); 
         if(type === 'CAMERA_FRONT' || type === 'CAMERA_BACK') { setTimeout(() => viewImage(deviceId), 4000); }
-      } catch (e) { showToast('Transmission failed'); }
+      } catch (e) { showToast('Gagal mengirim perintah'); }
     }
 
     async function viewImage(id) {
@@ -486,7 +484,7 @@
         if (data.image) {
           const imgModal = document.createElement('div');
           imgModal.className = 'modal-bg show';
-          imgModal.innerHTML = `<div class="modal" style="max-width:90%"><h3><i class="fa-solid fa-camera" style="color:var(--primary);"></i> Visual Feed</h3><img src="data:image/jpeg;base64,${data.image}" style="width:100%; border-radius:16px; margin-bottom:16px; border:1px solid var(--border);"><button class="close-btn" onclick="this.closest('.modal-bg').remove()">Tutup Feed</button></div>`;
+          imgModal.innerHTML = `<div class="modal" style="max-width:90%"><h3><i class="fa-solid fa-camera" style="color:var(--primary);"></i> Hasil Kamera</h3><img src="data:image/jpeg;base64,${data.image}" style="width:100%; border-radius:16px; margin-bottom:16px; border:1px solid var(--border);"><button class="close-btn" onclick="this.closest('.modal-bg').remove()">Tutup</button></div>`;
           document.body.appendChild(imgModal);
         }
       } catch(e) {}
@@ -500,14 +498,14 @@
     function openTimer(id) { selectedDeviceId = id; document.getElementById('timerModal').classList.add('show'); }
     async function setTimer() { 
       const val = parseInt(document.getElementById('timerVal').value); const unit = parseInt(document.getElementById('timerUnit').value); 
-      if(!val || val <= 0) return showToast('Input invalid'); 
-      try { await apiFetch('/api/dashboard/command', 'POST', { device_id: selectedDeviceId, type: 'LOCK_TIMER', payload: { duration_ms: val * unit } }); document.getElementById('timerModal').classList.remove('show'); showToast('Timer activated!'); } catch (e) { showToast('Failed'); } 
+      if(!val || val <= 0) return showToast('Masukkan angka yang benar!'); 
+      try { await apiFetch('/api/dashboard/command', 'POST', { device_id: selectedDeviceId, type: 'LOCK_TIMER', payload: { duration_ms: val * unit } }); document.getElementById('timerModal').classList.remove('show'); showToast('Timer diaktifkan!'); } catch (e) { showToast('Gagal'); } 
     }
     
     function openDelete(id) { deviceToDelete = id; document.getElementById('deleteModal').classList.add('show'); }
     async function konfirmasiHapus() { 
       if (!deviceToDelete) return; 
-      try { await apiFetch('/api/dashboard/device/' + encodeURIComponent(deviceToDelete), 'DELETE'); document.getElementById('deleteModal').classList.remove('show'); showToast('Device disconnected'); load(); } catch (e) { showToast('Failed'); } 
+      try { await apiFetch('/api/dashboard/device/' + encodeURIComponent(deviceToDelete), 'DELETE'); document.getElementById('deleteModal').classList.remove('show'); showToast('Perangkat dihapus'); load(); } catch (e) { showToast('Gagal menghapus'); } 
     }
     
     function openChat(id) { selectedDeviceId = id; document.getElementById('chatModal').classList.add('show'); document.getElementById('chatInput').value = ''; loadChat(); }
@@ -520,17 +518,36 @@
     }
     
     async function openBlock(id) { 
-      selectedDeviceId = id; document.getElementById('blockModal').classList.add('show'); document.getElementById('appList').innerHTML = '<p style="text-align:center; padding:20px;">Scanning apps...</p>'; 
+      selectedDeviceId = id; document.getElementById('blockModal').classList.add('show'); document.getElementById('appList').innerHTML = '<p style="text-align:center; padding:20px;">Memindai aplikasi...</p>'; 
       try { 
         const data = await apiFetch('/api/dashboard/apps/' + encodeURIComponent(selectedDeviceId)); const blocked = data.blocked || []; 
-        if (data.installed.length === 0) { document.getElementById('appList').innerHTML = '<p style="text-align:center; padding:20px;">No apps detected. Ensure device is online.</p>'; return; } 
+        if (data.installed.length === 0) { 
+          document.getElementById('appList').innerHTML = `
+            <p style="text-align:center; padding:20px; color:var(--muted);">Belum ada aplikasi tersinkron.</p>
+            <button class="btn-action btn-block" style="width:100%; padding:14px;" onclick="syncApps()">
+              <i class="fa-solid fa-rotate"></i> Paksa Sinkronisasi Aplikasi
+            </button>
+          `; 
+          return; 
+        } 
         document.getElementById('appList').innerHTML = data.installed.map(app => `<label class="app-item"><input type="checkbox" value="${app.package}" ${blocked.includes(app.package) ? 'checked' : ''}><span>${app.name}</span></label>`).join(''); 
-      } catch(e) { document.getElementById('appList').innerHTML = '<p style="text-align:center; padding:20px; color:var(--danger);">Failed to load apps</p>'; } 
+      } catch(e) { document.getElementById('appList').innerHTML = '<p style="text-align:center; padding:20px; color:var(--danger);">Gagal memuat aplikasi</p>'; } 
     }
+
+    async function syncApps() {
+      try {
+        await apiFetch('/api/dashboard/command', 'POST', { device_id: selectedDeviceId, type: 'SYNC_APPS' });
+        showToast('Sinkronisasi dikirim. Tunggu 5 detik...');
+        setTimeout(() => openBlock(selectedDeviceId), 5000);
+      } catch(e) {
+        showToast('Gagal sinkronisasi');
+      }
+    }
+
     async function simpanBlokir() { 
       const checkboxes = document.querySelectorAll('#appList input[type="checkbox"]:checked'); const blocked = Array.from(checkboxes).map(cb => cb.value); 
       await apiFetch('/api/dashboard/blocked', 'POST', { device_id: selectedDeviceId, blocked }); 
-      document.getElementById('blockModal').classList.remove('show'); showToast('Restrictions applied!'); 
+      document.getElementById('blockModal').classList.remove('show'); showToast('Aplikasi berhasil diblokir!'); 
     }
 
     checkAuth();

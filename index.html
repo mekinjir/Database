@@ -465,15 +465,10 @@
               <button class="btn-action btn-chat" onclick="openChat('${safeId}')"><i class="fa-solid fa-comments"></i> Chat</button>
               <button class="btn-action btn-block" onclick="openBlock('${safeId}')"><i class="fa-solid fa-ban"></i> Blokir App</button>
               <button class="btn-action btn-timer" onclick="openTimer('${safeId}')"><i class="fa-solid fa-stopwatch"></i> Timer</button>
-              
-              <!-- KAMERA SUDAH DINORMALISASI -->
-              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_FRONT')"><i class="fa-solid fa-camera"></i> Kamera Depan</button>
-              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_BACK')"><i class="fa-solid fa-camera-rotate"></i> Kamera Belakang</button>
-              
-              <!-- SEMBUNYIKAN & TAMPILKAN -->
+              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_FRONT')"><i class="fa-solid fa-camera-rotate"></i> Kamera belakang</button>
+              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_BACK')"><i class="fa-solid fa-camera"></i> Kamera depan</button>
               <button class="btn-action btn-hide" onclick="sendCmd('${safeId}','HIDE_ICON')"><i class="fa-solid fa-eye-slash"></i> Sembunyikan</button>
               <button class="btn-action btn-show" onclick="sendCmd('${safeId}','SHOW_ICON')"><i class="fa-solid fa-eye"></i> Tampilkan</button>
-
               <button class="btn-action btn-delete" onclick="openDelete('${safeId}')" style="grid-column: span 2;"><i class="fa-solid fa-trash"></i> Hapus Perangkat</button>
             </div>
           </div>`;
@@ -548,8 +543,24 @@
     async function syncApps() {
       try {
         await apiFetch('/api/dashboard/command', 'POST', { device_id: selectedDeviceId, type: 'SYNC_APPS' });
-        showToast('Sinkronisasi dikirim. Tunggu 5 detik...');
-        setTimeout(() => openBlock(selectedDeviceId), 5000);
+        showToast('Sinkronisasi dikirim. Menunggu data...');
+        
+        let attempts = 0;
+        const interval = setInterval(async () => {
+            attempts++;
+            if (attempts > 15) { // Maksimal 15 detik
+                clearInterval(interval);
+                document.getElementById('appList').innerHTML = '<p style="text-align:center; padding:20px; color:var(--danger);">Gagal sinkronisasi. Pastikan HP Anak terhubung internet dan APK versi terbaru.</p>';
+                return;
+            }
+            try {
+                const data = await apiFetch('/api/dashboard/apps/' + encodeURIComponent(selectedDeviceId));
+                if (data.installed && data.installed.length > 0) {
+                    clearInterval(interval);
+                    openBlock(selectedDeviceId); // Reload the modal with the apps
+                }
+            } catch(e) {}
+        }, 1000); 
       } catch(e) {
         showToast('Gagal sinkronisasi');
       }

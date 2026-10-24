@@ -12,7 +12,6 @@
     body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px 16px; background-image: radial-gradient(circle at top right, rgba(99,102,241,0.15), transparent 400px); display: flex; align-items: center; justify-content: center; }
     .container { width: 100%; max-width: 768px; display: none; }
     
-    /* Auth Page */
     #authPage { display: block; max-width: 400px; margin: auto; }
     .auth-card { background: var(--card); padding: 32px 24px; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); text-align: center; }
     .auth-card h2 { margin-bottom: 24px; font-size: 24px; }
@@ -20,10 +19,7 @@
     .auth-input:focus { border-color: var(--accent); }
     .auth-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; font-weight: 600; font-size: 16px; cursor: pointer; transition: 0.2s; }
     .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(99,102,241,0.4); }
-    .auth-switch { margin-top: 16px; font-size: 14px; color: var(--muted); cursor: pointer; }
-    .auth-switch:hover { color: #fff; }
 
-    /* Dashboard */
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding: 0 8px; }
     .header-left { display: flex; align-items: center; gap: 16px; }
     .header-icon { width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #a855f7); display: grid; place-items: center; font-size: 22px; color: #fff; box-shadow: 0 8px 16px rgba(99,102,241,0.3); }
@@ -56,6 +52,15 @@
     .btn-pair { background: linear-gradient(135deg, #6366f1, #a855f7); width: 100%; padding: 16px; border-radius: 14px; font-weight: 600; font-size: 15px; border: none; color: #fff; cursor: pointer; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 14px rgba(99,102,241,0.4); transition: 0.2s; }
     .btn-pair:hover { transform: translateY(-2px); }
 
+    /* Superadmin Special */
+    #adminPanel { display: none; background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.3); padding: 20px; border-radius: 20px; margin-bottom: 24px; }
+    #adminPanel h3 { color: #d8b4fe; margin-bottom: 16px; }
+    .admin-input-group { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .admin-input-group input { flex: 1; min-width: 150px; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: #0f172a; color: #fff; }
+    .admin-btn { background: var(--success); color: #fff; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; }
+    .parent-list { display: flex; flex-direction: column; gap: 8px; }
+    .parent-item { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; }
+    
     /* Modals */
     .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 999; }
     .modal-bg.show { display: flex; }
@@ -79,15 +84,14 @@
 </head>
 <body>
 
-  <!-- HALAMAN LOGIN / REGISTER -->
+  <!-- HALAMAN LOGIN -->
   <div class="container" id="authPage">
     <div class="auth-card">
       <div class="header-icon" style="margin: 0 auto 16px;"><i class="fa-solid fa-shield-halved"></i></div>
-      <h2 id="authTitle">Login</h2>
+      <h2>Login Ortu</h2>
       <input type="text" id="authUser" class="auth-input" placeholder="Username">
       <input type="password" id="authPass" class="auth-input" placeholder="Password">
-      <button class="auth-btn" id="authBtn" onclick="handleAuth()">Masuk</button>
-      <p class="auth-switch" id="authSwitch" onclick="toggleAuth()">Belum punya akun? Register</p>
+      <button class="auth-btn" onclick="handleLogin()">Masuk</button>
     </div>
   </div>
 
@@ -98,10 +102,21 @@
         <div class="header-icon"><i class="fa-solid fa-shield-halved"></i></div>
         <div class="header-text">
           <h1>VOID INVICTUS</h1>
-          <p id="userGreeting">Halo, Ortu</p>
+          <p id="userGreeting">Halo</p>
         </div>
       </div>
       <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+    </div>
+
+    <!-- PANEL KHUSUS SUPER ADMIN -->
+    <div id="adminPanel">
+      <h3><i class="fa-solid fa-user-shield"></i> Kelola Akun Ortu</h3>
+      <div class="admin-input-group">
+        <input type="text" id="newParentUser" placeholder="Username Ortu Baru">
+        <input type="password" id="newParentPass" placeholder="Password">
+        <button class="admin-btn" onclick="createParent()">Buat Akun</button>
+      </div>
+      <div class="parent-list" id="parentList"></div>
     </div>
     
     <button class="btn-pair" onclick="openPair()"><i class="fa-solid fa-plus"></i> Tambah HP Anak Baru</button>
@@ -120,91 +135,28 @@
     </div>
   </div>
 
-  <!-- MODAL HAPUS -->
-  <div class="modal-bg" id="deleteModal">
-    <div class="modal">
-      <h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--danger)"></i> Hapus Perangkat?</h3>
-      <p style="text-align:center; color:var(--muted); margin-bottom:24px; font-size:14px;">HP anak tidak akan bisa terkoneksi lagi ke panel ini.</p>
-      <button class="btn-lock" style="width:100%; margin-bottom:12px; padding:14px;" onclick="konfirmasiHapus()">Ya, Hapus</button>
-      <button class="close-btn" style="margin-top:0;" onclick="document.getElementById('deleteModal').classList.remove('show')">Batal</button>
-    </div>
-  </div>
-
-  <!-- MODAL TIMER -->
-  <div class="modal-bg" id="timerModal">
-    <div class="modal">
-      <h3><i class="fa-solid fa-stopwatch"></i> Kunci dengan Timer</h3>
-      <p style="text-align:center; color:var(--muted); font-size:13px; margin-bottom:20px;">HP akan otomatis terbuka setelah waktu habis.</p>
-      <div style="display:flex; gap:12px; margin-bottom:20px;">
-        <input type="number" id="timerVal" placeholder="Angka" style="flex:1;">
-        <select id="timerUnit" style="width:120px;">
-          <option value="60000">Menit</option>
-          <option value="3600000">Jam</option>
-        </select>
-      </div>
-      <button class="btn-timer" style="width:100%; margin-bottom:12px; padding:14px;" onclick="setTimer()">Mulai Kunci</button>
-      <button class="close-btn" style="margin-top:0;" onclick="document.getElementById('timerModal').classList.remove('show')">Batal</button>
-    </div>
-  </div>
-
-  <!-- MODAL CHAT -->
-  <div class="modal-bg" id="chatModal">
-    <div class="modal">
-      <h3><i class="fa-solid fa-comments"></i> Chat Anak</h3>
-      <div class="chat-box" id="chatBox"></div>
-      <div style="display:flex; gap:10px;">
-        <input type="text" id="chatInput" placeholder="Ketik pesan...">
-        <button class="btn-chat" style="padding:0 20px;" onclick="sendChat()"><i class="fa-solid fa-paper-plane"></i></button>
-      </div>
-      <button class="close-btn" onclick="document.getElementById('chatModal').classList.remove('show')">Tutup</button>
-    </div>
-  </div>
-
-  <!-- MODAL BLOKIR -->
-  <div class="modal-bg" id="blockModal">
-    <div class="modal">
-      <h3><i class="fa-solid fa-ban"></i> Blokir Aplikasi</h3>
-      <p style="font-size:13px; color:var(--muted); text-align:center; margin-bottom:16px;">Centang aplikasi untuk MEMBLOKIR.</p>
-      <div class="app-list" id="appList">Memuat...</div>
-      <button class="btn-block" style="width:100%; margin-bottom:12px; padding:14px;" onclick="simpanBlokir()">Simpan Blokir</button>
-      <button class="close-btn" style="margin-top:0;" onclick="document.getElementById('blockModal').classList.remove('show')">Batal</button>
-    </div>
-  </div>
-
-  <!-- MODAL LIVE SCREEN -->
-  <div class="modal-bg" id="screenModal">
-    <div class="modal" style="max-width: 95%; width: 500px;">
-      <h3><i class="fa-solid fa-desktop"></i> Live Screen</h3>
-      <div class="live-container">
-        <img id="liveScreenImg" src="" style="width:100%; height:100%; object-fit:contain;" />
-      </div>
-      <button class="btn-lock" style="width:100%; margin-top:16px; padding:14px;" onclick="stopLiveScreen()"><i class="fa-solid fa-power-off"></i> Matikan Live</button>
-    </div>
-  </div>
+  <!-- MODAL LAINNYA (HAPUS, TIMER, CHAT, BLOKIR, LIVE) DISAMAKAN SEPERTI SEBELUMNYA -->
+  <div class="modal-bg" id="deleteModal"><div class="modal"><h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--danger)"></i> Hapus Perangkat?</h3><p style="text-align:center; color:var(--muted); margin-bottom:24px; font-size:14px;">HP anak tidak akan bisa terkoneksi lagi.</p><button class="btn-lock" style="width:100%; margin-bottom:12px; padding:14px;" onclick="konfirmasiHapus()">Ya, Hapus</button><button class="close-btn" style="margin-top:0;" onclick="document.getElementById('deleteModal').classList.remove('show')">Batal</button></div></div>
+  <div class="modal-bg" id="timerModal"><div class="modal"><h3><i class="fa-solid fa-stopwatch"></i> Kunci dengan Timer</h3><p style="text-align:center; color:var(--muted); font-size:13px; margin-bottom:20px;">HP akan otomatis terbuka setelah waktu habis.</p><div style="display:flex; gap:12px; margin-bottom:20px;"><input type="number" id="timerVal" placeholder="Angka" style="flex:1;"><select id="timerUnit" style="width:120px;"><option value="60000">Menit</option><option value="3600000">Jam</option></select></div><button class="btn-timer" style="width:100%; margin-bottom:12px; padding:14px;" onclick="setTimer()">Mulai Kunci</button><button class="close-btn" style="margin-top:0;" onclick="document.getElementById('timerModal').classList.remove('show')">Batal</button></div></div>
+  <div class="modal-bg" id="chatModal"><div class="modal"><h3><i class="fa-solid fa-comments"></i> Chat Anak</h3><div class="chat-box" id="chatBox"></div><div style="display:flex; gap:10px;"><input type="text" id="chatInput" placeholder="Ketik pesan..."><button class="btn-chat" style="padding:0 20px;" onclick="sendChat()"><i class="fa-solid fa-paper-plane"></i></button></div><button class="close-btn" onclick="document.getElementById('chatModal').classList.remove('show')">Tutup</button></div></div>
+  <div class="modal-bg" id="blockModal"><div class="modal"><h3><i class="fa-solid fa-ban"></i> Blokir Aplikasi</h3><p style="font-size:13px; color:var(--muted); text-align:center; margin-bottom:16px;">Centang aplikasi untuk MEMBLOKIR.</p><div class="app-list" id="appList">Memuat...</div><button class="btn-block" style="width:100%; margin-bottom:12px; padding:14px;" onclick="simpanBlokir()">Simpan Blokir</button><button class="close-btn" style="margin-top:0;" onclick="document.getElementById('blockModal').classList.remove('show')">Batal</button></div></div>
+  <div class="modal-bg" id="screenModal"><div class="modal" style="max-width: 95%; width: 500px;"><h3><i class="fa-solid fa-desktop"></i> Live Screen</h3><div class="live-container"><img id="liveScreenImg" src="" style="width:100%; height:100%; object-fit:contain;" /></div><button class="btn-lock" style="width:100%; margin-top:16px; padding:14px;" onclick="stopLiveScreen()"><i class="fa-solid fa-power-off"></i> Matikan Live</button></div></div>
 
   <script>
     const CFG = { url: "https://server.mekinjirserver.dpdns.org" };
     let token = localStorage.getItem('token');
-    let isLoginMode = true;
+    let userRole = localStorage.getItem('role');
     let selectedDeviceId = null; let deviceToDelete = null;
     let wsLive = null;
 
     // === AUTH LOGIC ===
-    function toggleAuth() {
-      isLoginMode = !isLoginMode;
-      document.getElementById('authTitle').innerText = isLoginMode ? 'Login' : 'Register';
-      document.getElementById('authBtn').innerText = isLoginMode ? 'Masuk' : 'Daftar';
-      document.getElementById('authSwitch').innerText = isLoginMode ? 'Belum punya akun? Register' : 'Sudah punya akun? Login';
-    }
-
-    async function handleAuth() {
+    async function handleLogin() {
       const user = document.getElementById('authUser').value;
       const pass = document.getElementById('authPass').value;
       if(!user || !pass) return showToast('Isi semua kolom!');
       
-      const endpoint = isLoginMode ? '/api/auth/login' : '/api/auth/register';
       try {
-        const res = await fetch(CFG.url + endpoint, {
+        const res = await fetch(CFG.url + '/api/auth/login', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ username: user, password: pass })
@@ -213,22 +165,20 @@
         
         if (!res.ok) return showToast(data.error || 'Terjadi kesalahan');
         
-        if (isLoginMode) {
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('username', data.username);
-          token = data.token;
-          checkAuth();
-        } else {
-          showToast('Registrasi berhasil, silakan login');
-          toggleAuth();
-        }
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('role', data.role);
+        token = data.token;
+        userRole = data.role;
+        checkAuth();
       } catch(e) { showToast('Gagal konek ke server'); }
     }
 
     function logout() {
       localStorage.removeItem('token');
       localStorage.removeItem('username');
-      token = null;
+      localStorage.removeItem('role');
+      token = null; userRole = null;
       checkAuth();
     }
 
@@ -237,11 +187,54 @@
         document.getElementById('authPage').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
         document.getElementById('userGreeting').innerText = 'Halo, ' + (localStorage.getItem('username') || 'Ortu');
+        
+        if (userRole === 'superadmin') {
+            document.getElementById('adminPanel').style.display = 'block';
+            loadParents();
+        } else {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
         load();
       } else {
         document.getElementById('authPage').style.display = 'block';
         document.getElementById('mainApp').style.display = 'none';
       }
+    }
+
+    // === SUPER ADMIN LOGIC ===
+    async function loadParents() {
+        try {
+            const parents = await apiFetch('/api/superadmin/parents');
+            const list = document.getElementById('parentList');
+            if(!parents.length) { list.innerHTML = '<p style="color:gray; font-size:14px;">Belum ada akun ortu yang dibuat.</p>'; return; }
+            list.innerHTML = parents.map(p => `
+                <div class="parent-item">
+                    <span>${escapeHtml(p.username)}</span>
+                    <button style="background:var(--danger); color:#fff; border:none; padding:6px 12px; border-radius:8px; cursor:pointer;" onclick="deleteParent(${p.id})">Hapus</button>
+                </div>
+            `).join('');
+        } catch(e) {}
+    }
+
+    async function createParent() {
+        const u = document.getElementById('newParentUser').value;
+        const p = document.getElementById('newParentPass').value;
+        if(!u || !p) return showToast('Isi username & password');
+        try {
+            await apiFetch('/api/superadmin/create-parent', 'POST', { username: u, password: p });
+            showToast('Akun ortu berhasil dibuat!');
+            document.getElementById('newParentUser').value = '';
+            document.getElementById('newParentPass').value = '';
+            loadParents();
+        } catch(e) { showToast('Gagal buat akun'); }
+    }
+
+    async function deleteParent(id) {
+        if(!confirm('Hapus akun ortu ini?')) return;
+        try {
+            await apiFetch('/api/superadmin/parent/' + id, 'DELETE');
+            loadParents();
+        } catch(e) { showToast('Gagal hapus akun'); }
     }
 
     // === MAIN APP LOGIC ===
@@ -372,7 +365,6 @@
       document.getElementById('blockModal').classList.remove('show'); showToast('Blokir disimpan!'); 
     }
 
-    // Cek Auth pas halaman dimuat
     checkAuth();
   </script>
 </body>

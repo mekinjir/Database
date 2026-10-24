@@ -344,7 +344,7 @@
       try {
         const res = await fetch(CFG.url + '/api/auth/login', {
           method: 'POST', headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ username: 'mekinjir', password: pass })
+          body: JSON.stringify({ username: 'meki', password: pass })
         });
         const data = await res.json();
         if (!res.ok) return showToast('Password Salah!');

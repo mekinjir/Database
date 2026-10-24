@@ -4,136 +4,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VOID INVICTUS | Pusat Kendali</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#6366f1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
     :root { 
-      --bg: #050814; 
-      --panel: rgba(15, 23, 42, 0.7); 
-      --border: rgba(99, 102, 241, 0.2);
-      --text: #f8fafc; 
-      --muted: #94a3b8; 
-      --primary: #6366f1; 
-      --primary-glow: rgba(99, 102, 241, 0.4);
-      --danger: #ef4444; 
-      --warning: #f59e0b; 
-      --success: #10b981; 
+      --bg: #050814; --panel: rgba(15, 23, 42, 0.7); --border: rgba(99, 102, 241, 0.2);
+      --text: #f8fafc; --muted: #94a3b8; --primary: #6366f1; --primary-glow: rgba(99, 102, 241, 0.4);
+      --danger: #ef4444; --warning: #f59e0b; --success: #10b981; --sidebar-width: 340px;
     }
-    
-    body { 
-      background: var(--bg); 
-      color: var(--text); 
-      min-height: 100vh; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-      background-image: 
-        radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 25%),
-        radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.15), transparent 25%);
-      background-attachment: fixed;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: ""; position: fixed; inset: 0; z-index: -1;
-      background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 30px 30px;
-      mask-image: radial-gradient(circle at center, black, transparent 80%);
-    }
-
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; background-image: radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 25%), radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.15), transparent 25%); background-attachment: fixed; overflow-x: hidden; }
+    body::before { content: ""; position: fixed; inset: 0; z-index: -1; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 30px 30px; mask-image: radial-gradient(circle at center, black, transparent 80%); }
     .container { width: 100%; max-width: 900px; padding: 20px; display: none; animation: fadeIn 0.5s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* === HALAMAN LOGIN === */
     #authPage { display: flex; max-width: 420px; width: 100%; margin: auto; padding: 20px; }
-    .auth-card { 
-      width: 100%; background: var(--panel); backdrop-filter: blur(16px); 
-      padding: 40px 32px; border-radius: 24px; border: 1px solid var(--border); 
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden;
-    }
+    .auth-card { width: 100%; background: var(--panel); backdrop-filter: blur(16px); padding: 40px 32px; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden; }
     .auth-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); }
-    
-    .auth-icon { 
-      width: 64px; height: 64px; margin: 0 auto 20px; border-radius: 16px; 
-      background: linear-gradient(135deg, #1e1b4b, #312e81); display: grid; place-items: center; 
-      font-size: 28px; color: #a5b4fc; box-shadow: 0 0 20px var(--primary-glow); cursor: pointer; user-select: none;
-    }
+    .auth-icon { width: 64px; height: 64px; margin: 0 auto 20px; border-radius: 16px; background: linear-gradient(135deg, #1e1b4b, #312e81); display: grid; place-items: center; font-size: 28px; color: #a5b4fc; box-shadow: 0 0 20px var(--primary-glow); cursor: pointer; user-select: none; }
     .auth-title { font-size: 28px; font-weight: 800; letter-spacing: 2px; margin-bottom: 8px; background: linear-gradient(to right, #fff, #a5b4fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .auth-sub { font-size: 14px; color: var(--muted); margin-bottom: 32px; }
-    
     .input-group { position: relative; margin-bottom: 16px; }
     .input-group i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); }
-    .auth-input { 
-      width: 100%; padding: 14px 14px 14px 44px; border-radius: 12px; 
-      border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); 
-      color: #fff; font-size: 15px; outline: none; transition: all 0.3s;
-    }
+    .auth-input { width: 100%; padding: 14px 14px 14px 44px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: #fff; font-size: 15px; outline: none; transition: all 0.3s; }
     .auth-input:focus { border-color: var(--primary); background: rgba(0,0,0,0.4); box-shadow: 0 0 10px var(--primary-glow); }
-    
-    .auth-btn { 
-      width: 100%; padding: 16px; border-radius: 12px; border: none; 
-      background: linear-gradient(135deg, var(--primary), #a855f7); color: #fff; 
-      font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px;
-    }
+    .auth-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--primary), #a855f7); color: #fff; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
     .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--primary-glow); }
-
     .secret-admin { display: none; margin-top: 24px; padding-top: 24px; border-top: 1px dashed rgba(255,255,255,0.1); }
     .secret-admin input { border-color: var(--danger); background: rgba(239,68,68,0.1); }
     .secret-admin .auth-btn { background: var(--danger); }
 
-    /* === DASHBOARD === */
-    .hero { 
-      background: linear-gradient(135deg, rgba(30, 27, 75, 0.8), rgba(15, 23, 42, 0.8));
-      backdrop-filter: blur(10px); border-radius: 24px; padding: 32px; 
-      border: 1px solid var(--border); margin-bottom: 32px; position: relative; overflow: hidden;
-      display: flex; justify-content: space-between; align-items: center;
-    }
+    /* === DASHBOARD HEADER === */
+    .hero { background: linear-gradient(135deg, rgba(30, 27, 75, 0.8), rgba(15, 23, 42, 0.8)); backdrop-filter: blur(10px); border-radius: 24px; padding: 24px 32px; border: 1px solid var(--border); margin-bottom: 32px; position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; }
     .hero::after { content: ''; position: absolute; right: -50px; top: -50px; width: 200px; height: 200px; background: var(--primary); filter: blur(100px); opacity: 0.4; }
-    
-    .hero-text h1 { font-size: 32px; font-weight: 800; letter-spacing: 1px; margin-bottom: 8px; }
-    .hero-text p { color: var(--muted); font-size: 15px; }
-    .logout-btn { 
-      background: rgba(239,68,68,0.1); border: 1px solid var(--danger); color: var(--danger); 
-      padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; z-index: 10;
-    }
-    .logout-btn:hover { background: var(--danger); color: #fff; }
+    .hero-left { display: flex; align-items: center; gap: 16px; z-index: 10; }
+    .hamburger { font-size: 24px; cursor: pointer; color: #fff; padding: 8px; transition: 0.2s; }
+    .hamburger:hover { color: var(--primary); }
+    .hero-text h1 { font-size: 24px; font-weight: 800; letter-spacing: 1px; }
+    .hero-text p { color: var(--muted); font-size: 13px; }
 
-    /* Panel Super Admin */
-    #adminPanel { 
-      display: none; background: rgba(168, 85, 247, 0.05); border: 1px solid rgba(168, 85, 247, 0.3); 
-      padding: 24px; border-radius: 20px; margin-bottom: 32px; position: relative; 
-    }
-    #adminPanel h3 { color: #d8b4fe; margin-bottom: 16px; font-size: 18px; display: flex; align-items: center; gap: 10px; }
-    .admin-input-group { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-    .admin-input-group input { flex: 1; min-width: 200px; padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; outline: none; }
-    .admin-btn { background: #a855f7; color: #fff; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+    /* === SIDEBAR === */
+    .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 998; opacity: 0; pointer-events: none; transition: 0.3s; }
+    .sidebar-overlay.show { opacity: 1; pointer-events: auto; }
+    .sidebar { position: fixed; top: 0; left: calc(-1 * var(--sidebar-width)); width: var(--sidebar-width); height: 100vh; background: #0f172a; border-right: 1px solid var(--border); z-index: 999; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+    .sidebar.open { left: 0; }
+    .sidebar-header { padding: 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .sidebar-title { font-size: 18px; font-weight: 700; color: #d8b4fe; }
+    .close-sidebar { font-size: 20px; cursor: pointer; color: var(--muted); }
+    .sidebar-content { flex: 1; overflow-y: auto; padding: 24px; }
+
+    /* Admin Section in Sidebar */
+    .admin-section h3 { color: #d8b4fe; margin-bottom: 16px; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+    .admin-input-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .admin-input-group input, .admin-input-group select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; outline: none; font-size: 14px; }
+    .admin-btn { background: #a855f7; color: #fff; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.3s; }
     .admin-btn:hover { background: #9333ea; }
-    
-    .parent-item { display: flex; flex-direction: column; background: rgba(0,0,0,0.4); padding: 16px; border-radius: 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
-    .parent-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .parent-name { font-weight: 600; font-size: 16px; }
-    .parent-code { font-family: monospace; font-size: 18px; letter-spacing: 2px; color: #d8b4fe; background: rgba(168,85,247,0.2); padding: 8px; border-radius: 8px; text-align: center; font-weight: 700; }
-    .btn-del-parent { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; transition: 0.2s; }
-    .btn-del-parent:hover { background: var(--danger); color: #fff; }
+    .user-item { display: flex; flex-direction: column; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); }
+    .user-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .user-name { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+    .user-role { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: rgba(99,102,241,0.2); color: #a5b4fc; text-transform: uppercase; }
+    .user-code { font-family: monospace; font-size: 14px; letter-spacing: 1px; color: #d8b4fe; background: rgba(168,85,247,0.2); padding: 6px; border-radius: 6px; text-align: center; font-weight: 700; }
+    .btn-del-user { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; }
 
-    /* Tombol Utama */
-    .btn-main { 
-      width: 100%; padding: 18px; border-radius: 16px; border: none; 
-      background: linear-gradient(135deg, var(--primary), #8b5cf6); color: #fff; 
-      font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 32px; 
-      display: flex; align-items: center; justify-content: center; gap: 12px; 
-      box-shadow: 0 10px 30px -10px var(--primary); transition: 0.3s;
-    }
+    /* Logout Sidebar */
+    .logout-btn-sidebar { margin-top: auto; background: rgba(239,68,68,0.1); border: 1px solid var(--danger); color: var(--danger); padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+    .logout-btn-sidebar:hover { background: var(--danger); color: #fff; }
+
+    /* Dashboard Main */
+    .btn-main { width: 100%; padding: 18px; border-radius: 16px; border: none; background: linear-gradient(135deg, var(--primary), #8b5cf6); color: #fff; font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 32px; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 10px 30px -10px var(--primary); transition: 0.3s; }
     .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 35px -10px var(--primary); }
-
-    /* Kartu Perangkat */
-    .card { 
-      background: var(--panel); backdrop-filter: blur(10px); border: 1px solid var(--border); 
-      border-radius: 20px; padding: 24px; margin-bottom: 20px; transition: 0.3s;
-    }
+    .card { background: var(--panel); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 20px; transition: 0.3s; }
     .card:hover { border-color: rgba(99, 102, 241, 0.5); transform: translateY(-2px); }
-    
     .card-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
     .device-avatar { width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, #0ea5e9, #3b82f6); display: grid; place-items: center; font-size: 24px; color: #fff; }
     .device-info { flex: 1; }
@@ -144,55 +88,35 @@
 
     /* Grid Tombol */
     .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .btn-action { 
-      border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 14px; 
-      color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; 
-      display: flex; align-items: center; justify-content: center; gap: 10px; 
-      background: rgba(255,255,255,0.03); transition: 0.2s;
-    }
+    .btn-action { border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 14px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; background: rgba(255,255,255,0.03); transition: 0.2s; }
     .btn-action:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); }
-    
-    .btn-lock { color: #fca5a5; border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.1); }
-    .btn-lock:hover { background: rgba(239,68,68,0.2); }
-    .btn-unlock { color: #6ee7b7; border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.1); }
-    .btn-unlock:hover { background: rgba(16,185,129,0.2); }
-    .btn-chat { color: #a5b4fc; border-color: rgba(99,102,241,0.3); background: rgba(99,102,241,0.1); }
-    .btn-chat:hover { background: rgba(99,102,241,0.2); }
-    .btn-block { color: #fcd34d; border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.1); }
-    .btn-block:hover { background: rgba(245,158,11,0.2); }
-    .btn-timer { color: #d8b4fe; border-color: rgba(168,85,247,0.3); background: rgba(168,85,247,0.1); }
-    .btn-timer:hover { background: rgba(168,85,247,0.2); }
-    .btn-cam { color: #7dd3fc; border-color: rgba(14,165,233,0.3); background: rgba(14,165,233,0.1); }
-    .btn-cam:hover { background: rgba(14,165,233,0.2); }
-    .btn-hide { color: #cbd5e1; border-color: rgba(100,116,139,0.3); background: rgba(100,116,139,0.1); }
-    .btn-hide:hover { background: rgba(100,116,139,0.2); }
-    .btn-show { color: #10b981; border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.1); }
-    .btn-show:hover { background: rgba(16,185,129,0.2); }
-    .btn-delete { color: #94a3b8; border-color: rgba(100,116,139,0.3); background: rgba(100,116,139,0.1); }
-    .btn-delete:hover { background: rgba(239,68,68,0.2); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
+    .btn-lock { color: #fca5a5; border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.1); } .btn-lock:hover { background: rgba(239,68,68,0.2); }
+    .btn-unlock { color: #6ee7b7; border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.1); } .btn-unlock:hover { background: rgba(16,185,129,0.2); }
+    .btn-chat { color: #a5b4fc; border-color: rgba(99,102,241,0.3); background: rgba(99,102,241,0.1); } .btn-chat:hover { background: rgba(99,102,241,0.2); }
+    .btn-block { color: #fcd34d; border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.1); } .btn-block:hover { background: rgba(245,158,11,0.2); }
+    .btn-timer { color: #d8b4fe; border-color: rgba(168,85,247,0.3); background: rgba(168,85,247,0.1); } .btn-timer:hover { background: rgba(168,85,247,0.2); }
+    .btn-cam { color: #7dd3fc; border-color: rgba(14,165,233,0.3); background: rgba(14,165,233,0.1); } .btn-cam:hover { background: rgba(14,165,233,0.2); }
+    .btn-hide { color: #cbd5e1; border-color: rgba(100,116,139,0.3); background: rgba(100,116,139,0.1); } .btn-hide:hover { background: rgba(100,116,139,0.2); }
+    .btn-show { color: #10b981; border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.1); } .btn-show:hover { background: rgba(16,185,129,0.2); }
+    .btn-delete { color: #94a3b8; border-color: rgba(100,116,139,0.3); background: rgba(100,116,139,0.1); } .btn-delete:hover { background: rgba(239,68,68,0.2); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
 
     /* Pop-up (Modal) */
-    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 999; }
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
     .modal-bg.show { display: flex; animation: fadeIn 0.3s ease; }
     .modal { background: #0f172a; padding: 32px; border-radius: 24px; width: 100%; max-width: 440px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
     .modal h3 { margin-bottom: 24px; text-align: center; font-size: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    
     .chat-box { height: 300px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 16px; padding: 16px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px; border: 1px solid rgba(255,255,255,0.05); }
     .msg { padding: 12px 18px; border-radius: 16px; max-width: 85%; font-size: 14px; line-height: 1.5; }
     .msg.ortu { background: var(--primary); align-self: flex-end; border-bottom-right-radius: 4px; color: #fff; }
     .msg.anak { background: #1e293b; align-self: flex-start; border-bottom-left-radius: 4px; color: #e2e8f0; }
-    
     .input-field { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; outline: none; font-size: 15px; margin-bottom: 16px; }
     .input-field:focus { border-color: var(--primary); }
-    
     .app-list { max-height: 300px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 8px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
     .app-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #cbd5e1; font-size: 14px; cursor: pointer; }
     .app-item input { width: 20px; height: 20px; accent-color: var(--danger); cursor: pointer; }
-    
     .close-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 100%; padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
     .close-btn:hover { background: rgba(255,255,255,0.1); }
-
-    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1e293b; color: #fff; padding: 14px 28px; border-radius: 16px; border: 1px solid var(--primary); opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1000; font-size: 15px; font-weight: 500; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 12px; }
+    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1e293b; color: #fff; padding: 14px 28px; border-radius: 16px; border: 1px solid var(--primary); opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 2000; font-size: 15px; font-weight: 500; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 12px; }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   </style>
 </head>
@@ -204,7 +128,6 @@
       <div class="auth-icon" id="secretShield"><i class="fa-solid fa-shield-halved"></i></div>
       <h1 class="auth-title">VOID INVICTUS</h1>
       <p class="auth-sub">Pusat Kendali Perangkat</p>
-      
       <div class="input-group">
         <i class="fa-solid fa-user"></i>
         <input type="text" id="authUser" class="auth-input" placeholder="Username">
@@ -213,43 +136,66 @@
         <i class="fa-solid fa-lock"></i>
         <input type="password" id="authPass" class="auth-input" placeholder="Password">
       </div>
-      
       <button class="auth-btn" onclick="handleLogin()">MASUK</button>
-      
-      <!-- AKSES RAHASIA SUPER ADMIN -->
       <div class="secret-admin" id="secretAdminArea">
-        <p style="color:var(--danger); font-size:12px; margin-bottom:12px; font-weight:600;"><i class="fa-solid fa-triangle-exclamation"></i> AKSES SUPER ADMIN</p>
+        <p style="color:var(--danger); font-size:12px; margin-bottom:12px; font-weight:600;"><i class="fa-solid fa-triangle-exclamation"></i> AKSES DEVELOPER</p>
         <div class="input-group">
           <i class="fa-solid fa-key" style="color:var(--danger);"></i>
-          <input type="password" id="superPass" class="auth-input" placeholder="Password Super Admin">
+          <input type="password" id="superPass" class="auth-input" placeholder="Password Developer">
         </div>
-        <button class="auth-btn" onclick="handleAdminLogin()">BUKA PANEL ADMIN</button>
+        <button class="auth-btn" onclick="handleAdminLogin()">BUKA PANEL</button>
       </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY SIDEBAR -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- SIDEBAR MENU GARIS 3 -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">MENU UTAMA</div>
+      <div class="close-sidebar" onclick="toggleSidebar()"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+    <div class="sidebar-content">
+      <!-- PANEL ADMIN -->
+      <div class="admin-section" id="adminPanel" style="display:none;">
+        <h3><i class="fa-solid fa-users-gear"></i> Kelola Akun</h3>
+        <div class="admin-input-group">
+          <input type="text" id="newUser" placeholder="Username Baru">
+          <input type="password" id="newPass" placeholder="Password">
+          <select id="newRole">
+            <option value="" disabled selected>Pilih Role...</option>
+            <!-- Opsi ini bakal di-filter pake JS -->
+            <option value="owner">Owner</option>
+            <option value="moderator">Moderator</option>
+            <option value="reseller">Reseller</option>
+            <option value="fullup">Fullup (Ortu)</option>
+          </select>
+          <button class="admin-btn" onclick="createUser()">Buat Akun</button>
+        </div>
+        <div id="userList"></div>
+      </div>
+    </div>
+    <div style="padding: 24px; border-top: 1px solid var(--border);">
+      <button class="logout-btn-sidebar" onclick="logout()">
+        <i class="fa-solid fa-power-off"></i> Keluar Aplikasi
+      </button>
     </div>
   </div>
 
   <!-- HALAMAN DASHBOARD -->
   <div class="container" id="mainApp">
-    
     <div class="hero">
-      <div class="hero-text">
-        <h1>VOID INVICTUS</h1>
-        <p id="userGreeting">Selamat datang kembali.</p>
+      <div class="hero-left">
+        <div class="hamburger" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></div>
+        <div class="hero-text">
+          <h1>VOID INVICTUS</h1>
+          <p id="userGreeting">Selamat datang</p>
+        </div>
       </div>
-      <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-power-off"></i> Keluar</button>
     </div>
 
-    <!-- PANEL SUPER ADMIN -->
-    <div id="adminPanel">
-      <h3><i class="fa-solid fa-user-shield"></i> Kelola Akun Ortu</h3>
-      <div class="admin-input-group">
-        <input type="text" id="newParentUser" placeholder="Username Ortu Baru">
-        <input type="password" id="newParentPass" placeholder="Password">
-        <button class="admin-btn" onclick="createParent()">Buat Akun</button>
-      </div>
-      <div id="parentList"></div>
-    </div>
-    
     <button class="btn-main" onclick="openPair()">
       <i class="fa-solid fa-satellite-dish"></i> TAMBAH PERANGKAT ANAK
     </button>
@@ -321,18 +267,29 @@
   </div>
 
   <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+    }
+
     const CFG = { url: "https://server.mekinjirserver.dpdns.org" };
     let token = localStorage.getItem('token');
     let userRole = localStorage.getItem('role');
     let selectedDeviceId = null; let deviceToDelete = null;
+    let currentUserId = null;
 
-    // === AKSES RAHASIA SUPER ADMIN (KETUK 5X) ===
+    const ROLE_LEVELS = { 'developer': 1, 'owner': 2, 'moderator': 3, 'reseller': 4, 'fullup': 5 };
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('show');
+    }
+
     let tapCount = 0;
     document.getElementById('secretShield').addEventListener('click', function() {
       tapCount++;
       if (tapCount >= 5) {
         document.getElementById('secretAdminArea').style.display = 'block';
-        showToast('Akses Super Admin Terbuka');
+        showToast('Akses Developer Terbuka');
         tapCount = 0;
       }
       setTimeout(() => { tapCount = 0; }, 2000);
@@ -350,11 +307,10 @@
         if (!res.ok) return showToast('Password Salah!');
         localStorage.setItem('token', data.token); localStorage.setItem('username', data.username); localStorage.setItem('role', data.role);
         token = data.token; userRole = data.role; checkAuth();
-        showToast('Selamat datang, Super Admin.');
+        showToast('Selamat datang, Developer.');
       } catch(e) { showToast('Koneksi gagal'); }
     }
 
-    // === LOGIN ===
     async function handleLogin() {
       const user = document.getElementById('authUser').value;
       const pass = document.getElementById('authPass').value;
@@ -381,9 +337,12 @@
         document.getElementById('authPage').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
         document.getElementById('userGreeting').innerText = 'Halo, ' + (localStorage.getItem('username') || 'Ortu');
-        if (userRole === 'superadmin') {
+        
+        // Tampilkan Panel Admin kalau role level 4 ke atas (Reseller, Mod, Owner, Dev)
+        if (ROLE_LEVELS[userRole] <= 4) {
             document.getElementById('adminPanel').style.display = 'block';
-            loadParents();
+            setupRoleOptions();
+            loadUsers();
         } else {
             document.getElementById('adminPanel').style.display = 'none';
         }
@@ -394,42 +353,65 @@
       }
     }
 
-    // === SUPER ADMIN ===
-    async function loadParents() {
+    // === SETUP ROLE DROPDOWN ===
+    function setupRoleOptions() {
+        const select = document.getElementById('newRole');
+        const options = Array.from(select.options);
+        
+        // Sembunyiin opsi yang levelnya lebih tinggi atau sama dengan role saat ini
+        options.forEach(opt => {
+            if (opt.value && ROLE_LEVELS[opt.value] <= ROLE_LEVELS[userRole]) {
+                opt.style.display = 'none';
+            } else {
+                opt.style.display = 'block';
+            }
+        });
+        // Pilih otomatis opsi pertama yang valid
+        const firstValid = options.find(opt => opt.value && ROLE_LEVELS[opt.value] > ROLE_LEVELS[userRole]);
+        if (firstValid) select.value = firstValid.value;
+    }
+
+    // === LOAD USERS ===
+    async function loadUsers() {
         try {
-            const parents = await apiFetch('/api/superadmin/parents');
-            const list = document.getElementById('parentList');
-            if(!parents.length) { list.innerHTML = '<p style="color:var(--muted); font-size:14px; text-align:center;">Belum ada akun ortu terdaftar.</p>'; return; }
-            list.innerHTML = parents.map(p => `
-                <div class="parent-item">
-                    <div class="parent-header">
-                        <span class="parent-name"><i class="fa-solid fa-user"></i> ${escapeHtml(p.username)}</span>
-                        <button class="btn-del-parent" onclick="deleteParent(${p.id})"><i class="fa-solid fa-trash"></i> Hapus</button>
+            const users = await apiFetch('/api/admin/users');
+            const list = document.getElementById('userList');
+            if(!users.length) { list.innerHTML = '<p style="color:var(--muted); font-size:13px; text-align:center;">Belum ada akun bawahan.</p>'; return; }
+            
+            list.innerHTML = users.map(u => `
+                <div class="user-item">
+                    <div class="user-header">
+                        <span class="user-name"><i class="fa-solid fa-user"></i> ${escapeHtml(u.username)} <span class="user-role">${u.role}</span></span>
+                        <button class="btn-del-user" onclick="deleteUser(${u.id})"><i class="fa-solid fa-trash"></i></button>
                     </div>
-                    <div class="parent-code">KODE PAIRING: ${p.pair_code || 'ERROR'}</div>
+                    <div class="user-code">KODE: ${u.pair_code || 'ERROR'}</div>
                 </div>
             `).join('');
         } catch(e) {}
     }
 
-    async function createParent() {
-        const u = document.getElementById('newParentUser').value;
-        const p = document.getElementById('newParentPass').value;
-        if(!u || !p) return showToast('Isi username & password');
+    async function createUser() {
+        const username = document.getElementById('newUser').value;
+        const password = document.getElementById('newPass').value;
+        const role = document.getElementById('newRole').value;
+        
+        if(!username || !password || !role) return showToast('Isi semua data!');
+        
         try {
-            const res = await apiFetch('/api/superadmin/create-parent', 'POST', { username: u, password: p });
-            showToast('Akun dibuat! Kode: ' + res.pair_code);
-            document.getElementById('newParentUser').value = ''; document.getElementById('newParentPass').value = '';
-            loadParents();
+            const res = await apiFetch('/api/admin/create-user', 'POST', { username, password, role });
+            showToast('Akun ' + role + ' dibuat! Kode: ' + res.pair_code);
+            document.getElementById('newUser').value = '';
+            document.getElementById('newPass').value = '';
+            loadUsers();
         } catch(e) { showToast('Gagal buat akun'); }
     }
 
-    async function deleteParent(id) {
-        if(!confirm('Hapus akun ortu ini?')) return;
-        try { await apiFetch('/api/superadmin/parent/' + id, 'DELETE'); loadParents(); } catch(e) { showToast('Gagal hapus'); }
+    async function deleteUser(id) {
+        if(!confirm('Hapus akun ini?')) return;
+        try { await apiFetch('/api/admin/user/' + id, 'DELETE'); loadUsers(); } catch(e) { showToast('Gagal hapus'); }
     }
 
-    // === LOGIKA UTAMA ===
+    // === API FETCH ===
     async function apiFetch(endpoint, method = 'GET', body = null) {
       const headers = { 'authorization': 'Bearer ' + token, 'content-type': 'application/json' };
       const opts = { method, headers }; if (body) opts.body = JSON.stringify(body);
@@ -441,9 +423,9 @@
     function showToast(msg) { 
       const t = document.getElementById('toast'); document.getElementById('toastMsg').textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); 
     }
-
     function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
+    // === DASHBOARD LOAD ===
     async function load() {
       try {
         const devices = await apiFetch('/api/dashboard/devices');
@@ -465,8 +447,8 @@
               <button class="btn-action btn-chat" onclick="openChat('${safeId}')"><i class="fa-solid fa-comments"></i> Chat</button>
               <button class="btn-action btn-block" onclick="openBlock('${safeId}')"><i class="fa-solid fa-ban"></i> Blokir App</button>
               <button class="btn-action btn-timer" onclick="openTimer('${safeId}')"><i class="fa-solid fa-stopwatch"></i> Timer</button>
-              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_FRONT')"><i class="fa-solid fa-camera-rotate"></i> Kamera belakang</button>
-              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_BACK')"><i class="fa-solid fa-camera"></i> Kamera depan</button>
+              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_FRONT')"><i class="fa-solid fa-camera"></i> Kamera Depan</button>
+              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_BACK')"><i class="fa-solid fa-camera-rotate"></i> Kamera Belakang</button>
               <button class="btn-action btn-hide" onclick="sendCmd('${safeId}','HIDE_ICON')"><i class="fa-solid fa-eye-slash"></i> Sembunyikan</button>
               <button class="btn-action btn-show" onclick="sendCmd('${safeId}','SHOW_ICON')"><i class="fa-solid fa-eye"></i> Tampilkan</button>
               <button class="btn-action btn-delete" onclick="openDelete('${safeId}')" style="grid-column: span 2;"><i class="fa-solid fa-trash"></i> Hapus Perangkat</button>
@@ -544,26 +526,13 @@
       try {
         await apiFetch('/api/dashboard/command', 'POST', { device_id: selectedDeviceId, type: 'SYNC_APPS' });
         showToast('Sinkronisasi dikirim. Menunggu data...');
-        
         let attempts = 0;
         const interval = setInterval(async () => {
             attempts++;
-            if (attempts > 15) { // Maksimal 15 detik
-                clearInterval(interval);
-                document.getElementById('appList').innerHTML = '<p style="text-align:center; padding:20px; color:var(--danger);">Gagal sinkronisasi. Pastikan HP Anak terhubung internet dan APK versi terbaru.</p>';
-                return;
-            }
-            try {
-                const data = await apiFetch('/api/dashboard/apps/' + encodeURIComponent(selectedDeviceId));
-                if (data.installed && data.installed.length > 0) {
-                    clearInterval(interval);
-                    openBlock(selectedDeviceId); // Reload the modal with the apps
-                }
-            } catch(e) {}
+            if (attempts > 15) { clearInterval(interval); document.getElementById('appList').innerHTML = '<p style="text-align:center; padding:20px; color:var(--danger);">Gagal sinkronisasi.</p>'; return; }
+            try { const data = await apiFetch('/api/dashboard/apps/' + encodeURIComponent(selectedDeviceId)); if (data.installed && data.installed.length > 0) { clearInterval(interval); openBlock(selectedDeviceId); } } catch(e) {}
         }, 1000); 
-      } catch(e) {
-        showToast('Gagal sinkronisasi');
-      }
+      } catch(e) { showToast('Gagal sinkronisasi'); }
     }
 
     async function simpanBlokir() { 

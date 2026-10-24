@@ -12,17 +12,21 @@
     body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px 16px; background-image: radial-gradient(circle at top right, rgba(99,102,241,0.15), transparent 400px); display: flex; align-items: center; justify-content: center; }
     .container { width: 100%; max-width: 768px; display: none; }
     
+    /* Auth Page */
     #authPage { display: block; max-width: 400px; margin: auto; }
-    .auth-card { background: var(--card); padding: 32px 24px; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); text-align: center; }
+    .auth-card { background: var(--card); padding: 32px 24px; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); text-align: center; position: relative; }
     .auth-card h2 { margin-bottom: 24px; font-size: 24px; }
     .auth-input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: #0f172a; color: #fff; margin-bottom: 16px; outline: none; }
     .auth-input:focus { border-color: var(--accent); }
     .auth-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; font-weight: 600; font-size: 16px; cursor: pointer; transition: 0.2s; }
     .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(99,102,241,0.4); }
+    .secret-admin { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); }
+    .secret-admin input { border-color: var(--danger); }
 
+    /* Dashboard */
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding: 0 8px; }
     .header-left { display: flex; align-items: center; gap: 16px; }
-    .header-icon { width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #a855f7); display: grid; place-items: center; font-size: 22px; color: #fff; box-shadow: 0 8px 16px rgba(99,102,241,0.3); }
+    .header-icon { width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #a855f7); display: grid; place-items: center; font-size: 22px; color: #fff; box-shadow: 0 8px 16px rgba(99,102,241,0.3); cursor: pointer; user-select: none; }
     .header-text h1 { font-size: 22px; font-weight: 700; text-transform: uppercase; background: linear-gradient(to right, #fff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .header-text p { font-size: 13px; color: var(--muted); }
     .logout-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.2s; }
@@ -87,11 +91,19 @@
   <!-- HALAMAN LOGIN -->
   <div class="container" id="authPage">
     <div class="auth-card">
-      <div class="header-icon" style="margin: 0 auto 16px;"><i class="fa-solid fa-shield-halved"></i></div>
+      <!-- TAP ICON INI 5 KALI UNTUK ADMIN -->
+      <div class="header-icon" id="secretShield" style="margin: 0 auto 16px;"><i class="fa-solid fa-shield-halved"></i></div>
       <h2>Login Ortu</h2>
       <input type="text" id="authUser" class="auth-input" placeholder="Username">
       <input type="password" id="authPass" class="auth-input" placeholder="Password">
       <button class="auth-btn" onclick="handleLogin()">Masuk</button>
+      
+      <!-- AREA RAHASIA SUPER ADMIN -->
+      <div class="secret-admin" id="secretAdminArea">
+        <p style="color:var(--danger); font-size:12px; margin-bottom:12px;">Mode Super Admin Terdeteksi</p>
+        <input type="password" id="superPass" class="auth-input" placeholder="Super Admin Password" style="border-color:var(--danger);">
+        <button class="auth-btn" style="background:var(--danger);" onclick="handleAdminLogin()">Buka Panel Admin</button>
+      </div>
     </div>
   </div>
 
@@ -149,6 +161,41 @@
     let selectedDeviceId = null; let deviceToDelete = null;
     let wsLive = null;
 
+    // === SECRET ADMIN LOGIC ===
+    let tapCount = 0;
+    document.getElementById('secretShield').addEventListener('click', function() {
+      tapCount++;
+      if (tapCount >= 5) {
+        document.getElementById('secretAdminArea').style.display = 'block';
+        showToast('Mode Admin terbuka');
+        tapCount = 0; // reset
+      }
+      setTimeout(() => { tapCount = 0; }, 2000); // Reset kalau kelamaan
+    });
+
+    async function handleAdminLogin() {
+      const pass = document.getElementById('superPass').value;
+      if(!pass) return showToast('Masukkan password admin!');
+      
+      try {
+        const res = await fetch(CFG.url + '/api/auth/login', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ username: 'mekinjir', password: pass }) // GANTI 'mekinjir' PAKE USERNAME ADMIN LU
+        });
+        const data = await res.json();
+        
+        if (!res.ok) return showToast('Password Admin Salah!');
+        
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('role', data.role);
+        token = data.token; userRole = data.role;
+        checkAuth();
+        showToast('Berhasil masuk sebagai Super Admin!');
+      } catch(e) { showToast('Gagal konek ke server'); }
+    }
+
     // === AUTH LOGIC ===
     async function handleLogin() {
       const user = document.getElementById('authUser').value;
@@ -168,8 +215,7 @@
         localStorage.setItem('token', data.token);
         localStorage.setItem('username', data.username);
         localStorage.setItem('role', data.role);
-        token = data.token;
-        userRole = data.role;
+        token = data.token; userRole = data.role;
         checkAuth();
       } catch(e) { showToast('Gagal konek ke server'); }
     }

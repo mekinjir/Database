@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>VOID INVICTUS | Pusat Kendali</title>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#6366f1">
@@ -49,19 +49,39 @@
     /* === SIDEBAR === */
     .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 998; opacity: 0; pointer-events: none; transition: 0.3s; }
     .sidebar-overlay.show { opacity: 1; pointer-events: auto; }
-    .sidebar { position: fixed; top: 0; left: calc(-1 * var(--sidebar-width)); width: var(--sidebar-width); height: 100vh; background: #0f172a; border-right: 1px solid var(--border); z-index: 999; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+    .sidebar {
+      position: fixed; top: 0; left: calc(-1 * var(--sidebar-width));
+      width: var(--sidebar-width); height: 100vh; height: 100dvh;
+      background: #0f172a; border-right: 1px solid var(--border); z-index: 999;
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column;
+    }
     .sidebar.open { left: 0; }
-    .sidebar-header { padding: 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .sidebar-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
     .sidebar-title { font-size: 18px; font-weight: 700; color: #d8b4fe; }
-    .close-sidebar { font-size: 20px; cursor: pointer; color: var(--muted); }
-    .sidebar-content { flex: 1; overflow-y: auto; padding: 24px; }
+    .close-sidebar { font-size: 20px; cursor: pointer; color: var(--muted); padding: 4px 8px; }
+    .sidebar-content { flex: 1; overflow-y: auto; padding: 20px 24px; }
 
-    /* Admin Section in Sidebar */
+    /* User info card - SELALU tampil */
+    .user-info-card { background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1)); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+    .user-avatar { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), #a855f7); display: grid; place-items: center; color: #fff; font-size: 18px; flex-shrink: 0; }
+    .user-meta { flex: 1; min-width: 0; }
+    .user-meta-name { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
+    .user-meta-role { font-size: 10px; color: #a5b4fc; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-top: 2px; }
+
+    /* Quick menu */
+    .quick-menu { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .menu-item { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: #cbd5e1; padding: 14px 16px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 500; text-align: left; width: 100%; transition: 0.2s; }
+    .menu-item:hover { background: rgba(99,102,241,0.15); border-color: var(--border); color: #fff; }
+    .menu-item i { color: var(--primary); width: 20px; text-align: center; }
+
+    /* Admin Section */
     .admin-section h3 { color: #d8b4fe; margin-bottom: 16px; font-size: 15px; display: flex; align-items: center; gap: 8px; }
     .admin-input-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
     .admin-input-group input, .admin-input-group select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; outline: none; font-size: 14px; }
     .admin-btn { background: #a855f7; color: #fff; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.3s; }
     .admin-btn:hover { background: #9333ea; }
+    .admin-btn:disabled { background: #475569; cursor: not-allowed; }
     .user-item { display: flex; flex-direction: column; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); }
     .user-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .user-name { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px; }
@@ -69,8 +89,15 @@
     .user-code { font-family: monospace; font-size: 14px; letter-spacing: 1px; color: #d8b4fe; background: rgba(168,85,247,0.2); padding: 6px; border-radius: 6px; text-align: center; font-weight: 700; }
     .btn-del-user { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; }
 
-    /* Logout Sidebar */
-    .logout-btn-sidebar { margin-top: auto; background: rgba(239,68,68,0.1); border: 1px solid var(--danger); color: var(--danger); padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+    /* Sidebar footer FIX */
+    .sidebar-footer {
+      padding: 20px 24px;
+      padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+      background: #0f172a;
+    }
+    .logout-btn-sidebar { width: 100%; background: rgba(239,68,68,0.1); border: 1px solid var(--danger); color: var(--danger); padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
     .logout-btn-sidebar:hover { background: var(--danger); color: #fff; }
 
     /* Dashboard Main */
@@ -86,7 +113,6 @@
     .badge.off { background: rgba(148,163,184,0.1); color: #94a3b8; border-color: rgba(148,163,184,0.2); }
     .device-id { font-size: 13px; color: var(--muted); font-family: monospace; margin-top: 4px; }
 
-    /* Grid Tombol */
     .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .btn-action { border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 14px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; background: rgba(255,255,255,0.03); transition: 0.2s; }
     .btn-action:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); }
@@ -100,7 +126,6 @@
     .btn-show { color: #10b981; border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.1); } .btn-show:hover { background: rgba(16,185,129,0.2); }
     .btn-delete { color: #94a3b8; border-color: rgba(100,116,139,0.3); background: rgba(100,116,139,0.1); } .btn-delete:hover { background: rgba(239,68,68,0.2); color: #fca5a5; border-color: rgba(239,68,68,0.3); }
 
-    /* Pop-up (Modal) */
     .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
     .modal-bg.show { display: flex; animation: fadeIn 0.3s ease; }
     .modal { background: #0f172a; padding: 32px; border-radius: 24px; width: 100%; max-width: 440px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
@@ -130,11 +155,11 @@
       <p class="auth-sub">Pusat Kendali Perangkat</p>
       <div class="input-group">
         <i class="fa-solid fa-user"></i>
-        <input type="text" id="authUser" class="auth-input" placeholder="Username">
+        <input type="text" id="authUser" class="auth-input" placeholder="Username" autocomplete="username">
       </div>
       <div class="input-group">
         <i class="fa-solid fa-lock"></i>
-        <input type="password" id="authPass" class="auth-input" placeholder="Password">
+        <input type="password" id="authPass" class="auth-input" placeholder="Password" autocomplete="current-password">
       </div>
       <button class="auth-btn" onclick="handleLogin()">MASUK</button>
       <div class="secret-admin" id="secretAdminArea">
@@ -148,17 +173,32 @@
     </div>
   </div>
 
-  <!-- OVERLAY SIDEBAR -->
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-  <!-- SIDEBAR MENU GARIS 3 -->
+  <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-title">MENU UTAMA</div>
       <div class="close-sidebar" onclick="toggleSidebar()"><i class="fa-solid fa-xmark"></i></div>
     </div>
     <div class="sidebar-content">
-      <!-- PANEL ADMIN -->
+      <!-- USER INFO — SELALU TAMPIL SEMUA ROLE -->
+      <div class="user-info-card">
+        <div class="user-avatar"><i class="fa-solid fa-user-shield"></i></div>
+        <div class="user-meta">
+          <div class="user-meta-name" id="sideUsername">-</div>
+          <div class="user-meta-role" id="sideRole">-</div>
+        </div>
+      </div>
+
+      <!-- QUICK MENU — SELALU TAMPIL SEMUA ROLE -->
+      <div class="quick-menu">
+        <button class="menu-item" onclick="openPair(); toggleSidebar();">
+          <i class="fa-solid fa-satellite-dish"></i> <span>Kode Pairing Saya</span>
+        </button>
+      </div>
+
+      <!-- PANEL ADMIN (khusus role level ≤ 4) -->
       <div class="admin-section" id="adminPanel" style="display:none;">
         <h3><i class="fa-solid fa-users-gear"></i> Kelola Akun</h3>
         <div class="admin-input-group">
@@ -166,25 +206,26 @@
           <input type="password" id="newPass" placeholder="Password">
           <select id="newRole">
             <option value="" disabled selected>Pilih Role...</option>
-            <!-- Opsi ini bakal di-filter pake JS -->
             <option value="owner">Owner</option>
             <option value="moderator">Moderator</option>
             <option value="reseller">Reseller</option>
             <option value="fullup">Fullup (Ortu)</option>
           </select>
-          <button class="admin-btn" onclick="createUser()">Buat Akun</button>
+          <button class="admin-btn" id="btnCreateUser" onclick="createUser()">Buat Akun</button>
         </div>
         <div id="userList"></div>
       </div>
     </div>
-    <div style="padding: 24px; border-top: 1px solid var(--border);">
+
+    <!-- FOOTER — tidak akan tenggelam -->
+    <div class="sidebar-footer">
       <button class="logout-btn-sidebar" onclick="logout()">
         <i class="fa-solid fa-power-off"></i> Keluar Aplikasi
       </button>
     </div>
   </div>
 
-  <!-- HALAMAN DASHBOARD -->
+  <!-- DASHBOARD -->
   <div class="container" id="mainApp">
     <div class="hero">
       <div class="hero-left">
@@ -238,7 +279,7 @@
         </select>
       </div>
       <button class="btn-action btn-timer" style="width:100%; margin-bottom:12px;" onclick="setTimer()">Mulai Kunci</button>
-      <button class="close-btn" onclick="document.getElementById('timerModal').classList.remove('show')">Batal</button>
+      <button class="close-btn" onclick="closeTimer()">Batal</button>
     </div>
   </div>
 
@@ -251,7 +292,7 @@
         <input type="text" id="chatInput" class="input-field" style="margin:0;" placeholder="Ketik pesan...">
         <button class="btn-action btn-chat" style="padding:0 20px;" onclick="sendChat()"><i class="fa-solid fa-paper-plane"></i></button>
       </div>
-      <button class="close-btn" style="margin-top:16px;" onclick="document.getElementById('chatModal').classList.remove('show')">Tutup</button>
+      <button class="close-btn" style="margin-top:16px;" onclick="closeChat()">Tutup</button>
     </div>
   </div>
 
@@ -262,7 +303,7 @@
       <p style="font-size:13px; color:var(--muted); text-align:center; margin-bottom:16px;">Centang aplikasi yang akan diblokir oleh sistem.</p>
       <div class="app-list" id="appList">Memuat...</div>
       <button class="btn-action btn-block" style="width:100%; margin-bottom:12px;" onclick="simpanBlokir()">Simpan Blokir</button>
-      <button class="close-btn" onclick="document.getElementById('blockModal').classList.remove('show')">Batal</button>
+      <button class="close-btn" onclick="closeBlock()">Batal</button>
     </div>
   </div>
 
@@ -274,8 +315,13 @@
     const CFG = { url: "https://server.mekinjirserver.dpdns.org" };
     let token = localStorage.getItem('token');
     let userRole = localStorage.getItem('role');
-    let selectedDeviceId = null; let deviceToDelete = null;
-    let currentUserId = null;
+    let selectedDeviceId = null;
+    let deviceToDelete = null;
+
+    let refreshInterval = null;
+    let chatRefreshInterval = null;
+    let syncAppsInterval = null;
+    let toastTimeout = null;
 
     const ROLE_LEVELS = { 'developer': 1, 'owner': 2, 'moderator': 3, 'reseller': 4, 'fullup': 5 };
 
@@ -297,7 +343,7 @@
 
     async function handleAdminLogin() {
       const pass = document.getElementById('superPass').value;
-      if(!pass) return showToast('Masukkan password!');
+      if (!pass) return showToast('Masukkan password!');
       try {
         const res = await fetch(CFG.url + '/api/auth/login', {
           method: 'POST', headers: { 'content-type': 'application/json' },
@@ -305,16 +351,19 @@
         });
         const data = await res.json();
         if (!res.ok) return showToast('Password Salah!');
-        localStorage.setItem('token', data.token); localStorage.setItem('username', data.username); localStorage.setItem('role', data.role);
-        token = data.token; userRole = data.role; checkAuth();
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('role', data.role);
+        token = data.token; userRole = data.role;
+        checkAuth();
         showToast('Selamat datang, Developer.');
-      } catch(e) { showToast('Koneksi gagal'); }
+      } catch (e) { showToast('Koneksi gagal'); }
     }
 
     async function handleLogin() {
       const user = document.getElementById('authUser').value;
       const pass = document.getElementById('authPass').value;
-      if(!user || !pass) return showToast('Isi semua kolom!');
+      if (!user || !pass) return showToast('Isi semua kolom!');
       try {
         const res = await fetch(CFG.url + '/api/auth/login', {
           method: 'POST', headers: { 'content-type': 'application/json' },
@@ -322,148 +371,230 @@
         });
         const data = await res.json();
         if (!res.ok) return showToast(data.error || 'Akses Ditolak');
-        localStorage.setItem('token', data.token); localStorage.setItem('username', data.username); localStorage.setItem('role', data.role);
-        token = data.token; userRole = data.role; checkAuth();
-      } catch(e) { showToast('Server Offline'); }
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('role', data.role);
+        token = data.token; userRole = data.role;
+        checkAuth();
+      } catch (e) { showToast('Server Offline'); }
     }
 
     function logout() {
-      localStorage.removeItem('token'); localStorage.removeItem('username'); localStorage.removeItem('role');
-      token = null; userRole = null; checkAuth();
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      localStorage.removeItem('role');
+      token = null; userRole = null;
+      // tutup sidebar & overlay
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('show');
+      // reset state modal
+      document.getElementById('secretAdminArea').style.display = 'none';
+      document.getElementById('superPass').value = '';
+      // clear interval refresh
+      clearInterval(refreshInterval);
+      clearInterval(chatRefreshInterval);
+      clearInterval(syncAppsInterval);
+      checkAuth();
     }
 
     function checkAuth() {
       if (token) {
         document.getElementById('authPage').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
-        document.getElementById('userGreeting').innerText = 'Halo, ' + (localStorage.getItem('username') || 'Ortu');
-        
-        // Tampilkan Panel Admin kalau role level 4 ke atas (Reseller, Mod, Owner, Dev)
-        if (ROLE_LEVELS[userRole] <= 4) {
-            document.getElementById('adminPanel').style.display = 'block';
-            setupRoleOptions();
-            loadUsers();
+
+        const uname = localStorage.getItem('username') || 'Ortu';
+        document.getElementById('userGreeting').innerText = 'Halo, ' + uname;
+
+        // populate sidebar
+        document.getElementById('sideUsername').textContent = uname;
+        document.getElementById('sideRole').textContent = userRole || '-';
+
+        const lvl = ROLE_LEVELS[userRole] ?? 99;
+        if (lvl <= 4) {
+          document.getElementById('adminPanel').style.display = 'block';
+          setupRoleOptions();
+          loadUsers();
         } else {
-            document.getElementById('adminPanel').style.display = 'none';
+          document.getElementById('adminPanel').style.display = 'none';
         }
+
         load();
+        clearInterval(refreshInterval);
+        refreshInterval = setInterval(load, 15000);
       } else {
         document.getElementById('authPage').style.display = 'flex';
         document.getElementById('mainApp').style.display = 'none';
       }
     }
 
-    // === SETUP ROLE DROPDOWN ===
     function setupRoleOptions() {
-        const select = document.getElementById('newRole');
-        const options = Array.from(select.options);
-        
-        // Sembunyiin opsi yang levelnya lebih tinggi atau sama dengan role saat ini
-        options.forEach(opt => {
-            if (opt.value && ROLE_LEVELS[opt.value] <= ROLE_LEVELS[userRole]) {
-                opt.style.display = 'none';
-            } else {
-                opt.style.display = 'block';
-            }
-        });
-        // Pilih otomatis opsi pertama yang valid
-        const firstValid = options.find(opt => opt.value && ROLE_LEVELS[opt.value] > ROLE_LEVELS[userRole]);
-        if (firstValid) select.value = firstValid.value;
+      const select = document.getElementById('newRole');
+      const btn = document.getElementById('btnCreateUser');
+      const myLvl = ROLE_LEVELS[userRole] ?? 99;
+      const options = Array.from(select.options);
+
+      options.forEach(opt => {
+        if (opt.value && ROLE_LEVELS[opt.value] <= myLvl) {
+          opt.style.display = 'none';
+          opt.disabled = true;
+        } else {
+          opt.style.display = 'block';
+          opt.disabled = false;
+        }
+      });
+
+      const firstValid = options.find(opt => opt.value && ROLE_LEVELS[opt.value] > myLvl);
+      if (firstValid) {
+        select.value = firstValid.value;
+        btn.disabled = false;
+        btn.textContent = 'Buat Akun';
+      } else {
+        select.value = '';
+        btn.disabled = true;
+        btn.textContent = 'Anda tidak berhak membuat role';
+      }
     }
 
-    // === LOAD USERS ===
     async function loadUsers() {
-        try {
-            const users = await apiFetch('/api/admin/users');
-            const list = document.getElementById('userList');
-            if(!users.length) { list.innerHTML = '<p style="color:var(--muted); font-size:13px; text-align:center;">Belum ada akun bawahan.</p>'; return; }
-            
-            list.innerHTML = users.map(u => `
-                <div class="user-item">
-                    <div class="user-header">
-                        <span class="user-name"><i class="fa-solid fa-user"></i> ${escapeHtml(u.username)} <span class="user-role">${u.role}</span></span>
-                        <button class="btn-del-user" onclick="deleteUser(${u.id})"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                    <div class="user-code">KODE: ${u.pair_code || 'ERROR'}</div>
-                </div>
-            `).join('');
-        } catch(e) {}
+      try {
+        const users = await apiFetch('/api/admin/users');
+        const list = document.getElementById('userList');
+        if (!users.length) {
+          list.innerHTML = '<p style="color:var(--muted); font-size:13px; text-align:center;">Belum ada akun bawahan.</p>';
+          return;
+        }
+        list.innerHTML = users.map(u => `
+          <div class="user-item">
+            <div class="user-header">
+              <span class="user-name"><i class="fa-solid fa-user"></i> ${escapeHtml(u.username)} <span class="user-role">${escapeHtml(u.role)}</span></span>
+              <button class="btn-del-user" data-del-user="${u.id}"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <div class="user-code">KODE: ${escapeHtml(u.pair_code || 'ERROR')}</div>
+          </div>
+        `).join('');
+      } catch (e) { /* silent */ }
     }
+
+    // Delegation untuk tombol hapus user
+    document.getElementById('userList').addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-del-user]');
+      if (!btn) return;
+      deleteUser(btn.dataset.delUser);
+    });
 
     async function createUser() {
-        const username = document.getElementById('newUser').value;
-        const password = document.getElementById('newPass').value;
-        const role = document.getElementById('newRole').value;
-        
-        if(!username || !password || !role) return showToast('Isi semua data!');
-        
-        try {
-            const res = await apiFetch('/api/admin/create-user', 'POST', { username, password, role });
-            showToast('Akun ' + role + ' dibuat! Kode: ' + res.pair_code);
-            document.getElementById('newUser').value = '';
-            document.getElementById('newPass').value = '';
-            loadUsers();
-        } catch(e) { showToast('Gagal buat akun'); }
+      const username = document.getElementById('newUser').value;
+      const password = document.getElementById('newPass').value;
+      const role = document.getElementById('newRole').value;
+
+      if (!username || !password || !role) return showToast('Isi semua data!');
+
+      try {
+        const res = await apiFetch('/api/admin/create-user', 'POST', { username, password, role });
+        showToast('Akun ' + role + ' dibuat! Kode: ' + res.pair_code);
+        document.getElementById('newUser').value = '';
+        document.getElementById('newPass').value = '';
+        loadUsers();
+      } catch (e) { showToast('Gagal buat akun'); }
     }
 
     async function deleteUser(id) {
-        if(!confirm('Hapus akun ini?')) return;
-        try { await apiFetch('/api/admin/user/' + id, 'DELETE'); loadUsers(); } catch(e) { showToast('Gagal hapus'); }
+      if (!confirm('Hapus akun ini?')) return;
+      try {
+        await apiFetch('/api/admin/user/' + id, 'DELETE');
+        loadUsers();
+      } catch (e) { showToast('Gagal hapus'); }
     }
 
-    // === API FETCH ===
     async function apiFetch(endpoint, method = 'GET', body = null) {
       const headers = { 'authorization': 'Bearer ' + token, 'content-type': 'application/json' };
-      const opts = { method, headers }; if (body) opts.body = JSON.stringify(body);
-      const res = await fetch(CFG.url + endpoint, opts); 
-      if (!res.ok) throw new Error('HTTP ' + res.status); 
+      const opts = { method, headers };
+      if (body) opts.body = JSON.stringify(body);
+      const res = await fetch(CFG.url + endpoint, opts);
+      if (res.status === 401) {
+        showToast('Sesi habis, silakan login ulang');
+        logout();
+        throw new Error('unauthorized');
+      }
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       return res.json();
     }
 
-    function showToast(msg) { 
-      const t = document.getElementById('toast'); document.getElementById('toastMsg').textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); 
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => t.classList.remove('show'), 3000);
     }
-    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
 
     // === DASHBOARD LOAD ===
     async function load() {
+      if (!token) return;
       try {
         const devices = await apiFetch('/api/dashboard/devices');
-        if (!devices.length) { document.getElementById('list').innerHTML = '<p style="text-align:center; color:var(--muted); padding:40px 0;">Belum ada Perangkat Anak yang terhubung.</p>'; return; }
+        if (!devices.length) {
+          document.getElementById('list').innerHTML = '<p style="text-align:center; color:var(--muted); padding:40px 0;">Belum ada Perangkat Anak yang terhubung.</p>';
+          return;
+        }
         document.getElementById('list').innerHTML = devices.map(d => {
           const online = d.last_seen && (Date.now() - new Date(d.last_seen).getTime()) < 120000;
-          const safeId = escapeHtml(d.id); 
+          const id = escapeHtml(d.id);
           return `<div class="card">
             <div class="card-header">
               <div class="device-avatar"><i class="fa-solid fa-mobile-screen-button"></i></div>
               <div class="device-info">
-                <div class="device-title">${escapeHtml(d.name)} <span class="badge ${online?'':'off'}">${online?'ONLINE':'OFFLINE'}</span></div>
-                <div class="device-id">ID: ${safeId}</div>
+                <div class="device-title">${escapeHtml(d.name)} <span class="badge ${online ? '' : 'off'}">${online ? 'ONLINE' : 'OFFLINE'}</span></div>
+                <div class="device-id">ID: ${id}</div>
               </div>
             </div>
             <div class="btn-grid">
-              <button class="btn-action btn-lock" onclick="sendCmd('${safeId}','LOCK')"><i class="fa-solid fa-lock"></i> Kunci</button>
-              <button class="btn-action btn-unlock" onclick="sendCmd('${safeId}','UNLOCK')"><i class="fa-solid fa-lock-open"></i> Buka</button>
-              <button class="btn-action btn-chat" onclick="openChat('${safeId}')"><i class="fa-solid fa-comments"></i> Chat</button>
-              <button class="btn-action btn-block" onclick="openBlock('${safeId}')"><i class="fa-solid fa-ban"></i> Blokir App</button>
-              <button class="btn-action btn-timer" onclick="openTimer('${safeId}')"><i class="fa-solid fa-stopwatch"></i> Timer</button>
-              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_FRONT')"><i class="fa-solid fa-camera"></i> Kamera Depan</button>
-              <button class="btn-action btn-cam" onclick="sendCmd('${safeId}','CAMERA_BACK')"><i class="fa-solid fa-camera-rotate"></i> Kamera Belakang</button>
-              <button class="btn-action btn-hide" onclick="sendCmd('${safeId}','HIDE_ICON')"><i class="fa-solid fa-eye-slash"></i> Sembunyikan</button>
-              <button class="btn-action btn-show" onclick="sendCmd('${safeId}','SHOW_ICON')"><i class="fa-solid fa-eye"></i> Tampilkan</button>
-              <button class="btn-action btn-delete" onclick="openDelete('${safeId}')" style="grid-column: span 2;"><i class="fa-solid fa-trash"></i> Hapus Perangkat</button>
+              <button class="btn-action btn-lock"   data-cmd="LOCK"          data-id="${id}"><i class="fa-solid fa-lock"></i> Kunci</button>
+              <button class="btn-action btn-unlock" data-cmd="UNLOCK"        data-id="${id}"><i class="fa-solid fa-lock-open"></i> Buka</button>
+              <button class="btn-action btn-chat"   data-action="chat"       data-id="${id}"><i class="fa-solid fa-comments"></i> Chat</button>
+              <button class="btn-action btn-block"  data-action="block"      data-id="${id}"><i class="fa-solid fa-ban"></i> Blokir App</button>
+              <button class="btn-action btn-timer"  data-action="timer"      data-id="${id}"><i class="fa-solid fa-stopwatch"></i> Timer</button>
+              <button class="btn-action btn-cam"    data-cmd="CAMERA_FRONT"  data-id="${id}"><i class="fa-solid fa-camera"></i> Kamera Depan</button>
+              <button class="btn-action btn-cam"    data-cmd="CAMERA_BACK"   data-id="${id}"><i class="fa-solid fa-camera-rotate"></i> Kamera Belakang</button>
+              <button class="btn-action btn-hide"   data-cmd="HIDE_ICON"     data-id="${id}"><i class="fa-solid fa-eye-slash"></i> Sembunyikan</button>
+              <button class="btn-action btn-show"   data-cmd="SHOW_ICON"     data-id="${id}"><i class="fa-solid fa-eye"></i> Tampilkan</button>
+              <button class="btn-action btn-delete" data-action="delete"     data-id="${id}" style="grid-column: span 2;"><i class="fa-solid fa-trash"></i> Hapus Perangkat</button>
             </div>
           </div>`;
         }).join('');
-      } catch (e) { document.getElementById('list').innerHTML = `<p style="color:var(--danger); text-align:center;">Error: ${e.message}</p>`; }
+      } catch (e) {
+        if (e.message !== 'unauthorized') {
+          document.getElementById('list').innerHTML = `<p style="color:var(--danger); text-align:center;">Error: ${escapeHtml(e.message)}</p>`;
+        }
+      }
     }
 
+    // Delegation untuk tombol aksi device card
+    document.getElementById('list').addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-cmd], [data-action]');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      const cmd = btn.dataset.cmd;
+      const action = btn.dataset.action;
+      if (cmd) return sendCmd(id, cmd);
+      if (action === 'chat')   return openChat(id);
+      if (action === 'block')  return openBlock(id);
+      if (action === 'timer')  return openTimer(id);
+      if (action === 'delete') return openDelete(id);
+    });
+
     async function sendCmd(deviceId, type) {
-      try { 
-        await apiFetch('/api/dashboard/command', 'POST', { device_id: deviceId, type }); 
-        showToast('Perintah terkirim!'); 
-        if(type === 'CAMERA_FRONT' || type === 'CAMERA_BACK') { setTimeout(() => viewImage(deviceId), 4000); }
-      } catch (e) { showToast('Gagal mengirim perintah'); }
+      try {
+        await apiFetch('/api/dashboard/command', 'POST', { device_id: deviceId, type });
+        showToast('Perintah terkirim!');
+        if (type === 'CAMERA_FRONT' || type === 'CAMERA_BACK') {
+          setTimeout(() => viewImage(deviceId), 4000);
+        }
+      } catch (e) { if (e.message !== 'unauthorized') showToast('Gagal mengirim perintah'); }
     }
 
     async function viewImage(id) {
@@ -472,73 +603,150 @@
         if (data.image) {
           const imgModal = document.createElement('div');
           imgModal.className = 'modal-bg show';
-          imgModal.innerHTML = `<div class="modal" style="max-width:90%"><h3><i class="fa-solid fa-camera" style="color:var(--primary);"></i> Hasil Kamera</h3><img src="data:image/jpeg;base64,${data.image}" style="width:100%; border-radius:16px; margin-bottom:16px; border:1px solid var(--border);"><button class="close-btn" onclick="this.closest('.modal-bg').remove()">Tutup</button></div>`;
+          imgModal.innerHTML = `<div class="modal" style="max-width:90%"><h3><i class="fa-solid fa-camera" style="color:var(--primary);"></i> Hasil Kamera</h3><img src="data:image/jpeg;base64,${data.image}" style="width:100%; border-radius:16px; margin-bottom:16px; border:1px solid var(--border);"><button class="close-btn">Tutup</button></div>`;
+          imgModal.querySelector('.close-btn').onclick = () => imgModal.remove();
           document.body.appendChild(imgModal);
         }
-      } catch(e) {}
+      } catch (e) { /* silent */ }
     }
 
-    async function openPair() { 
-      document.getElementById('pairModal').classList.add('show'); 
-      try { const data = await apiFetch('/api/dashboard/pair-code', 'POST'); document.getElementById('pairCode').textContent = data.code; } catch (e) { document.getElementById('pairCode').textContent = 'ERROR'; } 
+    async function openPair() {
+      document.getElementById('pairModal').classList.add('show');
+      try {
+        const data = await apiFetch('/api/dashboard/pair-code', 'POST');
+        document.getElementById('pairCode').textContent = data.code;
+      } catch (e) { document.getElementById('pairCode').textContent = 'ERROR'; }
     }
-    
-    function openTimer(id) { selectedDeviceId = id; document.getElementById('timerModal').classList.add('show'); }
-    async function setTimer() { 
-      const val = parseInt(document.getElementById('timerVal').value); const unit = parseInt(document.getElementById('timerUnit').value); 
-      if(!val || val <= 0) return showToast('Masukkan angka yang benar!'); 
-      try { await apiFetch('/api/dashboard/command', 'POST', { device_id: selectedDeviceId, type: 'LOCK_TIMER', payload: { duration_ms: val * unit } }); document.getElementById('timerModal').classList.remove('show'); showToast('Timer diaktifkan!'); } catch (e) { showToast('Gagal'); } 
+
+    function openTimer(id) {
+      selectedDeviceId = id;
+      document.getElementById('timerVal').value = '';
+      document.getElementById('timerModal').classList.add('show');
     }
-    
-    function openDelete(id) { deviceToDelete = id; document.getElementById('deleteModal').classList.add('show'); }
-    async function konfirmasiHapus() { 
-      if (!deviceToDelete) return; 
-      try { await apiFetch('/api/dashboard/device/' + encodeURIComponent(deviceToDelete), 'DELETE'); document.getElementById('deleteModal').classList.remove('show'); showToast('Perangkat dihapus'); load(); } catch (e) { showToast('Gagal menghapus'); } 
+    function closeTimer() { document.getElementById('timerModal').classList.remove('show'); }
+    async function setTimer() {
+      const val = parseInt(document.getElementById('timerVal').value);
+      const unit = parseInt(document.getElementById('timerUnit').value);
+      if (!val || val <= 0) return showToast('Masukkan angka yang benar!');
+      try {
+        await apiFetch('/api/dashboard/command', 'POST', { device_id: selectedDeviceId, type: 'LOCK_TIMER', payload: { duration_ms: val * unit } });
+        closeTimer();
+        showToast('Timer diaktifkan!');
+      } catch (e) { showToast('Gagal'); }
     }
-    
-    function openChat(id) { selectedDeviceId = id; document.getElementById('chatModal').classList.add('show'); document.getElementById('chatInput').value = ''; loadChat(); }
-    async function loadChat() { 
-      try { const msgs = await apiFetch('/api/dashboard/chat/' + encodeURIComponent(selectedDeviceId)); const box = document.getElementById('chatBox'); box.innerHTML = msgs.map(m => { const p = JSON.parse(m.payload); return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`; }).join(''); box.scrollTop = box.scrollHeight; } catch(e) {} 
+
+    function openDelete(id) {
+      deviceToDelete = id;
+      document.getElementById('deleteModal').classList.add('show');
     }
-    async function sendChat() { 
-      const text = document.getElementById('chatInput').value.trim(); if(!text) return; document.getElementById('chatInput').value = ''; 
-      await apiFetch('/api/dashboard/chat', 'POST', { device_id: selectedDeviceId, text }); loadChat(); 
+    async function konfirmasiHapus() {
+      if (!deviceToDelete) return;
+      try {
+        await apiFetch('/api/dashboard/device/' + encodeURIComponent(deviceToDelete), 'DELETE');
+        document.getElementById('deleteModal').classList.remove('show');
+        showToast('Perangkat dihapus');
+        load();
+      } catch (e) { showToast('Gagal menghapus'); }
     }
-    
-    async function openBlock(id) { 
-      selectedDeviceId = id; document.getElementById('blockModal').classList.add('show'); document.getElementById('appList').innerHTML = '<p style="text-align:center; padding:20px;">Memindai aplikasi...</p>'; 
-      try { 
-        const data = await apiFetch('/api/dashboard/apps/' + encodeURIComponent(selectedDeviceId)); const blocked = data.blocked || []; 
-        if (data.installed.length === 0) { 
+
+    function openChat(id) {
+      selectedDeviceId = id;
+      document.getElementById('chatModal').classList.add('show');
+      document.getElementById('chatInput').value = '';
+      loadChat();
+      clearInterval(chatRefreshInterval);
+      chatRefreshInterval = setInterval(loadChat, 4000);
+    }
+    function closeChat() {
+      clearInterval(chatRefreshInterval);
+      document.getElementById('chatModal').classList.remove('show');
+    }
+    async function loadChat() {
+      try {
+        const msgs = await apiFetch('/api/dashboard/chat/' + encodeURIComponent(selectedDeviceId));
+        const box = document.getElementById('chatBox');
+        box.innerHTML = msgs.map(m => {
+          let p;
+          try { p = JSON.parse(m.payload); } catch { return ''; }
+          const cls = p.sender === 'ortu' ? 'ortu' : 'anak';
+          const txt = escapeHtml(p.text ?? '');
+          return `<div class="msg ${cls}">${txt}</div>`;
+        }).join('');
+        box.scrollTop = box.scrollHeight;
+      } catch (e) { /* silent */ }
+    }
+    async function sendChat() {
+      const text = document.getElementById('chatInput').value.trim();
+      if (!text) return;
+      document.getElementById('chatInput').value = '';
+      try {
+        await apiFetch('/api/dashboard/chat', 'POST', { device_id: selectedDeviceId, text });
+        loadChat();
+      } catch (e) { showToast('Gagal kirim pesan'); }
+    }
+
+    async function openBlock(id) {
+      selectedDeviceId = id;
+      document.getElementById('blockModal').classList.add('show');
+      document.getElementById('appList').innerHTML = '<p style="text-align:center; padding:20px;">Memindai aplikasi...</p>';
+      try {
+        const data = await apiFetch('/api/dashboard/apps/' + encodeURIComponent(selectedDeviceId));
+        const blocked = data.blocked || [];
+        if (data.installed.length === 0) {
           document.getElementById('appList').innerHTML = `
             <p style="text-align:center; padding:20px; color:var(--muted);">Belum ada aplikasi tersinkron.</p>
             <button class="btn-action btn-block" style="width:100%; padding:14px;" onclick="syncApps()">
               <i class="fa-solid fa-rotate"></i> Paksa Sinkronisasi Aplikasi
             </button>
-          `; 
-          return; 
-        } 
-        document.getElementById('appList').innerHTML = data.installed.map(app => `<label class="app-item"><input type="checkbox" value="${app.package}" ${blocked.includes(app.package) ? 'checked' : ''}><span>${app.name}</span></label>`).join(''); 
-      } catch(e) { document.getElementById('appList').innerHTML = '<p style="text-align:center; padding:20px; color:var(--danger);">Gagal memuat aplikasi</p>'; } 
+          `;
+          return;
+        }
+        document.getElementById('appList').innerHTML = data.installed.map(app => `
+          <label class="app-item">
+            <input type="checkbox" value="${escapeHtml(app.package)}" ${blocked.includes(app.package) ? 'checked' : ''}>
+            <span>${escapeHtml(app.name)}</span>
+          </label>
+        `).join('');
+      } catch (e) {
+        document.getElementById('appList').innerHTML = '<p style="text-align:center; padding:20px; color:var(--danger);">Gagal memuat aplikasi</p>';
+      }
+    }
+    function closeBlock() {
+      clearInterval(syncAppsInterval);
+      document.getElementById('blockModal').classList.remove('show');
     }
 
     async function syncApps() {
       try {
         await apiFetch('/api/dashboard/command', 'POST', { device_id: selectedDeviceId, type: 'SYNC_APPS' });
         showToast('Sinkronisasi dikirim. Menunggu data...');
+        clearInterval(syncAppsInterval);
         let attempts = 0;
-        const interval = setInterval(async () => {
-            attempts++;
-            if (attempts > 15) { clearInterval(interval); document.getElementById('appList').innerHTML = '<p style="text-align:center; padding:20px; color:var(--danger);">Gagal sinkronisasi.</p>'; return; }
-            try { const data = await apiFetch('/api/dashboard/apps/' + encodeURIComponent(selectedDeviceId)); if (data.installed && data.installed.length > 0) { clearInterval(interval); openBlock(selectedDeviceId); } } catch(e) {}
-        }, 1000); 
-      } catch(e) { showToast('Gagal sinkronisasi'); }
+        syncAppsInterval = setInterval(async () => {
+          attempts++;
+          if (attempts > 15 || !document.getElementById('blockModal').classList.contains('show')) {
+            clearInterval(syncAppsInterval);
+            return;
+          }
+          try {
+            const data = await apiFetch('/api/dashboard/apps/' + encodeURIComponent(selectedDeviceId));
+            if (data.installed && data.installed.length > 0) {
+              clearInterval(syncAppsInterval);
+              openBlock(selectedDeviceId);
+            }
+          } catch (e) { /* silent */ }
+        }, 1000);
+      } catch (e) { showToast('Gagal sinkronisasi'); }
     }
 
-    async function simpanBlokir() { 
-      const checkboxes = document.querySelectorAll('#appList input[type="checkbox"]:checked'); const blocked = Array.from(checkboxes).map(cb => cb.value); 
-      await apiFetch('/api/dashboard/blocked', 'POST', { device_id: selectedDeviceId, blocked }); 
-      document.getElementById('blockModal').classList.remove('show'); showToast('Aplikasi berhasil diblokir!'); 
+    async function simpanBlokir() {
+      const checkboxes = document.querySelectorAll('#appList input[type="checkbox"]:checked');
+      const blocked = Array.from(checkboxes).map(cb => cb.value);
+      try {
+        await apiFetch('/api/dashboard/blocked', 'POST', { device_id: selectedDeviceId, blocked });
+        closeBlock();
+        showToast('Aplikasi berhasil diblokir!');
+      } catch (e) { showToast('Gagal menyimpan'); }
     }
 
     checkAuth();

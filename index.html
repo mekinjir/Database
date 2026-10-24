@@ -20,7 +20,6 @@
     .container { width: 100%; max-width: 900px; padding: 20px; display: none; animation: fadeIn 0.5s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* === HALAMAN LOGIN === */
     #authPage { display: flex; max-width: 420px; width: 100%; margin: auto; padding: 20px; }
     .auth-card { width: 100%; background: var(--panel); backdrop-filter: blur(16px); padding: 40px 32px; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden; }
     .auth-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); }
@@ -37,7 +36,6 @@
     .secret-admin input { border-color: var(--danger); background: rgba(239,68,68,0.1); }
     .secret-admin .auth-btn { background: var(--danger); }
 
-    /* === DASHBOARD HEADER === */
     .hero { background: linear-gradient(135deg, rgba(30, 27, 75, 0.8), rgba(15, 23, 42, 0.8)); backdrop-filter: blur(10px); border-radius: 24px; padding: 24px 32px; border: 1px solid var(--border); margin-bottom: 32px; position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; }
     .hero::after { content: ''; position: absolute; right: -50px; top: -50px; width: 200px; height: 200px; background: var(--primary); filter: blur(100px); opacity: 0.4; }
     .hero-left { display: flex; align-items: center; gap: 16px; z-index: 10; }
@@ -46,7 +44,6 @@
     .hero-text h1 { font-size: 24px; font-weight: 800; letter-spacing: 1px; }
     .hero-text p { color: var(--muted); font-size: 13px; }
 
-    /* === SIDEBAR === */
     .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 998; opacity: 0; pointer-events: none; transition: 0.3s; }
     .sidebar-overlay.show { opacity: 1; pointer-events: auto; }
     .sidebar {
@@ -62,20 +59,17 @@
     .close-sidebar { font-size: 20px; cursor: pointer; color: var(--muted); padding: 4px 8px; }
     .sidebar-content { flex: 1; overflow-y: auto; padding: 20px 24px; }
 
-    /* User info card - SELALU tampil */
     .user-info-card { background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.1)); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
     .user-avatar { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), #a855f7); display: grid; place-items: center; color: #fff; font-size: 18px; flex-shrink: 0; }
     .user-meta { flex: 1; min-width: 0; }
     .user-meta-name { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
     .user-meta-role { font-size: 10px; color: #a5b4fc; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-top: 2px; }
 
-    /* Quick menu */
     .quick-menu { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
     .menu-item { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: #cbd5e1; padding: 14px 16px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 500; text-align: left; width: 100%; transition: 0.2s; }
     .menu-item:hover { background: rgba(99,102,241,0.15); border-color: var(--border); color: #fff; }
     .menu-item i { color: var(--primary); width: 20px; text-align: center; }
 
-    /* Admin Section */
     .admin-section h3 { color: #d8b4fe; margin-bottom: 16px; font-size: 15px; display: flex; align-items: center; gap: 8px; }
     .admin-input-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
     .admin-input-group input, .admin-input-group select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; outline: none; font-size: 14px; }
@@ -89,7 +83,6 @@
     .user-code { font-family: monospace; font-size: 14px; letter-spacing: 1px; color: #d8b4fe; background: rgba(168,85,247,0.2); padding: 6px; border-radius: 6px; text-align: center; font-weight: 700; }
     .btn-del-user { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; }
 
-    /* Sidebar footer FIX */
     .sidebar-footer {
       padding: 20px 24px;
       padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
@@ -100,7 +93,6 @@
     .logout-btn-sidebar { width: 100%; background: rgba(239,68,68,0.1); border: 1px solid var(--danger); color: var(--danger); padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
     .logout-btn-sidebar:hover { background: var(--danger); color: #fff; }
 
-    /* Dashboard Main */
     .btn-main { width: 100%; padding: 18px; border-radius: 16px; border: none; background: linear-gradient(135deg, var(--primary), #8b5cf6); color: #fff; font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 32px; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 10px 30px -10px var(--primary); transition: 0.3s; }
     .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 35px -10px var(--primary); }
     .card { background: var(--panel); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 20px; transition: 0.3s; }
@@ -175,14 +167,12 @@
 
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-  <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-title">MENU UTAMA</div>
       <div class="close-sidebar" onclick="toggleSidebar()"><i class="fa-solid fa-xmark"></i></div>
     </div>
     <div class="sidebar-content">
-      <!-- USER INFO — SELALU TAMPIL SEMUA ROLE -->
       <div class="user-info-card">
         <div class="user-avatar"><i class="fa-solid fa-user-shield"></i></div>
         <div class="user-meta">
@@ -191,14 +181,12 @@
         </div>
       </div>
 
-      <!-- QUICK MENU — SELALU TAMPIL SEMUA ROLE -->
       <div class="quick-menu">
         <button class="menu-item" onclick="openPair(); toggleSidebar();">
           <i class="fa-solid fa-satellite-dish"></i> <span>Kode Pairing Saya</span>
         </button>
       </div>
 
-      <!-- PANEL ADMIN (khusus role level ≤ 4) -->
       <div class="admin-section" id="adminPanel" style="display:none;">
         <h3><i class="fa-solid fa-users-gear"></i> Kelola Akun</h3>
         <div class="admin-input-group">
@@ -217,7 +205,6 @@
       </div>
     </div>
 
-    <!-- FOOTER — tidak akan tenggelam -->
     <div class="sidebar-footer">
       <button class="logout-btn-sidebar" onclick="logout()">
         <i class="fa-solid fa-power-off"></i> Keluar Aplikasi
@@ -225,7 +212,6 @@
     </div>
   </div>
 
-  <!-- DASHBOARD -->
   <div class="container" id="mainApp">
     <div class="hero">
       <div class="hero-left">
@@ -246,7 +232,6 @@
 
   <div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i> <span id="toastMsg"></span></div>
 
-  <!-- POP-UP PAIRING -->
   <div class="modal-bg" id="pairModal">
     <div class="modal">
       <h3><i class="fa-solid fa-tower-broadcast" style="color:var(--primary);"></i> Kode Pairing</h3>
@@ -256,7 +241,6 @@
     </div>
   </div>
 
-  <!-- POP-UP HAPUS -->
   <div class="modal-bg" id="deleteModal">
     <div class="modal">
       <h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--danger);"></i> Hapus Perangkat?</h3>
@@ -266,7 +250,6 @@
     </div>
   </div>
 
-  <!-- POP-UP TIMER -->
   <div class="modal-bg" id="timerModal">
     <div class="modal">
       <h3><i class="fa-solid fa-stopwatch" style="color:#d8b4fe;"></i> Kunci dengan Timer</h3>
@@ -283,7 +266,6 @@
     </div>
   </div>
 
-  <!-- POP-UP CHAT -->
   <div class="modal-bg" id="chatModal">
     <div class="modal">
       <h3><i class="fa-solid fa-comments" style="color:var(--primary);"></i> Chat Anak</h3>
@@ -296,7 +278,6 @@
     </div>
   </div>
 
-  <!-- POP-UP BLOKIR APP -->
   <div class="modal-bg" id="blockModal">
     <div class="modal">
       <h3><i class="fa-solid fa-ban" style="color:var(--warning);"></i> Blokir Aplikasi</h3>
@@ -312,7 +293,11 @@
       window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
     }
 
-    const CFG = { url: "https://server.mekinjirserver.dpdns.org" };
+    const CFG = {
+      url: "https://server.mekinjirserver.dpdns.org",
+      devUsername: "meki"   // ← ganti kalau username developer berubah
+    };
+
     let token = localStorage.getItem('token');
     let userRole = localStorage.getItem('role');
     let selectedDeviceId = null;
@@ -347,7 +332,7 @@
       try {
         const res = await fetch(CFG.url + '/api/auth/login', {
           method: 'POST', headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ username: 'mekinjir', password: pass })
+          body: JSON.stringify({ username: CFG.devUsername, password: pass })
         });
         const data = await res.json();
         if (!res.ok) return showToast('Password Salah!');
@@ -384,13 +369,10 @@
       localStorage.removeItem('username');
       localStorage.removeItem('role');
       token = null; userRole = null;
-      // tutup sidebar & overlay
       document.getElementById('sidebar').classList.remove('open');
       document.getElementById('sidebarOverlay').classList.remove('show');
-      // reset state modal
       document.getElementById('secretAdminArea').style.display = 'none';
       document.getElementById('superPass').value = '';
-      // clear interval refresh
       clearInterval(refreshInterval);
       clearInterval(chatRefreshInterval);
       clearInterval(syncAppsInterval);
@@ -404,8 +386,6 @@
 
         const uname = localStorage.getItem('username') || 'Ortu';
         document.getElementById('userGreeting').innerText = 'Halo, ' + uname;
-
-        // populate sidebar
         document.getElementById('sideUsername').textContent = uname;
         document.getElementById('sideRole').textContent = userRole || '-';
 
@@ -475,7 +455,6 @@
       } catch (e) { /* silent */ }
     }
 
-    // Delegation untuk tombol hapus user
     document.getElementById('userList').addEventListener('click', (e) => {
       const btn = e.target.closest('[data-del-user]');
       if (!btn) return;
@@ -486,9 +465,7 @@
       const username = document.getElementById('newUser').value;
       const password = document.getElementById('newPass').value;
       const role = document.getElementById('newRole').value;
-
       if (!username || !password || !role) return showToast('Isi semua data!');
-
       try {
         const res = await apiFetch('/api/admin/create-user', 'POST', { username, password, role });
         showToast('Akun ' + role + ' dibuat! Kode: ' + res.pair_code);
@@ -532,7 +509,6 @@
       return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
 
-    // === DASHBOARD LOAD ===
     async function load() {
       if (!token) return;
       try {
@@ -573,7 +549,6 @@
       }
     }
 
-    // Delegation untuk tombol aksi device card
     document.getElementById('list').addEventListener('click', (e) => {
       const btn = e.target.closest('[data-cmd], [data-action]');
       if (!btn) return;

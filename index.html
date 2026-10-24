@@ -7,113 +7,104 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; }
-    :root { 
-      --bg: #0b1120; 
-      --card: #1e293b; 
-      --text: #f8fafc; 
-      --muted: #94a3b8; 
-      --accent: #6366f1; 
-      --danger: #ef4444; 
-      --warning: #f59e0b; 
-      --success: #10b981; 
-      --border: #334155; 
-    }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px 16px; background-image: radial-gradient(circle at top right, rgba(99,102,241,0.15), transparent 400px); }
-    .container { max-width: 768px; margin: 0 auto; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    :root { --bg: #0b1120; --card: #1e293b; --text: #f8fafc; --muted: #94a3b8; --accent: #6366f1; --danger: #ef4444; --warning: #f59e0b; --success: #10b981; --border: #334155; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px 16px; background-image: radial-gradient(circle at top right, rgba(99,102,241,0.15), transparent 400px); display: flex; align-items: center; justify-content: center; }
+    .container { width: 100%; max-width: 768px; display: none; }
     
-    /* Header */
-    .header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 0 8px; }
+    /* Auth Page */
+    #authPage { display: block; max-width: 400px; margin: auto; }
+    .auth-card { background: var(--card); padding: 32px 24px; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); text-align: center; }
+    .auth-card h2 { margin-bottom: 24px; font-size: 24px; }
+    .auth-input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: #0f172a; color: #fff; margin-bottom: 16px; outline: none; }
+    .auth-input:focus { border-color: var(--accent); }
+    .auth-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; font-weight: 600; font-size: 16px; cursor: pointer; transition: 0.2s; }
+    .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(99,102,241,0.4); }
+    .auth-switch { margin-top: 16px; font-size: 14px; color: var(--muted); cursor: pointer; }
+    .auth-switch:hover { color: #fff; }
+
+    /* Dashboard */
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding: 0 8px; }
+    .header-left { display: flex; align-items: center; gap: 16px; }
     .header-icon { width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #a855f7); display: grid; place-items: center; font-size: 22px; color: #fff; box-shadow: 0 8px 16px rgba(99,102,241,0.3); }
-    .header-text h1 { font-size: 22px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; background: linear-gradient(to right, #fff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .header-text p { font-size: 13px; color: var(--muted); font-weight: 500; }
-    
-    /* Cards */
-    .card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); transition: transform 0.2s ease; }
-    .card:hover { transform: translateY(-2px); }
+    .header-text h1 { font-size: 22px; font-weight: 700; text-transform: uppercase; background: linear-gradient(to right, #fff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .header-text p { font-size: 13px; color: var(--muted); }
+    .logout-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+    .logout-btn:hover { background: rgba(239,68,68,0.1); }
+
+    .card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
     .card-top { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
-    .avatar { width: 50px; height: 50px; border-radius: 14px; background: linear-gradient(135deg, #0ea5e9, #3b82f6); display: grid; place-items: center; font-size: 22px; color: #fff; box-shadow: 0 4px 10px rgba(14,165,233,0.3); }
+    .avatar { width: 50px; height: 50px; border-radius: 14px; background: linear-gradient(135deg, #0ea5e9, #3b82f6); display: grid; place-items: center; font-size: 22px; color: #fff; }
     .device-info { flex: 1; }
     .device-name { font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 10px; }
-    .badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 99px; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 99px; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); text-transform: uppercase; }
     .badge.off { background: rgba(148,163,184,0.15); color: #cbd5e1; border-color: rgba(148,163,184,0.3); }
     .device-id { font-size: 12px; color: var(--muted); font-family: monospace; margin-top: 4px; }
     
-    /* Button Group Grid */
     .btn-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .btn-group button { width: 100%; border: none; padding: 12px 14px; border-radius: 12px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
-    .btn-group button:hover { background: rgba(255,255,255,0.1); transform: translateY(-1px); }
-    .btn-group button:active { transform: translateY(1px); }
-    .btn-group button i { font-size: 14px; }
-    
-    /* Specific Button Colors */
+    .btn-group button { width: 100%; border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255,255,255,0.05); transition: 0.2s; }
+    .btn-group button:hover { background: rgba(255,255,255,0.1); }
     .btn-lock { background: rgba(239,68,68,0.15) !important; color: #fca5a5 !important; border-color: rgba(239,68,68,0.3) !important; }
-    .btn-lock:hover { background: rgba(239,68,68,0.25) !important; }
     .btn-unlock { background: rgba(16,185,129,0.15) !important; color: #6ee7b7 !important; border-color: rgba(16,185,129,0.3) !important; }
-    .btn-unlock:hover { background: rgba(16,185,129,0.25) !important; }
     .btn-chat { background: rgba(99,102,241,0.15) !important; color: #a5b4fc !important; border-color: rgba(99,102,241,0.3) !important; }
-    .btn-chat:hover { background: rgba(99,102,241,0.25) !important; }
     .btn-block { background: rgba(245,158,11,0.15) !important; color: #fcd34d !important; border-color: rgba(245,158,11,0.3) !important; }
-    .btn-block:hover { background: rgba(245,158,11,0.25) !important; }
     .btn-timer { background: rgba(168,85,247,0.15) !important; color: #d8b4fe !important; border-color: rgba(168,85,247,0.3) !important; }
-    .btn-timer:hover { background: rgba(168,85,247,0.25) !important; }
     .btn-screen { background: rgba(20,184,166,0.15) !important; color: #5eead4 !important; border-color: rgba(20,184,166,0.3) !important; }
-    .btn-screen:hover { background: rgba(20,184,166,0.25) !important; }
     .btn-cam { background: rgba(14,165,233,0.15) !important; color: #7dd3fc !important; border-color: rgba(14,165,233,0.3) !important; }
-    .btn-cam:hover { background: rgba(14,165,233,0.25) !important; }
     .btn-delete { background: rgba(100,116,139,0.15) !important; color: #94a3b8 !important; border-color: rgba(100,116,139,0.3) !important; }
-    .btn-delete:hover { background: rgba(100,116,139,0.25) !important; }
     
-    /* Tambah Anak Button */
-    .btn-pair { background: linear-gradient(135deg, #6366f1, #a855f7); width: 100%; padding: 16px; border-radius: 14px; font-weight: 600; font-size: 15px; border: none; color: #fff; cursor: pointer; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 14px rgba(99,102,241,0.4); transition: all 0.2s; }
-    .btn-pair:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99,102,241,0.5); }
+    .btn-pair { background: linear-gradient(135deg, #6366f1, #a855f7); width: 100%; padding: 16px; border-radius: 14px; font-weight: 600; font-size: 15px; border: none; color: #fff; cursor: pointer; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 14px rgba(99,102,241,0.4); transition: 0.2s; }
+    .btn-pair:hover { transform: translateY(-2px); }
 
     /* Modals */
-    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 999; opacity: 0; transition: opacity 0.3s; }
-    .modal-bg.show { display: flex; opacity: 1; }
-    .modal { background: #1e293b; padding: 24px; border-radius: 20px; width: 100%; max-width: 420px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); transform: scale(0.95); transition: transform 0.3s; }
-    .modal-bg.show .modal { transform: scale(1); }
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 999; }
+    .modal-bg.show { display: flex; }
+    .modal { background: #1e293b; padding: 24px; border-radius: 20px; width: 100%; max-width: 420px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
     .modal h3 { margin-bottom: 20px; text-align: center; font-size: 18px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    
-    /* Chat Box */
     .chat-box { height: 300px; overflow-y: auto; background: #0b1120; border-radius: 12px; padding: 16px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px; border: 1px solid rgba(255,255,255,0.05); }
     .msg { padding: 12px 16px; border-radius: 14px; max-width: 85%; font-size: 14px; line-height: 1.5; }
     .msg.ortu { background: var(--accent); align-self: flex-end; border-bottom-right-radius: 4px; }
     .msg.anak { background: #334155; align-self: flex-start; border-bottom-left-radius: 4px; }
-    
-    /* Inputs */
-    input[type="text"], input[type="number"], select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6); color: #fff; outline: none; transition: border 0.2s; }
-    input:focus, select:focus { border-color: var(--accent); }
-    
-    /* App List */
+    input[type="text"], input[type="number"], input[type="password"], select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.6); color: #fff; outline: none; }
     .app-list { max-height: 300px; overflow-y: auto; background: #0b1120; border-radius: 12px; padding: 8px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.05); }
     .app-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #cbd5e1; font-size: 14px; cursor: pointer; }
-    .app-item:last-child { border-bottom: none; }
     .app-item input { width: 20px; height: 20px; accent-color: var(--danger); cursor: pointer; }
-    
-    /* Toast */
-    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1e293b; color: #fff; padding: 14px 24px; border-radius: 12px; border: 1px solid var(--accent); opacity: 0; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1000; font-size: 14px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1e293b; color: #fff; padding: 14px 24px; border-radius: 12px; border: 1px solid var(--accent); opacity: 0; transition: all 0.3s; z-index: 1000; font-size: 14px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px; }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    
-    /* Image & Live Screen */
     .img-view { width: 100%; border-radius: 12px; margin-top: 12px; border: 1px solid rgba(255,255,255,0.1); }
     .live-container { background: #000; width: 100%; aspect-ratio: 9/16; max-height: 70vh; display: flex; align-items: center; justify-content: center; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
-    
-    .close-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 100%; padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 16px; transition: background 0.2s; }
+    .close-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 100%; padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 16px; transition: 0.2s; }
     .close-btn:hover { background: rgba(255,255,255,0.05); }
   </style>
 </head>
 <body>
-  <div class="container">
+
+  <!-- HALAMAN LOGIN / REGISTER -->
+  <div class="container" id="authPage">
+    <div class="auth-card">
+      <div class="header-icon" style="margin: 0 auto 16px;"><i class="fa-solid fa-shield-halved"></i></div>
+      <h2 id="authTitle">Login</h2>
+      <input type="text" id="authUser" class="auth-input" placeholder="Username">
+      <input type="password" id="authPass" class="auth-input" placeholder="Password">
+      <button class="auth-btn" id="authBtn" onclick="handleAuth()">Masuk</button>
+      <p class="auth-switch" id="authSwitch" onclick="toggleAuth()">Belum punya akun? Register</p>
+    </div>
+  </div>
+
+  <!-- HALAMAN DASHBOARD -->
+  <div class="container" id="mainApp">
     <div class="header">
-      <div class="header-icon"><i class="fa-solid fa-shield-halved"></i></div>
-      <div class="header-text">
-        <h1>VOID INVICTUS</h1>
-        <p>Control Panel Dashboard</p>
+      <div class="header-left">
+        <div class="header-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="header-text">
+          <h1>VOID INVICTUS</h1>
+          <p id="userGreeting">Halo, Ortu</p>
+        </div>
       </div>
+      <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
     </div>
     
-    <button class="btn-pair" onclick="openPair()"><i class="fa-solid fa-plus"></i> Tambah Perangkat Anak</button>
+    <button class="btn-pair" onclick="openPair()"><i class="fa-solid fa-plus"></i> Tambah HP Anak Baru</button>
     <div id="list">Memuat data...</div>
   </div>
 
@@ -124,6 +115,7 @@
     <div class="modal">
       <h3><i class="fa-solid fa-key"></i> Kode Pairing</h3>
       <h1 id="pairCode" style="text-align:center; font-size:48px; letter-spacing:12px; color:var(--accent); margin:24px 0; font-family:monospace;">------</h1>
+      <p style="text-align:center; color:var(--muted); font-size:13px; margin-bottom:16px;">Kode ini berlaku permanen untuk banyak HP anak.</p>
       <button class="close-btn" onclick="document.getElementById('pairModal').classList.remove('show')">Tutup</button>
     </div>
   </div>
@@ -191,9 +183,75 @@
   </div>
 
   <script>
-    const CFG = { url: "https://server.mekinjirserver.dpdns.org", key: "a8f3c9d2e1b7f4a6c0d8e2f9b5a1c7d3e6f0a2b4c8d1e5f9a7b3c6d2e4f8a1b5" };
+    const CFG = { url: "https://server.mekinjirserver.dpdns.org" };
+    let token = localStorage.getItem('token');
+    let isLoginMode = true;
     let selectedDeviceId = null; let deviceToDelete = null;
     let wsLive = null;
+
+    // === AUTH LOGIC ===
+    function toggleAuth() {
+      isLoginMode = !isLoginMode;
+      document.getElementById('authTitle').innerText = isLoginMode ? 'Login' : 'Register';
+      document.getElementById('authBtn').innerText = isLoginMode ? 'Masuk' : 'Daftar';
+      document.getElementById('authSwitch').innerText = isLoginMode ? 'Belum punya akun? Register' : 'Sudah punya akun? Login';
+    }
+
+    async function handleAuth() {
+      const user = document.getElementById('authUser').value;
+      const pass = document.getElementById('authPass').value;
+      if(!user || !pass) return showToast('Isi semua kolom!');
+      
+      const endpoint = isLoginMode ? '/api/auth/login' : '/api/auth/register';
+      try {
+        const res = await fetch(CFG.url + endpoint, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ username: user, password: pass })
+        });
+        const data = await res.json();
+        
+        if (!res.ok) return showToast(data.error || 'Terjadi kesalahan');
+        
+        if (isLoginMode) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('username', data.username);
+          token = data.token;
+          checkAuth();
+        } else {
+          showToast('Registrasi berhasil, silakan login');
+          toggleAuth();
+        }
+      } catch(e) { showToast('Gagal konek ke server'); }
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      token = null;
+      checkAuth();
+    }
+
+    function checkAuth() {
+      if (token) {
+        document.getElementById('authPage').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        document.getElementById('userGreeting').innerText = 'Halo, ' + (localStorage.getItem('username') || 'Ortu');
+        load();
+      } else {
+        document.getElementById('authPage').style.display = 'block';
+        document.getElementById('mainApp').style.display = 'none';
+      }
+    }
+
+    // === MAIN APP LOGIC ===
+    async function apiFetch(endpoint, method = 'GET', body = null) {
+      const headers = { 'authorization': 'Bearer ' + token, 'content-type': 'application/json' };
+      const opts = { method, headers }; if (body) opts.body = JSON.stringify(body);
+      const res = await fetch(CFG.url + endpoint, opts); 
+      if (!res.ok) throw new Error('HTTP ' + res.status); 
+      return res.json();
+    }
 
     function showToast(msg) { 
       const t = document.getElementById('toast'); 
@@ -202,17 +260,11 @@
       setTimeout(() => t.classList.remove('show'), 3000); 
     }
 
-    async function apiFetch(endpoint, method = 'GET', body = null) {
-      const headers = { 'x-termux-url': CFG.url, 'x-api-key': CFG.key, 'content-type': 'application/json' };
-      const opts = { method, headers }; if (body) opts.body = JSON.stringify(body);
-      const res = await fetch(endpoint, opts); if (!res.ok) throw new Error('HTTP ' + res.status); return res.json();
-    }
-
     function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
     async function load() {
       try {
-        const devices = await apiFetch('/api/devices');
+        const devices = await apiFetch('/api/dashboard/devices');
         if (!devices.length) { document.getElementById('list').innerHTML = '<p style="text-align:center; color:var(--muted); padding:40px 0;">Belum ada perangkat terhubung.</p>'; return; }
         document.getElementById('list').innerHTML = devices.map(d => {
           const online = d.last_seen && (Date.now() - new Date(d.last_seen).getTime()) < 120000;
@@ -243,29 +295,21 @@
 
     async function sendCmd(deviceId, type) {
       try { 
-        await apiFetch('/api/command', 'POST', { device_id: deviceId, type }); 
-        showToast('Perintah ' + type.replace('_', ' ') + ' terkirim!'); 
+        await apiFetch('/api/dashboard/command', 'POST', { device_id: deviceId, type }); 
+        showToast('Perintah ' + type + ' terkirim!'); 
         if(type === 'CAMERA_FRONT' || type === 'CAMERA_BACK') { setTimeout(() => viewImage(deviceId), 4000); }
-      } catch (e) { showToast('Gagal mengirim perintah'); }
+      } catch (e) { showToast('Gagal kirim perintah'); }
     }
 
-    // === LIVE SCREEN ===
     function startLiveScreen(id) {
       selectedDeviceId = id;
       document.getElementById('screenModal').classList.add('show');
       document.getElementById('liveScreenImg').src = ""; 
-      
       sendCmd(id, 'SCREEN');
-
       setTimeout(() => {
         const wsUrl = CFG.url.replace("https://", "wss://").replace("http://", "ws://") + "/web-view";
         wsLive = new WebSocket(wsUrl);
-        
-        wsLive.onmessage = function(event) {
-          document.getElementById('liveScreenImg').src = "data:image/jpeg;base64," + event.data;
-        };
-
-        wsLive.onerror = function() { showToast("Gagal konek ke Live Screen"); };
+        wsLive.onmessage = function(event) { document.getElementById('liveScreenImg').src = "data:image/jpeg;base64," + event.data; };
       }, 1000); 
     }
 
@@ -277,7 +321,7 @@
 
     async function viewImage(id) {
       try {
-        const data = await apiFetch('/api/image?id=' + encodeURIComponent(id));
+        const data = await apiFetch('/api/dashboard/image/' + encodeURIComponent(id));
         if (data.image) {
           const imgModal = document.createElement('div');
           imgModal.className = 'modal-bg show';
@@ -289,79 +333,47 @@
 
     async function openPair() { 
       document.getElementById('pairModal').classList.add('show'); 
-      try { const data = await apiFetch('/api/pair-code', 'POST'); document.getElementById('pairCode').textContent = data.code; } catch (e) { document.getElementById('pairCode').textContent = 'Error'; } 
+      try { const data = await apiFetch('/api/dashboard/pair-code', 'POST'); document.getElementById('pairCode').textContent = data.code; } catch (e) { document.getElementById('pairCode').textContent = 'Error'; } 
     }
     
     function openTimer(id) { selectedDeviceId = id; document.getElementById('timerModal').classList.add('show'); }
-    
     async function setTimer() { 
-      const val = parseInt(document.getElementById('timerVal').value); 
-      const unit = parseInt(document.getElementById('timerUnit').value); 
-      if(!val || val <= 0) return showToast('Masukkan angka yang valid!'); 
-      try { 
-        await apiFetch('/api/command', 'POST', { device_id: selectedDeviceId, type: 'LOCK_TIMER', payload: { duration_ms: val * unit } }); 
-        document.getElementById('timerModal').classList.remove('show'); 
-        showToast('Timer kunci berhasil diatur!'); 
-      } catch (e) { showToast('Gagal atur timer'); } 
+      const val = parseInt(document.getElementById('timerVal').value); const unit = parseInt(document.getElementById('timerUnit').value); 
+      if(!val || val <= 0) return showToast('Masukkan angka!'); 
+      try { await apiFetch('/api/dashboard/command', 'POST', { device_id: selectedDeviceId, type: 'LOCK_TIMER', payload: { duration_ms: val * unit } }); document.getElementById('timerModal').classList.remove('show'); showToast('Timer diatur!'); } catch (e) { showToast('Gagal'); } 
     }
     
     function openDelete(id) { deviceToDelete = id; document.getElementById('deleteModal').classList.add('show'); }
-    
     async function konfirmasiHapus() { 
       if (!deviceToDelete) return; 
-      try { 
-        await apiFetch('/api/device?id=' + encodeURIComponent(deviceToDelete), 'DELETE'); 
-        document.getElementById('deleteModal').classList.remove('show'); 
-        showToast('Perangkat berhasil dihapus!'); 
-        load(); 
-      } catch (e) { showToast('Gagal menghapus perangkat'); } 
+      try { await apiFetch('/api/dashboard/device/' + encodeURIComponent(deviceToDelete), 'DELETE'); document.getElementById('deleteModal').classList.remove('show'); showToast('Perangkat dihapus!'); load(); } catch (e) { showToast('Gagal hapus'); } 
     }
     
     function openChat(id) { selectedDeviceId = id; document.getElementById('chatModal').classList.add('show'); document.getElementById('chatInput').value = ''; loadChat(); }
-    
     async function loadChat() { 
-      try { 
-        const msgs = await apiFetch('/api/chat?id=' + encodeURIComponent(selectedDeviceId)); 
-        const box = document.getElementById('chatBox'); 
-        box.innerHTML = msgs.map(m => { const p = JSON.parse(m.payload); return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`; }).join(''); 
-        box.scrollTop = box.scrollHeight; 
-      } catch(e) {} 
+      try { const msgs = await apiFetch('/api/dashboard/chat/' + encodeURIComponent(selectedDeviceId)); const box = document.getElementById('chatBox'); box.innerHTML = msgs.map(m => { const p = JSON.parse(m.payload); return `<div class="msg ${p.sender}">${escapeHtml(p.text)}</div>`; }).join(''); box.scrollTop = box.scrollHeight; } catch(e) {} 
     }
-    
     async function sendChat() { 
-      const text = document.getElementById('chatInput').value.trim(); 
-      if(!text) return; 
-      document.getElementById('chatInput').value = ''; 
-      await apiFetch('/api/chat', 'POST', { device_id: selectedDeviceId, text }); 
-      loadChat(); 
+      const text = document.getElementById('chatInput').value.trim(); if(!text) return; document.getElementById('chatInput').value = ''; 
+      await apiFetch('/api/dashboard/chat', 'POST', { device_id: selectedDeviceId, text }); loadChat(); 
     }
     
     async function openBlock(id) { 
-      selectedDeviceId = id; 
-      document.getElementById('blockModal').classList.add('show'); 
-      document.getElementById('appList').innerHTML = '<div style="padding:20px; text-align:center; color:gray;">Memuat aplikasi...</div>'; 
+      selectedDeviceId = id; document.getElementById('blockModal').classList.add('show'); document.getElementById('appList').innerHTML = 'Memuat...'; 
       try { 
-        const data = await apiFetch('/api/apps?id=' + encodeURIComponent(selectedDeviceId)); 
-        const blocked = data.blocked || []; 
-        if (data.installed.length === 0) { 
-          document.getElementById('appList').innerHTML = '<div style="padding:20px; text-align:center; color:gray;">Tunggu HP anak terkoneksi.</div>'; 
-          return; 
-        } 
-        document.getElementById('appList').innerHTML = data.installed.map(app => `<label class="app-item"><input type="checkbox" value="${app.package}" ${blocked.includes(app.package) ? 'checked' : ''}><span>${app.name}</span></label>`).join(''); 
-      } catch(e) { 
-        document.getElementById('appList').innerHTML = '<div style="padding:20px; text-align:center; color:red;">Gagal memuat aplikasi</div>'; 
-      } 
+        const data = await apiFetch('/api/dashboard/apps/' + encodeURIComponent(selectedDeviceId)); const blocked = data.blocked || []; 
+        if (data.installed.length === 0) { document.getElementById('appList').innerHTML = 'Tunggu HP anak terkoneksi.'; return; } 
+        document.getElementById('appList').innerHTML = data.installed.map(app => `<label class="app-item"><input type="checkbox" value="${app.package}" ${blocked.includes(app.package) ? 'checked' : ''}>${app.name}</label>`).join(''); 
+      } catch(e) { document.getElementById('appList').innerHTML = 'Gagal memuat'; } 
     }
-    
     async function simpanBlokir() { 
-      const checkboxes = document.querySelectorAll('#appList input[type="checkbox"]:checked'); 
-      const blocked = Array.from(checkboxes).map(cb => cb.value); 
-      await apiFetch('/api/blocked', 'POST', { device_id: selectedDeviceId, blocked }); 
-      document.getElementById('blockModal').classList.remove('show'); 
-      showToast('Daftar blokir berhasil disimpan!'); 
+      const checkboxes = document.querySelectorAll('#appList input[type="checkbox"]:checked'); const blocked = Array.from(checkboxes).map(cb => cb.value); 
+      await apiFetch('/api/dashboard/blocked', 'POST', { device_id: selectedDeviceId, blocked }); 
+      document.getElementById('blockModal').classList.remove('show'); showToast('Blokir disimpan!'); 
     }
 
-    setInterval(load, 5000); load();
+    // Cek Auth pas halaman dimuat
+    checkAuth();
   </script>
 </body>
 </html>

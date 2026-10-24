@@ -1,71 +1,51 @@
 export default async function handler(req, res) {
-  // 1. Tentukan URL tujuan (Cloudflare Tunnel ke Termux)
-  // Jika di Vercel kamu sudah set Environment Variable TERMUX_URL, itu yang dipakai.
-  // Jika belum, fallback ke URL di bawah ini:
-  const TARGET_HOST = process.env.TERMUX_URL || "https://server.mekinjirserver.dpdns.org";
+  const TERMUX_URL = req.headers['x-termux-url'];
+  const PARENT_KEY = req.headers['x-api-key'];
+  if (!TERMUX_URL || !PARENT_KEY) return res.status(401).json({ error: 'Config kosong' });
 
-  // 2. Ambil path (contoh: dashboard/devices, auth/login)
-  const { path } = req.query;
-  const subPath = Array.isArray(path) ? path.join('/') : (path || '');
-  
-  // 3. Susun URL tujuan lengkap
-  const targetUrl = `${TARGET_HOST}/api/${subPath}`;
+  // 1. Ambil URL asli, pisahkan dari parameter (?)
+  const urlParts = req.url.split('?');
+  let cleanPath = urlParts[0]; // Hasil: /api/devices atau /api/chat
+  let queryString = urlParts[1] || ''; // Hasil: id=Infinix...
 
-  // 4. Teruskan Header
-  const headers = {
-    'Content-Type': 'application/json',
-  };
+  // 2. Buang awalan /api/
+  let subPath = cleanPath.replace(/^\/api\//, '').replace(/^\/api$/, '');
+  try { subPath = decodeURIComponent(subPath); } catch(e) {}
 
-  // Teruskan token otorisasi (Bearer token) dari frontend ke Termux
-  if (req.headers.authorization) {
-    headers['authorization'] = req.headers.authorization;
+  // 3. Ambil ID dari Query String (?id=...)
+  let id = null;
+  if (queryString) {
+    const params = new URLSearchParams(queryString);
+    id = params.get('id');
   }
+  let safeId = id ? encodeURIComponent(id) : null;
 
-  // Teruskan custom headers jika ada
-  if (req.headers['x-api-key']) {
-    headers['x-api-key'] = req.headers['x-api-key'];
-  }
-  if (req.headers['x-device-token']) {
-    headers['x-device-token'] = req.headers['x-device-token'];
-  }
+  // 4. Routing ke Termux
+  let targetPath = '';
+  if (subPath === 'devices') targetPath = '/api/dashboard/devices';
+  else if (subPath === 'pair-code') targetPath = '/api/dashboard/pair-code';
+  else if (subPath === 'command') targetPath = '/api/dashboard/command';
+  else if (subPath === 'chat' && req.method === 'GET') targetPath = '/api/dashboard/chat/' + safeId;
+  else if (subPath === 'chat' && req.method === 'POST') targetPath = '/api/dashboard/chat';
+  else if (subPath === 'apps') targetPath = '/api/dashboard/apps/' + safeId;
+  else if (subPath === 'blocked') targetPath = '/api/dashboard/blocked';
+  else if (subPath === 'image') targetPath = '/api/dashboard/image/' + safeId;
+  else if (subPath === 'device' && req.method === 'DELETE') targetPath = '/api/dashboard/device/' + safeId;
+  else return res.status(404).json({ error: 'Proxy: Endpoint tidak dikenal -> ' + subPath });
 
-  // 5. Siapkan Body (jika bukan GET/HEAD)
-  let bodyData = undefined;
-  if (req.method !== 'GET' && req.method !== 'HEAD') {
-    // Vercel biasanya sudah mem-parsing body ke req.body (object)
-    // Kita ubah kembali ke string JSON
-    bodyData = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
-  }
-
-  // 6. Tembak ke Termux
+  // 5. Tembak ke Termux
   try {
-    const response = await fetch(targetUrl, {
-      method: req.method,
-      headers: headers,
-      body: bodyData,
-    });
-
-    // 7. Baca response dari Termux
-    let data;
-    const contentType = response.headers.get('content-type');
+    const fetchOpts = { 
+      method: req.method, 
+      headers: { 'x-api-key': PARENT_KEY, 'content-type': 'application/json' } 
+    };
+    if (req.method === 'POST' && req.body) fetchOpts.body = JSON.stringify(req.body);
     
-    if (contentType && contentType.includes('application/json')) {
-      data = await response.json();
-    } else {
-      // Jika response bukan JSON (misal error HTML dari Cloudflare)
-      const text = await response.text();
-      data = { error: text || 'Response bukan JSON' };
-    }
-
-    // 8. Kembalikan response ke frontend beserta status code aslinya (200, 401, 404, dll)
-    res.status(response.status).json(data);
-    
-  } catch (error) {
-    // Jika Cloudflare mati / URL salah
-    res.status(502).json({ 
-      error: 'Proxy Error: Gagal terhubung ke server Termux.', 
-      details: error.message,
-      target: targetUrl
-    });
+    const upstream = await fetch(TERMUX_URL + targetPath, fetchOpts);
+    res.status(upstream.status);
+    const data = await upstream.text();
+    try { res.json(JSON.parse(data)); } catch { res.send(data); }
+  } catch (e) { 
+    res.status(502).json({ error: 'Gagal konek ke Termux: ' + e.message }); 
   }
 }

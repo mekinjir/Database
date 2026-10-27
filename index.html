@@ -7,13 +7,14 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* CSS lo tetep sama kayak sebelumnya, gw pendekin biar gak kepanjangan */
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
     :root { --bg: #050814; --panel: rgba(15, 23, 42, 0.7); --border: rgba(99, 102, 241, 0.2); --text: #f8fafc; --muted: #94a3b8; --primary: #6366f1; --primary-glow: rgba(99, 102, 241, 0.4); --danger: #ef4444; --warning: #f59e0b; --success: #10b981; --sidebar-width: 340px; }
     body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; background-image: radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 25%), radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.15), transparent 25%); background-attachment: fixed; overflow-x: hidden; }
     body::before { content: ""; position: fixed; inset: 0; z-index: -1; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 30px 30px; mask-image: radial-gradient(circle at center, black, transparent 80%); }
     .container { width: 100%; max-width: 900px; padding: 20px; display: none; animation: fadeIn 0.5s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* AUTH */
     #authPage { display: flex; max-width: 420px; width: 100%; margin: auto; padding: 20px; }
     .auth-card { width: 100%; background: var(--panel); backdrop-filter: blur(16px); padding: 40px 32px; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden; }
     .auth-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); }
@@ -26,12 +27,16 @@
     .auth-input:focus { border-color: var(--primary); background: rgba(0,0,0,0.4); box-shadow: 0 0 10px var(--primary-glow); }
     .auth-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--primary), #a855f7); color: #fff; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
     .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--primary-glow); }
+    
+    /* DASHBOARD */
     .hero { background: linear-gradient(135deg, rgba(30, 27, 75, 0.8), rgba(15, 23, 42, 0.8)); backdrop-filter: blur(10px); border-radius: 24px; padding: 24px 32px; border: 1px solid var(--border); margin-bottom: 32px; position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; }
     .hero::after { content: ''; position: absolute; right: -50px; top: -50px; width: 200px; height: 200px; background: var(--primary); filter: blur(100px); opacity: 0.4; }
     .hero-left { display: flex; align-items: center; gap: 16px; z-index: 10; }
     .hamburger { font-size: 24px; cursor: pointer; color: #fff; padding: 8px; transition: 0.2s; }
     .hero-text h1 { font-size: 24px; font-weight: 800; letter-spacing: 1px; }
     .hero-text p { color: var(--muted); font-size: 13px; }
+    
+    /* SIDEBAR */
     .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 998; opacity: 0; pointer-events: none; transition: 0.3s; }
     .sidebar-overlay.show { opacity: 1; pointer-events: auto; }
     .sidebar { position: fixed; top: 0; left: calc(-1 * var(--sidebar-width)); width: var(--sidebar-width); height: 100vh; background: #0f172a; border-right: 1px solid var(--border); z-index: 999; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
@@ -51,7 +56,10 @@
     .user-code { font-family: monospace; font-size: 14px; letter-spacing: 1px; color: #d8b4fe; background: rgba(168,85,247,0.2); padding: 6px; border-radius: 6px; text-align: center; font-weight: 700; }
     .btn-del-user { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; }
     .logout-btn-sidebar { margin-top: auto; background: rgba(239,68,68,0.1); border: 1px solid var(--danger); color: var(--danger); padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+    
+    /* DEVICE CARD */
     .btn-main { width: 100%; padding: 18px; border-radius: 16px; border: none; background: linear-gradient(135deg, var(--primary), #8b5cf6); color: #fff; font-weight: 700; font-size: 16px; cursor: pointer; margin-bottom: 32px; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 10px 30px -10px var(--primary); transition: 0.3s; }
+    .btn-main:hover { transform: translateY(-3px); }
     .card { background: var(--panel); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 20px; }
     .card-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
     .device-avatar { width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, #0ea5e9, #3b82f6); display: grid; place-items: center; font-size: 24px; color: #fff; }
@@ -60,6 +68,8 @@
     .badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
     .badge.off { background: rgba(148,163,184,0.1); color: #94a3b8; border-color: rgba(148,163,184,0.2); }
     .device-id { font-size: 13px; color: var(--muted); font-family: monospace; margin-top: 4px; }
+    
+    /* BUTTON GRID */
     .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .btn-action { border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 14px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; background: rgba(255,255,255,0.03); transition: 0.2s; }
     .btn-action:hover { background: rgba(255,255,255,0.08); }
@@ -71,6 +81,8 @@
     .btn-cam { color: #7dd3fc; border-color: rgba(14,165,233,0.3); background: rgba(14,165,233,0.1); } 
     .btn-hide { color: #cbd5e1; border-color: rgba(100,116,139,0.3); background: rgba(100,116,139,0.1); } 
     .btn-delete { color: #94a3b8; border-color: rgba(100,116,139,0.3); background: rgba(100,116,139,0.1); }
+
+    /* MODAL */
     .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
     .modal-bg.show { display: flex; }
     .modal { background: #0f172a; padding: 32px; border-radius: 24px; width: 100%; max-width: 440px; border: 1px solid rgba(255,255,255,0.1); }
@@ -153,24 +165,25 @@
 
   <script>
     let TERMUX_URL = "";
-    let PARENT_KEY = "meki_secret_911"; // Samain sama config.js di Termux
+    const PARENT_KEY = "meki_secret_911"; 
     let token = localStorage.getItem('token');
     let userRole = localStorage.getItem('role');
     let selectedDeviceId = null; let deviceToDelete = null;
     const ROLE_LEVELS = { 'developer': 1, 'owner': 2, 'moderator': 3, 'reseller': 4, 'fullup': 5 };
 
-    // Ambil URL Termux dari Vercel
+    // 1. Ambil Config Vercel
     async function initConfig() {
       try {
         const res = await fetch('/api/config');
         const data = await res.json();
         TERMUX_URL = data.termux_url;
         checkAuth();
-      } catch(e) { showToast('Gagal ambil config Vercel'); }
+      } catch(e) { showToast('Gagal ambil config Vercel. Cek file api/config.js'); }
     }
 
     function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('show'); }
 
+    // 2. Handle Login
     async function handleLogin() {
       const user = document.getElementById('authUser').value; const pass = document.getElementById('authPass').value;
       if(!user || !pass) return showToast('Isi semua kolom!');
@@ -184,11 +197,18 @@
           }, 
           body: JSON.stringify({ username: user, password: pass }) 
         });
-        const data = await res.json(); 
+        
+        // Baca sebagai TEXT dulu biar ketahuan kalo Vercel ngirim HTML error
+        const textData = await res.text();
+        let data;
+        try { data = JSON.parse(textData); } catch(e) { return showToast('Vercel Error: ' + textData); }
+
         if (!res.ok) return showToast(data.error || 'Akses Ditolak');
+        
         localStorage.setItem('token', data.token); localStorage.setItem('username', data.username); localStorage.setItem('role', data.role);
         token = data.token; userRole = data.role; checkAuth();
-      } catch(e) { showToast('Server Offline / Proxy Error'); }
+        showToast('Selamat datang, ' + data.username);
+      } catch(e) { showToast('Error Jaringan: ' + e.message); }
     }
 
     function logout() {
@@ -247,22 +267,34 @@
         try { await apiFetch('/api/admin/user/' + id, 'DELETE'); loadUsers(); } catch(e) { showToast('Gagal hapus'); }
     }
 
+    // 3. Fungsi Fetch Utama
     async function apiFetch(endpoint, method = 'GET', body = null) {
-      const headers = { 
-        'authorization': 'Bearer ' + token, 
-        'content-type': 'application/json',
-        'x-termux-url': TERMUX_URL,
-        'x-api-key': PARENT_KEY
-      };
-      const opts = { method, headers }; if (body) opts.body = JSON.stringify(body);
-      const res = await fetch(endpoint, opts); 
-      if (!res.ok) throw new Error('HTTP ' + res.status); 
-      return res.json();
+      try {
+        const headers = { 
+          'authorization': 'Bearer ' + token, 
+          'content-type': 'application/json',
+          'x-termux-url': TERMUX_URL,
+          'x-api-key': PARENT_KEY
+        };
+        const opts = { method, headers }; if (body) opts.body = JSON.stringify(body);
+        const res = await fetch(endpoint, opts); 
+        
+        const textData = await res.text();
+        let data;
+        try { data = JSON.parse(textData); } catch(e) { throw new Error('Respon Vercel Bukan JSON (Cek Proxy)'); }
+        
+        if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
+        return data;
+      } catch (err) {
+        showToast(err.message);
+        throw err;
+      }
     }
 
-    function showToast(msg) { const t = document.getElementById('toast'); document.getElementById('toastMsg').textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+    function showToast(msg) { const t = document.getElementById('toast'); document.getElementById('toastMsg').textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500); }
     function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
+    // 4. Load Devices
     async function load() {
       try {
         const devices = await apiFetch('/api/devices');
@@ -298,6 +330,7 @@
       } catch (e) { document.getElementById('list').innerHTML = `<p style="color:var(--danger); text-align:center;">Error: ${e.message}</p>`; }
     }
 
+    // 5. Commands
     async function sendCmd(deviceId, type) {
       try { 
         await apiFetch('/api/command', 'POST', { device_id: deviceId, type }); 
